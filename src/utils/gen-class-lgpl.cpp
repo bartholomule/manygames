@@ -26,9 +26,18 @@
   $Id$
  */
 
+/*
+  TODO:
+
+  * Allow parents to be in different namespaces (parent namespaces are
+    currently stripped and ignored)
+  * Allow parents to have template parameters (they are currently determined,
+    but unused).
+ */
 
 #include <string>
 #include <vector>
+#include <utility>
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -44,7 +53,6 @@ static const string PackageText = "Part of \"Many Games\" - A nearly infinitely 
 static const string PackageLocation = "http://sourceforge.net/projects/manygames";
 static const string HeaderExtension = "hpp";
 
-
 string GenerateFileHeader()
 {
   static const string CVS_HEADER = string("$") + "Id$";
@@ -55,7 +63,6 @@ string GenerateFileHeader()
   tm* time_struct = localtime(&current_time);
   char year_text[6];
   sprintf(year_text, "%d", (time_struct->tm_year) + 1900);
-  
   
   string header = (string("/*\n") + 
                    " * " + CVS_HEADER + "\n *\n" +
@@ -76,12 +83,70 @@ string GenerateFileHeader()
  * License along with this library; if not, write to the Free Software     \n\
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.\n\
  */");
+
   return header;
+}
+
+string GenerateTemplateBeforeReturnType(const vector<pair<string,string> >& tparams,
+                                        const string& indent)
+{
+  string return_string;
+
+  if( !tparams.empty() )
+  {
+    return_string += "template<";
+    for( vector<pair<string,string> >::const_iterator tname = tparams.begin();
+         tname != tparams.end();
+         ++tname )
+    {
+      if( !tname->first.empty() )
+      {
+        return_string += tname->first;
+      }
+      else
+      {
+        return_string += "class";
+      }
+      return_string += " ";
+      return_string += tname->second;
+      
+      if( (tparams.end() - tname) > 1 )
+      {
+        return_string += ", ";
+      }
+    }
+    return_string += ">\n" + indent;    
+  }
+  return return_string;  
+}
+
+string GenerateTemplateAfterClassname(const vector<pair<string,string> >& tparams)
+{
+  string return_string;
+
+  if( !tparams.empty() )
+  {
+    return_string += "<";
+    for( vector<pair<string,string> >::const_iterator tname = tparams.begin();
+         tname != tparams.end();
+         ++tname )
+    {
+      return_string += tname->second;
+      
+      if( (tparams.end() - tname) > 1 )
+      {
+        return_string += ",";
+      }
+    }
+    return_string += ">";
+  }
+  return return_string;
 }
 
 string GenerateClassDeclaration(const string& classname,
                                 const string& indent = string(""),
-                                const string& parentname = string(""))
+                                const string& parentname = string(""),
+                                const vector<pair<string,string> >& tparams = vector<pair<string,string> >())
 {
   string declaration;
 
@@ -107,7 +172,16 @@ declaration += "//-----------------------------------------------------------\n"
   ++last_num_used[0];
   
   declaration += ("// (" + last_num_used + ") " +
-                  "Provide the required operations in the copy constructor and assignment\n//  operator (in the corresponding .cpp file).\n");
+                  "Provide the required operations in the copy constructor and assignment\n//  operator");
+  if( tparams.empty() )
+  {
+    declaration += " (in the corresponding .cpp file).\n";
+  }
+  else
+  {
+    declaration += ".\n";
+  }
+
   ++last_num_used[0];
   
   
@@ -123,8 +197,20 @@ declaration += "//-----------------------------------------------------------\n"
   declaration += indent + " * @version $" + "Revision: 1.1 $\n";
   declaration += indent + " * \n";
   declaration += indent + " */\n";
+
+  // This will either be used by the template (if any), or the statement after.
+  declaration += indent;
+
+  // Generate a template header before the class...
+  if( !tparams.empty() )
+  {
+    declaration += GenerateTemplateBeforeReturnType(tparams, indent);
+  }      
+
+  // This one gets its indent either from the template test (if any), or the
+  // statement right before.
+  declaration += "class " + classname;
   
-  declaration += indent + "class " + classname;
   if( !parentname.empty() )
   {
     declaration += " : public " + parentname;
@@ -154,9 +240,11 @@ declaration += "//-----------------------------------------------------------\n"
 } // GenerateClassDeclaration()
 
 
+
 string GenerateClassDefinition(const string& classname,
                                const string& indent = string(""),
-                               const string& parentname = string(""))
+                               const string& parentname = string(""),
+                               const vector<pair<string,string> >& tparams = vector<pair<string,string> >())
 {
   string definition;
   string dash_name = string(classname.size(), '-');
@@ -164,8 +252,13 @@ string GenerateClassDefinition(const string& classname,
   definition += indent + "//-------------------------------" + dash_name + "\n";
   definition += indent + "// Default constructor for class " + classname + "\n";
   definition += indent + "//-------------------------------" + dash_name + "\n";  
+
   
-  definition += indent + classname + "::" + classname + "()";
+  
+  definition += (indent +
+                 GenerateTemplateBeforeReturnType(tparams, indent) +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "::" + classname + "()");
   if( !parentname.empty() )
   {
     definition += ":\n";
@@ -182,7 +275,10 @@ string GenerateClassDefinition(const string& classname,
   definition += indent + "//----------------------" + dash_name + "\n";  
   definition += indent + "// Destructor for class " + classname + "\n";
   definition += indent + "//----------------------" + dash_name + "\n";  
-  definition += indent + classname + "::~" + classname + "()\n";
+  definition += (indent +
+                 GenerateTemplateBeforeReturnType(tparams, indent) +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "::~" + classname + "()\n");
   definition += indent + "{\n";
   definition += indent + "\n";
   definition += indent + "} // ~" + classname + "()\n";
@@ -192,8 +288,12 @@ string GenerateClassDefinition(const string& classname,
   definition += indent + "//----------------------------" + dash_name + "\n";  
   definition += indent + "// Copy constructor for class " + classname + "\n";
   definition += indent + "//----------------------------" + dash_name + "\n";  
-  definition += indent + classname + "::" + classname + "(const " + classname
-    + "& old)";
+  definition += (indent +
+                 GenerateTemplateBeforeReturnType(tparams, indent) +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "::" + classname + "(const " +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "& old)");
   if( !parentname.empty() )
   {
     definition += ":\n";
@@ -211,8 +311,13 @@ string GenerateClassDefinition(const string& classname,
   definition += indent + "// Assignment operator for class " + classname + "\n";
   definition += indent + "//-------------------------------" + dash_name + "\n";  
   
-  definition += indent + classname + "& " + classname + "::operator= (const " +
-    classname + "& old)\n";
+  definition += (indent +
+                 GenerateTemplateBeforeReturnType(tparams, indent) +
+                 classname + GenerateTemplateAfterClassname(tparams) + "& " +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "::operator= (const " +
+                 classname + GenerateTemplateAfterClassname(tparams) +
+                 "& old)\n");
   definition += indent + "{\n";
   definition += indent + "  // Generic check for self-assignment\n";  
   definition += indent + "  if( &old != this)\n";
@@ -290,7 +395,11 @@ void RemoveSwitches(int& argc, char** argv, string& munged_class, string& parent
   -p --parent - specifies a class from which to publicly derive.\n\
 \n\
   --version   - displays the version number and copyright/license \n\
-  --help      - displays this help" << endl;
+  --help      - displays this help \n\
+  Notes: If you want templated class output, put your templated list (comma \n\
+         deliminated, following the classname (no spaces allowed).  \n\
+  Example: \n\
+      gen-class namespace.classname,param1,param2=typename,param3=int\n" << endl;
         exit(1);
       }
     default:
@@ -312,6 +421,86 @@ void RemoveSwitches(int& argc, char** argv, string& munged_class, string& parent
   {
     munged_class = string(argv[1]);
   }
+}
+
+pair<string,string> ExtractSingleParam(const string& param_tag)
+{
+  // See the comments in ExtractTemplateParams for the format that we'll accept
+  // here.
+  pair<string, string> ret_pair;
+
+  if( !param_tag.empty() )
+  {
+    size_t equals_location = param_tag.find('=', 0);
+    string before, after;
+
+    before = param_tag.substr(0, equals_location);
+
+    if( equals_location < param_tag.size() )
+    {
+      after = param_tag.substr(equals_location + 1,
+                               param_tag.size() - equals_location - 1);
+    }
+    ret_pair.first = after;
+    ret_pair.second = before;
+  }
+  return ret_pair;
+}
+
+void ExtractTemplateParams(string& munged_name,
+                           vector<pair<string,string> >& template_parameters)
+{
+  template_parameters.erase(template_parameters.begin(),
+                            template_parameters.end());
+
+  // The format I'll accept here (bisonish description):
+  // template_param_name:
+  //    string                      -- classname
+  //    | string ',' template_params
+  // ;
+  // template_params:
+  //    single_param
+  //    | template_params ',' single_param
+  // ;
+  // single_param:
+  //    string                      -- name  (type=='class')
+  //    | string '=' string         -- name=type
+  //    | '=' string                -- type
+  // ;
+
+  size_t last_location = 0; // The last location which we've seen a comma
+
+  vector<string> comma_split_strings;
+
+  // While we haven't checked all of the commas in the list...
+  while( last_location < munged_name.size() )
+  {
+    size_t new_location = munged_name.find(',', last_location);
+    // The part *before* the comma (if there was a comma).
+    string temp = munged_name.substr(last_location,
+                                     new_location - last_location);
+    comma_split_strings.push_back(temp);
+    last_location = new_location;
+
+    // If there was a comma, advance beyond it.
+    if( last_location < munged_name.size() )
+    {
+      ++last_location;
+    }
+  }
+
+  if( !comma_split_strings.empty() )
+  {
+    // Extract the name of the class from the comma string list.
+    vector<string>::const_iterator current = comma_split_strings.begin();    
+    munged_name = *current;
+    ++current;
+
+    for(; current != comma_split_strings.end(); ++current)
+    {
+      template_parameters.push_back(ExtractSingleParam(*current));
+    }    
+  }  
 }
 
 void ExtractNamespaces(string& munged_name, vector<string>& namespaces)
@@ -406,6 +595,11 @@ int main(int argc, char** argv)
   string output_root = "CLASSOUT";
   string indent;
   vector<string> namespaces;
+  vector<string> parent_namespaces;
+  // The order of stuff stored in these next two, as a pair, will be
+  // <type, name> 
+  vector<pair<string, string> > template_arguments;
+  vector<pair<string, string> > parent_template_arguments;  
 
   RemoveSwitches(argc, argv, classname, parent, output_root);
 
@@ -415,7 +609,12 @@ int main(int argc, char** argv)
     exit(1);
   }
 
+  // Extract the namespaces and template arguments (if any) from the class name
+  // and parent name (if any).
   ExtractNamespaces(classname, namespaces);
+  ExtractTemplateParams(classname, template_arguments);
+  ExtractNamespaces(parent, parent_namespaces);  
+  ExtractTemplateParams(parent, parent_template_arguments);
 
   if( output_root == "CLASSOUT" )
   {
@@ -431,8 +630,14 @@ int main(int argc, char** argv)
     cerr << "Error: Could not open \"" << output_root + "." + HeaderExtension << "\"" << endl;
     exit(1);
   }
-  ofstream cpp_output(string(output_root + ".cpp").c_str());  
-  if( !cpp_output )
+  ofstream *cpp_output = NULL;
+
+  if( template_arguments.empty() )
+  {
+    cpp_output = new ofstream(string(output_root + ".cpp").c_str());
+  }
+  
+  if( cpp_output && !*cpp_output )
   {
     cerr << "Error: Could not open \"" << output_root + ".cpp\"" << endl;
     exit(1);
@@ -453,23 +658,33 @@ int main(int argc, char** argv)
     header_output << endl;
   }
   header_output << GenerateNamespaceBegin(namespaces, indent) << endl;
-  header_output << GenerateClassDeclaration(classname, indent, parent) << endl;
+  header_output << GenerateClassDeclaration(classname, indent, parent, template_arguments) << endl;
+
+  if( !cpp_output )
+  {
+    // Must be templated, so we'll dump it in the header!
+    header_output << endl;
+    header_output << endl;
+    header_output << GenerateClassDefinition(classname, indent, parent, template_arguments) << endl;        
+  }
+  
   header_output << GenerateNamespaceEnd(namespaces, indent) << endl;  
   header_output << endl;
   header_output << "#endif /* !defined(" << namespace_guard_string << ") */" << endl;  
   header_output << endl;
-
-
-  
-  cpp_output << GenerateFileHeader() << endl;
-  cpp_output << endl;
-  cpp_output << "#include \"" << output_root << "." << HeaderExtension << "\"" << endl;
-  cpp_output << endl;
-  cpp_output << endl;
-  cpp_output << GenerateNamespaceBegin(namespaces, indent) << endl;
-  cpp_output << GenerateClassDefinition(classname, indent, parent) << endl;    
-  cpp_output << GenerateNamespaceEnd(namespaces, indent) << endl;
-
   header_output.close();
-  cpp_output.close();
+
+
+  if( cpp_output )
+  {
+    *cpp_output << GenerateFileHeader() << endl;
+    *cpp_output << endl;
+    *cpp_output << "#include \"" << output_root << "." << HeaderExtension << "\"" << endl;
+    *cpp_output << endl;
+    *cpp_output << endl;
+    *cpp_output << GenerateNamespaceBegin(namespaces, indent) << endl;
+    *cpp_output << GenerateClassDefinition(classname, indent, parent) << endl;    
+    *cpp_output << GenerateNamespaceEnd(namespaces, indent) << endl;
+    cpp_output->close();
+  }
 }
