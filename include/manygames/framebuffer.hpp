@@ -23,6 +23,8 @@
 #define            __MANYGAMES__FRAMEBUFFER_HPP__
 
 #include <manygames/image.hpp>
+#include <manygames/masked_image.hpp>
+#include <manygames/rgbacolor.hpp>
 #include <manygames/template_functions.hpp>
 
 namespace manygames
@@ -122,6 +124,26 @@ namespace manygames
       (*foreground)(x,y) = c;
     }
 
+    /** Set the pixel at x,y to the given color (in the background buffer). */
+    template <class T2>
+    void setpixel_back(unsigned x, unsigned y, const rgbacolor<T,T2>& c)
+      throw(out_of_range) 
+    {
+      rgbcolor<T> cur_color = getpixel_back(x,y);
+      setpixel_back(x,y, ( (c.a() * cur_color) +
+			   (1 - c.a()) * convert_color(c) ) );
+    }
+    
+    /** Set the pixel at x,y to the given color (in the foreground buffer) */
+    template <class T2>
+    void setpixel(unsigned x, unsigned y, const rgbacolor<T,T2>& c)
+      throw(out_of_range)
+    {
+      rgbcolor<T> cur_color = getpixel(x,y);
+      setpixel(x,y, ( (c.a() * cur_color) +
+		      (1 - c.a()) * convert_color(c) ) );
+    }
+    
     /** Get the pixel at x,y (from the background buffer). */
     virtual rgbcolor<T> getpixel_back(unsigned x, unsigned y)
       throw(out_of_range)
@@ -135,6 +157,12 @@ namespace manygames
     {
       return ((*foreground)(x,y));      
     }    
+
+    virtual void fg_draw_image(const image<T>& img, int x, int y);
+    virtual void bg_draw_image(const image<T>& img, int x, int y);
+
+    virtual void fg_draw_image(const masked_image<T,bool>& img, int x, int y);
+    virtual void bg_draw_image(const masked_image<T,bool>& img, int x, int y);    
     
     /*
      * [FIXME!] Add functions here (possibly virtual) for drawing images (at
@@ -243,6 +271,104 @@ namespace manygames
     buffer1.resize(width, height, cx, cy, fill);
     buffer2.resize(width, height, cx, cy, fill);
   } // framebuffer::resize(width,height,cx,cy,fill)
+
+  template <class T>
+  void framebuffer<T>::fg_draw_image(const image<T>& img, int x, int y)
+  {
+    if( !img.empty() )
+    {
+      unsigned width = buffer1.get_width();
+      unsigned height = buffer1.get_height();
+
+      int x_min = std::min(width, unsigned(std::max(0, x)));
+      int x_max = std::min(width, unsigned(std::max(0, int(img.get_width()) + x)));
+      int y_min = std::min(height, unsigned(std::max(0, y)));
+      int y_max = std::min(height, unsigned(std::max(0, int(img.get_height()) + y)));
+
+      for(unsigned y1 = y_min; y1 < y_max; ++y1)
+      {
+	for(unsigned x1 = x_min; x1 < x_max; ++x1)
+	{
+	  (*foreground)(x1,y1) = img(x1 - x, y1 - y);
+	}
+      }
+    }
+  }
+
+  template <class T>
+  void framebuffer<T>::bg_draw_image(const image<T>& img, int x, int y)
+  {
+    if( !img.empty() )
+    {
+      unsigned width = buffer1.get_width();
+      unsigned height = buffer1.get_height();
+
+      int x_min = std::min(width, unsigned(std::max(0, x)));
+      int x_max = std::min(width, unsigned(std::max(0, int(img.get_width()) + x)));
+      int y_min = std::min(height, unsigned(std::max(0, y)));
+      int y_max = std::min(height, unsigned(std::max(0, int(img.get_height()) + y)));
+
+      for(unsigned y1 = y_min; y1 < y_max; ++y1)
+      {
+	for(unsigned x1 = x_min; x1 < x_max; ++x1)
+	{
+	  (*background)(x1,y1) = img(x1 - x, y1 - y);
+	}
+      }
+    }
+  }
+
+  template <class T>
+  void framebuffer<T>::fg_draw_image(const masked_image<T,bool>& img, int x, int y)
+  {
+    if( !img.empty() )
+    {
+      unsigned width = buffer1.get_width();
+      unsigned height = buffer1.get_height();
+
+      int x_min = std::min(width, unsigned(std::max(0, x)));
+      int x_max = std::min(width, unsigned(std::max(0, int(img.get_width()) + x)));
+      int y_min = std::min(height, unsigned(std::max(0, y)));
+      int y_max = std::min(height, unsigned(std::max(0, int(img.get_height()) + y)));
+
+      for(unsigned y1 = y_min; y1 < y_max; ++y1)
+      {
+	for(unsigned x1 = x_min; x1 < x_max; ++x1)
+	{
+	  if( img.mask(x1 - x, y1 - y) )
+	  {
+	    (*foreground)(x1,y1) = img(x1 - x, y1 - y);
+	  }
+	}
+      }
+    }
+  }
+
+  template <class T>
+  void framebuffer<T>::bg_draw_image(const masked_image<T,bool>& img, int x, int y)
+  {
+    if( !img.empty() )
+    {
+      unsigned width = buffer1.get_width();
+      unsigned height = buffer1.get_height();
+
+      int x_min = std::min(width, unsigned(std::max(0, x)));
+      int x_max = std::min(width, unsigned(std::max(0, int(img.get_width()) + x)));
+      int y_min = std::min(height, unsigned(std::max(0, y)));
+      int y_max = std::min(height, unsigned(std::max(0, int(img.get_height()) + y)));
+
+      for(unsigned y1 = y_min; y1 < y_max; ++y1)
+      {
+	for(unsigned x1 = x_min; x1 < x_max; ++x1)
+	{
+	  if( img.mask(x1 - x, y1 - y) )
+	  {
+	    (*background)(x1,y1) = img(x1 - x, y1 - y);
+	  }
+	}
+      }
+    }
+  }  
 
 } // namespace manygames
 
