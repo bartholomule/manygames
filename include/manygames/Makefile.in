@@ -183,9 +183,17 @@ manygamesinclude_HEADERS = \
 	rgbacolor.hpp \
 	image.hpp \
 	alpha_image.hpp \
+        masked_image.hpp \
 	image_converter.hpp \
+	\
 	extra_exceptions.hpp \
 	textized.hpp \
+	\
+	mouse_input.hpp \
+	keyboard_input.hpp \
+	input_window.hpp \
+	\
+	xpm_image_loader.hpp \
 	\
 	ref_count_object.hpp \
 	magic_pointer.hpp \
