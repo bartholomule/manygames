@@ -14,11 +14,11 @@ quiet=0
 while [ $# -ge 1 ]
 do
   # Check to see if a quiet parameter '-q' or '--quiet' was given.
-  if [ "$1" == "-q" ] || [ "$1" == "--quiet" ]
+  if [ "$1" = "-q" ] || [ "$1" = "--quiet" ]
   then
     # Set a flag for later use.
     quiet=1
-  elif [ "$1" == "-h" ] || [ "$1" == "--help" ]
+  elif [ "$1" = "-h" ] || [ "$1" = "--help" ]
   then
 cat <<EOF
   usage: do_all_tests.sh [flags]
@@ -28,7 +28,7 @@ cat <<EOF
    -v or --version  -- Display version/license information.
 EOF
     exit 0
-  elif [ "$1" == "-v" ] || [ "$1" == "--version" ]
+  elif [ "$1" = "-v" ] || [ "$1" = "--version" ]
   then
 cat <<EOF
   do_all_tests.sh automated test execution script
