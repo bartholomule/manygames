@@ -1,3 +1,3 @@
-SUBDIRS = gtkmm
+SUBDIRS = gtkmm X
 
 
