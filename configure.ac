@@ -344,5 +344,8 @@ AC_OUTPUT([ Makefile         \
           echo "------------------"
 )
 
-ln -s $ac_aux_dir/install-sh . 2>/dev/null
+if test ! -e install-sh
+then
+  ln -s "$ac_aux_dir/install-sh" . 2>/dev/null || echo "install-sh could not be linked."
+fi
 

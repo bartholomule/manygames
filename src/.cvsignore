@@ -4,3 +4,6 @@
 .deps
 .libs
 Makefile
+manygames_config.hpp
+barf
+barf.exe
