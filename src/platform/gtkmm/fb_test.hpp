@@ -25,7 +25,7 @@
 // --------------------------------------
 // Default include of parent class header
 // --------------------------------------
-#include "gtkmm_framebuffer.hpp"
+#include "gtkmm_input_window.hpp"
 
 /**
  * 
@@ -35,7 +35,7 @@
  * @version $Revision$
  * 
  */
-class fb_test : public manygames::gtkmm_framebuffer
+class fb_test : public manygames::gtkmm_input_window
 {
 
 private:
@@ -43,8 +43,6 @@ private:
 protected:
 
   long last_time;
-  int last_x, last_y;
-  int x_shift, y_shift;
   bool dragging;
 
 public:
@@ -57,21 +55,10 @@ public:
   /** Copy constructor */
   fb_test(const fb_test& old);
 
-  /** Assignment operator */
-  fb_test& operator= (const fb_test& old);
-
   virtual void update();
 
-  virtual bool on_expose_event(GdkEventExpose* e)
-  {
-    update(); /* temp */
-    draw();
-    return true;
-  }
-  
-  virtual bool on_button_press_event(GdkEventButton* event);
-  virtual bool on_button_release_event(GdkEventButton* event);  
-  virtual bool on_motion_notify_event(GdkEventMotion* event);
+
+
 }; // class fb_test
 
 
