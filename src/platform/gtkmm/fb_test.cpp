@@ -629,8 +629,8 @@ bool drag(int,int,int,int,unsigned)
 bool key_down(unsigned key, unsigned mods)
 {
   printf("::key_down(0x%06x,0x%06x)==%s -- %d keys are now down\n", key, mods,
-	 fb->keyname(key, mods, false).c_str(),
-	 fb->num_keys_down());
+         fb->keyname(key, mods, false).c_str(),
+         fb->num_keys_down());
 
   return true;
 }
@@ -638,8 +638,8 @@ bool key_down(unsigned key, unsigned mods)
 bool key_up(unsigned key, unsigned press_mods, unsigned release_mods)
 {
   printf("::key_up(0x%06x,0x%06x,0x%06x)==%s -- %d keys are now down\n", key, press_mods, release_mods,
-	 fb->keyname(key, release_mods, false).c_str(),
-	 fb->num_keys_down());
+         fb->keyname(key, release_mods, false).c_str(),
+         fb->num_keys_down());
 
   // Quit when they let up on Q or escape.
   if( (key == 'q') || (key == 'Q') || (key == keyboard_input::KEY_escape) )

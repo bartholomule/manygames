@@ -92,22 +92,22 @@ namespace manygames
     {
       if( modifiers & keyboard_input::keyboard_key_pressed )
       {
-	buttons_currently_held[button] = modifiers;
-	return key_pressed(button, modifiers);
+        buttons_currently_held[button] = modifiers;
+        return key_pressed(button, modifiers);
       }
       else
       {
-	// CHECKME!
-	// Should the released signal be relayed, even though there were no buttons down?
-	return key_released(button, 0, modifiers);
+        // CHECKME!
+        // Should the released signal be relayed, even though there were no buttons down?
+        return key_released(button, 0, modifiers);
       }
     }
     else if( modifiers & keyboard_input::keyboard_key_pressed ) // down, but repeated
     {
       if( allow_repeat )
       {
-	buttons_currently_held[button] = modifiers;
-	return key_pressed(button, modifiers);
+        buttons_currently_held[button] = modifiers;
+        return key_pressed(button, modifiers);
       }
       return true;
     }
@@ -147,7 +147,7 @@ namespace manygames
   {
 
     std::vector<std::pair<unsigned,unsigned> > retvec(buttons_currently_held.begin(),
-						      buttons_currently_held.end());
+                                                      buttons_currently_held.end());
     return retvec;
   }
 
@@ -423,148 +423,148 @@ namespace manygames
     if( modifiers & keyboard_input::keyboard_control )
     {
       if( (key != keyboard_input::KEY_control_left) &&
-	  (key != keyboard_input::KEY_control_right) )
+          (key != keyboard_input::KEY_control_right) )
       {
-	ADD_MERGER();
-	
-	if( !modifiers & keyboard_input::keyboard_right_control )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Control-L>";
-	  }
-	  else
-	  {
-	    ret_string += "<CTRL-L>";
-	  }
-	}
-	else if( !modifiers & keyboard_input::keyboard_left_control )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Control-R>";
-	  }
-	  else
-	  {
-	    ret_string += "<CTRL-R>";
-	  }
-	}
-	else
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Control>";
-	  }
-	  else
-	  {
-	    ret_string += "<CTRL>";
-	  }	
-	}
+        ADD_MERGER();
+        
+        if( !modifiers & keyboard_input::keyboard_right_control )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Control-L>";
+          }
+          else
+          {
+            ret_string += "<CTRL-L>";
+          }
+        }
+        else if( !modifiers & keyboard_input::keyboard_left_control )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Control-R>";
+          }
+          else
+          {
+            ret_string += "<CTRL-R>";
+          }
+        }
+        else
+        {
+          if( !shortened )
+          {
+            ret_string += "<Control>";
+          }
+          else
+          {
+            ret_string += "<CTRL>";
+          }     
+        }
       } // key NOT a control
     } // control modifier set
 
     if( modifiers & keyboard_input::keyboard_shift )
     {
       if( (key != keyboard_input::KEY_shift_left) &&
-	  (key != keyboard_input::KEY_shift_right) )
+          (key != keyboard_input::KEY_shift_right) )
       {      
-	ADD_MERGER();
-	if( !modifiers & keyboard_input::keyboard_right_shift )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Shift-L>";
-	  }
-	  else
-	  {
-	    ret_string += "<SHFT-L>";
-	  }
-	}
-	else if( !modifiers & keyboard_input::keyboard_left_shift )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Shift-R>";
-	  }
-	  else
-	  {
-	    ret_string += "<SHFT-R>";
-	  }
-	}
-	else
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Shift>";
-	  }
-	  else
-	  {
-	    ret_string += "<SHFT>";
-	  }	
-	}
+        ADD_MERGER();
+        if( !modifiers & keyboard_input::keyboard_right_shift )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Shift-L>";
+          }
+          else
+          {
+            ret_string += "<SHFT-L>";
+          }
+        }
+        else if( !modifiers & keyboard_input::keyboard_left_shift )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Shift-R>";
+          }
+          else
+          {
+            ret_string += "<SHFT-R>";
+          }
+        }
+        else
+        {
+          if( !shortened )
+          {
+            ret_string += "<Shift>";
+          }
+          else
+          {
+            ret_string += "<SHFT>";
+          }     
+        }
       } // key NOT a shift
     } // shift modifier set
 
     if( modifiers & keyboard_input::keyboard_super )
     {
       if( (key != keyboard_input::KEY_super_left) &&
-	  (key != keyboard_input::KEY_super_right) )
+          (key != keyboard_input::KEY_super_right) )
       {      
-	ADD_MERGER();
-	if( !modifiers & keyboard_input::keyboard_right_super )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Super-L>";
-	  }
-	  else
-	  {
-	    ret_string += "<SPR-L>";
-	  }
-	}
-	else if( !modifiers & keyboard_input::keyboard_left_super )
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Super-R>";
-	  }
-	  else
-	  {
-	    ret_string += "<SPR-R>";
-	  }
-	}
-	else
-	{
-	  if( !shortened )
-	  {
-	    ret_string += "<Super>";
-	  }
-	  else
-	  {
-	    ret_string += "<SPR>";
-	  }	
-	}
+        ADD_MERGER();
+        if( !modifiers & keyboard_input::keyboard_right_super )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Super-L>";
+          }
+          else
+          {
+            ret_string += "<SPR-L>";
+          }
+        }
+        else if( !modifiers & keyboard_input::keyboard_left_super )
+        {
+          if( !shortened )
+          {
+            ret_string += "<Super-R>";
+          }
+          else
+          {
+            ret_string += "<SPR-R>";
+          }
+        }
+        else
+        {
+          if( !shortened )
+          {
+            ret_string += "<Super>";
+          }
+          else
+          {
+            ret_string += "<SPR>";
+          }     
+        }
       } // key is NOT a super
     } // super modifier is set
     
     if( modifiers & keyboard_input::keyboard_alt )
     {
       if( (key != keyboard_input::KEY_alt_left) &&
-	  (key != keyboard_input::KEY_alt_right) )
+          (key != keyboard_input::KEY_alt_right) )
       {      
-	ADD_MERGER();
-	if( !modifiers & keyboard_input::keyboard_right_alt )
-	{
-	  ret_string += "<Alt-L>";
-	}
-	else if( !modifiers & keyboard_input::keyboard_left_alt )
-	{
-	  ret_string += "<Alt-R>";
-	}
-	else
-	{
-	  ret_string += "<Alt>";
-	}
+        ADD_MERGER();
+        if( !modifiers & keyboard_input::keyboard_right_alt )
+        {
+          ret_string += "<Alt-L>";
+        }
+        else if( !modifiers & keyboard_input::keyboard_left_alt )
+        {
+          ret_string += "<Alt-R>";
+        }
+        else
+        {
+          ret_string += "<Alt>";
+        }
       } // key NOT an alt
     } // alt modifier set
 
@@ -626,21 +626,21 @@ namespace manygames
       std::map<unsigned, std::string>::const_iterator mod_overrides = modifier_name_overrides.find(modifiers&~keyboard_key_pressed);
       if( mod_overrides != modifier_name_overrides.end() )
       {
-	mod_names = mod_overrides->second;
+        mod_names = mod_overrides->second;
       }
       else
       {
-	unsigned modifier_mask = ~modifier_ignore_mask & ~keyboard_key_pressed;
+        unsigned modifier_mask = ~modifier_ignore_mask & ~keyboard_key_pressed;
 
-	if( !shortened )
-	{
-	  mod_names = get_mod_names(key, modifiers & modifier_mask, "+", shortened);
-	}
-	else
-	{
-	  // No "+" in the concatenation.
-	  mod_names = get_mod_names(key, modifiers & modifier_mask, "", shortened);	  
-	}
+        if( !shortened )
+        {
+          mod_names = get_mod_names(key, modifiers & modifier_mask, "+", shortened);
+        }
+        else
+        {
+          // No "+" in the concatenation.
+          mod_names = get_mod_names(key, modifiers & modifier_mask, "", shortened);       
+        }
       }
     }
     if( !mod_names.empty() )
