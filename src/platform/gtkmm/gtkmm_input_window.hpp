@@ -28,21 +28,11 @@
 #include <manygames/input_window.hpp>
 #include <glib/gtypes.h>
 #include <gtkmm/drawingarea.h>
+#include <gtkmm/window.h>
+
 
 namespace manygames
 { 
-
-// BEGIN(DELETEME)
-//-----------------------------------------------------------
-//#error You must customize this automatically generated class.
-// To do this, you must: 
-// (1) Provide the proper include for class input_window<unsigned char> (above).
-// (2) Enter a class description below, on the line requested.
-// (3) Add your own class members to the class.
-// (4) Provide the required operations in the copy constructor and assignment
-//  operator (in the corresponding .cpp file).
-//-----------------------------------------------------------
-// END(DELETEME)
 
   /**
    * 
@@ -53,16 +43,18 @@ namespace manygames
    * 
    */
   class gtkmm_input_window : public input_window<guchar>,
-			    public Gtk::DrawingArea 
+                             public Gtk::DrawingArea 
   {
 
   private:
 
+    Gtk::Window* my_parent_window;
+    
   protected:
 
   public:
     /** Default constructor */
-    gtkmm_input_window();
+    gtkmm_input_window(Gtk::Window* win = NULL);
 
     /** Destructor */
     virtual ~gtkmm_input_window();
@@ -86,9 +78,9 @@ namespace manygames
     {
       if( is_drawable() )
       {
-	size_change_check();
-	update();
-	draw();
+        size_change_check();
+        update();
+        draw();
       }
       return true;
     }
@@ -106,6 +98,13 @@ namespace manygames
 
     virtual void override_keyname(unsigned key, const std::string& new_name);
     virtual void override_keyname(unsigned key, unsigned modifiers, const std::string& new_name);
+
+    /** Enter the main message loop, returning only when the program is
+        terminated, or if quit_window() below is called. . */
+    virtual void run_window();
+
+    /** Terminate any running message loop from above, allowing it to return */
+    virtual void quit_window();    
     
   }; // class gtkmm_input_window
 

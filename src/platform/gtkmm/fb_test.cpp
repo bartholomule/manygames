@@ -29,7 +29,7 @@ using std::endl;
 #include <manygames/xpm_image_loader.hpp>
 #include <sys/time.h>
 
-static manygames::masked_image<guchar,bool> barf;
+static manygames::masked_image<unsigned char,bool> barf;
 int x_shift, y_shift;
 
 const char *const wheelbarrow_xpm[] =
@@ -480,18 +480,16 @@ static const char* const barf_xpm[] = {
 
 
 #include <gtkmm/main.h>
-#include <gtkmm/window.h>
 
 using namespace manygames;
 
 // icky, nasty, global variable...
-gtkmm_input_window* fb;
-
+input_window<unsigned char>* fb;
 
 void update()
 {
 
-  framebuffer<guchar>* fb2 = fb;
+  framebuffer<unsigned char>* fb2 = fb;
   
   int width,height;
 
@@ -555,7 +553,7 @@ void update()
       }
       /*
         // Add a red 'fogging'.
-        setpixel_back(x,y,manygames::rgbacolor<guchar,double>(128,0,0,0.5));
+        setpixel_back(x,y,manygames::rgbacolor<unsigned char,double>(128,0,0,0.5));
       */
 
     }
@@ -568,7 +566,7 @@ void update()
     //    printf("Trying masked at %d,%d\n", x_mid, y_mid);
     fb2->bg_draw_image(barf, x_mid, y_mid);
     //    printf("Trying non-trasparent at %d,%d\n", x_mid, y_mid + barf.get_height());
-    fb2->bg_draw_image(*static_cast<manygames::image<guchar>*>(&barf), x_mid, y_mid + barf.get_height());    
+    fb2->bg_draw_image(*static_cast<manygames::image<unsigned char>*>(&barf), x_mid, y_mid + barf.get_height());    
   }
 
   //  printf("About to flip...\n");
@@ -637,6 +635,12 @@ bool key_down(unsigned key, unsigned mods)
 bool key_up(unsigned key, unsigned press_mods, unsigned release_mods)
 {
   printf("::key_up(0x%06x,0x%06x,0x%06x) -- %d keys are now down\n", key, press_mods, release_mods, fb->num_keys_down());
+
+  if( key == 'q' )
+  {
+    fb->quit_window();
+  }
+  
   return true;
 }
 
@@ -646,8 +650,6 @@ int main(int argc, char** argv)
   x_shift = y_shift = 0;
   Gtk::Main kit(argc, argv);
   
-  Gtk::Window win;
-
   fb = new gtkmm_input_window;
 
   fb->mouse_moved.connect(SigC::slot(mouse_moved));
@@ -659,15 +661,12 @@ int main(int argc, char** argv)
 
   fb->disable_repeat();
   
-  win.add(*fb);
-  fb->show();
-  
-  //  barf = xpm_convert_image<guchar,bool>(barf_xpm);
-  //   barf = xpm_convert_image<guchar,bool>(wheelbarrow_xpm);
-  barf = xpm_convert_image<guchar,bool>(al_xpm);   
+  //  barf = xpm_convert_image<unsigned char,bool>(barf_xpm);
+  //   barf = xpm_convert_image<unsigned char,bool>(wheelbarrow_xpm);
+  barf = xpm_convert_image<unsigned char,bool>(al_xpm);   
   barf = scale_image(barf, 8);
   
-  Gtk::Main::run(win);
+  fb->run_window();
 
   delete fb;
   

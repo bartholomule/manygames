@@ -68,6 +68,15 @@ namespace manygames
     input_window& operator= (const input_window& old);
 
     virtual void update() { buffer_update(); }
+
+    /** Enter the main message loop, returning only when the program is
+        terminated, or if quit_window() below is called. . */
+    virtual void run_window() = 0;
+
+    /** Terminate any running message loop from above, allowing it to return.
+        Note that this will close the window completely, so it should only be
+        called when appropriate. */
+    virtual void quit_window() = 0;
     
     SigC::Signal0<void> buffer_update;
     

@@ -23,7 +23,7 @@
 #include <manygames/textized.hpp>
 #include "gtkmm_input_window.hpp"
 #include <cassert>
-
+#include <gtkmm/main.h>
 
 namespace manygames
 { 
@@ -31,14 +31,23 @@ namespace manygames
   //------------------------------------------------
   // Default constructor for class gtkmm_input_window
   //------------------------------------------------
-  gtkmm_input_window::gtkmm_input_window():
+  gtkmm_input_window::gtkmm_input_window(Gtk::Window* win):
     input_window<guchar>(),
-    Gtk::DrawingArea()
+    Gtk::DrawingArea(),
+    my_parent_window(win)
   {
     set_flags(Gtk::CAN_FOCUS);    
     add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
     add_events(Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
     //    add_events(Gdk::VISIBILITY_NOTIFY_MASK);
+
+    if( !my_parent_window )
+    {
+      my_parent_window = new Gtk::Window();
+    }
+
+    my_parent_window->add(*this);
+    this->show();
     
   } // gtkmm_input_window()
 
@@ -84,11 +93,11 @@ namespace manygames
       Glib::RefPtr<Gdk::Window> window = get_window();
       
       window->draw_rgb_image(get_style()->get_fg_gc(Gtk::STATE_NORMAL),
-			     0, 0,
-			     foreground->get_width(), foreground->get_height(),
-			     Gdk::RGB_DITHER_MAX,
-			     foreground->reinterpret<guchar*>(),
-			     foreground->get_width() * 3);
+                             0, 0,
+                             foreground->get_width(), foreground->get_height(),
+                             Gdk::RGB_DITHER_MAX,
+                             foreground->reinterpret<guchar*>(),
+                             foreground->get_width() * 3);
     }
     else
     {
@@ -267,13 +276,13 @@ namespace manygames
   bool gtkmm_input_window::on_key_press_event(GdkEventKey* event)
   {
     handle_keyboard_event(keyboard_key_translate(event->keyval),
-			  keyboard_state_translate(event->state) | keyboard_input::keyboard_key_pressed);
+                          keyboard_state_translate(event->state) | keyboard_input::keyboard_key_pressed);
   }
   
   bool gtkmm_input_window::on_key_release_event(GdkEventKey* event)
   {
     handle_keyboard_event(keyboard_key_translate(event->keyval),
-			  keyboard_state_translate(event->state) & ~keyboard_input::keyboard_key_pressed);    
+                          keyboard_state_translate(event->state) & ~keyboard_input::keyboard_key_pressed);    
   }
 
 
@@ -295,6 +304,16 @@ namespace manygames
   void gtkmm_input_window::override_keyname(unsigned key, unsigned modifiers, const std::string& new_name)
   {
     assert("finish this" == NULL);
+  }  
+  
+  void gtkmm_input_window::run_window()
+  {
+    Gtk::Main::run(*my_parent_window);
+  }
+
+  void gtkmm_input_window::quit_window()
+  {
+    my_parent_window->hide();
   }  
   
 } // namespace manygames
