@@ -108,7 +108,7 @@ namespace manygames
      * @returns a new raster that contains the data from the specified region.
      */
     raster<T> sub_raster(unsigned x1, unsigned y1,
-			 unsigned x2, unsigned y2) const throw(out_of_range); 
+                         unsigned x2, unsigned y2) const throw(out_of_range); 
 
     /**
      * Resize the current raster to the given width and height.  If preserve is
@@ -124,7 +124,7 @@ namespace manygames
      * 
      */
     void resize(unsigned width, unsigned height,
-		int cx, int cy, const T& fill);
+                int cx, int cy, const T& fill);
 
     /**
      *
@@ -287,11 +287,11 @@ namespace manygames
       raster_data = new T[linear_size];
       if( data )
       {
-	T* dest = raster_data;
-	for( unsigned i = 0; i < linear_size; ++i )
-	{
-	  *(dest++) = *(data++);
-	}
+        T* dest = raster_data;
+        for( unsigned i = 0; i < linear_size; ++i )
+        {
+          *(dest++) = *(data++);
+        }
       }
     }
     else
@@ -331,10 +331,10 @@ namespace manygames
 
       if( old.raster_data )
       {
-	for(unsigned i = 0; i < linear_size; ++i)
-	{
-	  raster_data[i] = old.raster_data[i];
-	}
+        for(unsigned i = 0; i < linear_size; ++i)
+        {
+          raster_data[i] = old.raster_data[i];
+        }
       }
     }
     else
@@ -365,18 +365,18 @@ namespace manygames
       // crept into the old copy.
       if( (linear_size > 0) && old.raster_data )
       {
-	raster_data = new T[linear_size];
+        raster_data = new T[linear_size];
 
-	for(unsigned i = 0; i < linear_size; ++i)
-	{
-	  raster_data[i] = old.raster_data[i];
-	}
+        for(unsigned i = 0; i < linear_size; ++i)
+        {
+          raster_data[i] = old.raster_data[i];
+        }
       }
       else
       {
-	raster_data = NULL;
-	width = 0;
-	height = 0;
+        raster_data = NULL;
+        width = 0;
+        height = 0;
       }
     }
     return (*this);
@@ -393,7 +393,7 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::op()(%d,%d): %s", x, y,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
     }
   }
@@ -410,7 +410,7 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::op()(%d,%d)const: %s", x, y,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
     }    
   }
@@ -426,7 +426,7 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::op[](%d): %s", y,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
     }    
   }
@@ -443,46 +443,46 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::op[](%d)const: %s", y,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
     }    
   }
 
   template <class T>
   raster<T> raster<T>::sub_raster(unsigned x1, unsigned y1,
-				  unsigned x2, unsigned y2) const
+                                  unsigned x2, unsigned y2) const
     throw(out_of_range)
   {
     if( (x2 < width) && (y2 < height) )
     {
       if( (x1 < x2) && (y1 < y2) )
       {
-	// Both of these add 1, because it is inclusive...
-	unsigned x_range = x2 - x1 + 1; 
-	unsigned y_range = y2 - y1 + 1;
+        // Both of these add 1, because it is inclusive...
+        unsigned x_range = x2 - x1 + 1; 
+        unsigned y_range = y2 - y1 + 1;
 
-	raster<T> ret_ras(x_range, y_range);
+        raster<T> ret_ras(x_range, y_range);
 
-	for(unsigned y = 0; y < y_range; ++y)
-	{
-	  for(unsigned x = 0; x < x_range; ++x)
-	  {
-	    unsigned source = (x + x1) + ((y + y1) * width);
-	    ret_ras.raster_data[x + y * x_range] = raster_data[source];
-	  }
-	}
-	return ret_ras;
+        for(unsigned y = 0; y < y_range; ++y)
+        {
+          for(unsigned x = 0; x < x_range; ++x)
+          {
+            unsigned source = (x + x1) + ((y + y1) * width);
+            ret_ras.raster_data[x + y * x_range] = raster_data[source];
+          }
+        }
+        return ret_ras;
       }
       else
       {
-	throw out_of_range(std::string("raster<T>::sub_raster(...): ") +
-			   intl("dimensions are incorrectly ordered"));
+        throw out_of_range(std::string("raster<T>::sub_raster(...): ") +
+                           intl("dimensions are incorrectly ordered"));
       }
     }
     else
     {
       throw out_of_range(std::string("raster<T>::sub_raster(...): ") +
-			 intl("index is out of range"));			 
+                         intl("index is out of range"));                         
     }
   }
 
@@ -521,10 +521,10 @@ namespace manygames
       unsigned max_y = std::min(old_height, height);
       for(unsigned y = 0; y < max_y; ++y)
       {
-	for(unsigned x = 0; x < max_x; ++x)
-	{
-	  raster_data[(y * width) + x] = old_data[(y * old_width) + x];
-	}
+        for(unsigned x = 0; x < max_x; ++x)
+        {
+          raster_data[(y * width) + x] = old_data[(y * old_width) + x];
+        }
       }
     }
     
@@ -534,7 +534,7 @@ namespace manygames
 
   template <class T>
   void raster<T>::resize(unsigned width, unsigned height,
-			 int cx, int cy, const T& fill)
+                         int cx, int cy, const T& fill)
   {
     unsigned old_width = this->width;
     unsigned old_height = this->height;
@@ -544,7 +544,7 @@ namespace manygames
 
     // If there is no change, return, doing nothing.
     if( (old_width == width) && (old_height == height) &&
-	(old_mid_x == cx) && (old_mid_y == cy) )
+        (old_mid_x == cx) && (old_mid_y == cy) )
     {
       return;
     }
@@ -583,14 +583,14 @@ namespace manygames
       // Copy any useful data.
       for(unsigned y = min_y; y < max_y; ++y)
       {
-	unsigned old_y = y + y_shift;
-	unsigned old_lin_y = old_y * old_width;
-	unsigned lin_y = y * width;
-	for(unsigned x = min_x; x < max_x; ++x)
-	{
-	  unsigned old_x = x + x_shift;
-	  raster_data[lin_y + x] = old_data[old_lin_y + old_x];
-	}
+        unsigned old_y = y + y_shift;
+        unsigned old_lin_y = old_y * old_width;
+        unsigned lin_y = y * width;
+        for(unsigned x = min_x; x < max_x; ++x)
+        {
+          unsigned old_x = x + x_shift;
+          raster_data[lin_y + x] = old_data[old_lin_y + old_x];
+        }
       }
 
       // Now that the data is copied, fill the rest of the raster in the
@@ -618,40 +618,40 @@ namespace manygames
       // (1) Fill above the copied rectangle, if it needs it...
       for(unsigned y = 0; y < min_y; ++y)
       {
-	for(unsigned x = 0; x < width; ++x)
-	{
-	  raster_data[(y * width) + x] = fill;
-	}
+        for(unsigned x = 0; x < width; ++x)
+        {
+          raster_data[(y * width) + x] = fill;
+        }
       }
       // (2) Fill below the copied rectangle, if it needs it...
       for(unsigned y = max_y; y < height; ++y)
       {
-	for(unsigned x = 0; x < width; ++x)
-	{
-	  raster_data[(y * width) + x] = fill;
-	}
+        for(unsigned x = 0; x < width; ++x)
+        {
+          raster_data[(y * width) + x] = fill;
+        }
       }
       // (3) Fill the gap on the left (if any)
       if( min_x > 0 )
       {
-	for(unsigned y = min_y; y < max_y; ++y)
-	{
-	  for(unsigned x = 0; x < min_x; ++x)
-	  {
-	    raster_data[(y * width) + x] = fill;
-	  }
-	}
+        for(unsigned y = min_y; y < max_y; ++y)
+        {
+          for(unsigned x = 0; x < min_x; ++x)
+          {
+            raster_data[(y * width) + x] = fill;
+          }
+        }
       }
       // (4) Fill the gap on the right (if any)
       if( max_x < width )
       {
-	for(unsigned y = min_y; y < max_y; ++y)
-	{	
-	  for(unsigned x = max_x; x < width; ++x)
-	  {
-	    raster_data[(y * width) + x] = fill;
-	  }
-	}
+        for(unsigned y = min_y; y < max_y; ++y)
+        {       
+          for(unsigned x = max_x; x < width; ++x)
+          {
+            raster_data[(y * width) + x] = fill;
+          }
+        }
       }
     }
     else
@@ -660,7 +660,7 @@ namespace manygames
       unsigned max_linear = this->width * this->height;
       for(unsigned i = 0; i < max_linear; ++i)
       {
-	raster_data[i] = fill;
+        raster_data[i] = fill;
       }
     }
     
@@ -702,9 +702,9 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::scanline::op[](%d): %s", x,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
-    }	
+    }   
   } // scanline::operator[](x)
 
   template <class T>
@@ -718,9 +718,9 @@ namespace manygames
     {
       char buffer[1024];
       snprintf(buffer,1024,"raster<T>::scanline::op[](%d)const: %s", x,
-	       intl("index is out of range"));
+               intl("index is out of range"));
       throw out_of_range(std::string(buffer));
-    }	
+    }   
   } // scanline::operator[](x) const  
 
   template <class T>
@@ -731,18 +731,18 @@ namespace manygames
     {
       if( line.my_raster.get_width() == my_raster.get_width() )
       {
-	for(unsigned i = 0; i < my_raster.get_width(); ++i)
-	{
-	  my_raster(i, my_row) = line.my_raster(i, line.my_row);
-	}
+        for(unsigned i = 0; i < my_raster.get_width(); ++i)
+        {
+          my_raster(i, my_row) = line.my_raster(i, line.my_row);
+        }
       }
       else
       {
-	throw size_mismatch(std::string("raster::scanline::op=(scanline): ") +
-			    intl("raster widths are different"));
+        throw size_mismatch(std::string("raster::scanline::op=(scanline): ") +
+                            intl("raster widths are different"));
       }
     }
-    return *this;	  
+    return *this;         
   } // scanline::operator=(scanline)
   
 } // namespace manygames
