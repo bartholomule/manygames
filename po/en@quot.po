@@ -1,6 +1,6 @@
-# English translations for PACKAGE package.
+# English translations for GNU manygames package.
 # Copyright (C) 2003 Kevin Harris
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the GNU manygames package.
 # Automatically generated, 2003.
 #
 # All this catalog "translates" are quotation characters.
@@ -27,9 +27,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-03-23 22:34-0700\n"
-"PO-Revision-Date: 2003-03-23 22:34-0700\n"
+"Project-Id-Version: GNU manygames 0.00.00\n"
+"POT-Creation-Date: 2003-11-11 03:18-0700\n"
+"PO-Revision-Date: 2003-11-11 03:18-0700\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -37,17 +37,865 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: include/manygames/raster.hpp:366 include/manygames/raster.hpp:383
-#: include/manygames/raster.hpp:399 include/manygames/raster.hpp:416
-#: include/manygames/raster.hpp:455 include/manygames/raster.hpp:675
-#: include/manygames/raster.hpp:691
+#: include/manygames/raster.hpp:396 include/manygames/raster.hpp:413
+#: include/manygames/raster.hpp:429 include/manygames/raster.hpp:446
+#: include/manygames/raster.hpp:485 include/manygames/raster.hpp:705
+#: include/manygames/raster.hpp:721
 msgid "index is out of range"
 msgstr "index is out of range"
 
-#: include/manygames/raster.hpp:449
+#: include/manygames/raster.hpp:479
 msgid "dimensions are incorrectly ordered"
 msgstr "dimensions are incorrectly ordered"
 
-#: include/manygames/raster.hpp:712
+#: include/manygames/raster.hpp:742
 msgid "raster widths are different"
 msgstr "raster widths are different"
+
+#: src/input/keyboard_input.cpp:174
+msgid "Backspace"
+msgstr "Backspace"
+
+#: src/input/keyboard_input.cpp:175
+msgid "Tab"
+msgstr "Tab"
+
+#: src/input/keyboard_input.cpp:176
+msgid "Return"
+msgstr "Return"
+
+#: src/input/keyboard_input.cpp:178
+msgid "Insert"
+msgstr "Insert"
+
+#: src/input/keyboard_input.cpp:179
+msgid "Delete"
+msgstr "Delete"
+
+#: src/input/keyboard_input.cpp:180
+msgid "Home"
+msgstr "Home"
+
+#: src/input/keyboard_input.cpp:181
+msgid "End"
+msgstr "End"
+
+#: src/input/keyboard_input.cpp:182
+msgid "PageUp"
+msgstr "PageUp"
+
+#: src/input/keyboard_input.cpp:183
+msgid "PageDown"
+msgstr "PageDown"
+
+#: src/input/keyboard_input.cpp:185
+msgid "Escape"
+msgstr "Escape"
+
+#: src/input/keyboard_input.cpp:186
+msgid "Print"
+msgstr "Print"
+
+#: src/input/keyboard_input.cpp:187
+msgid "SysReq"
+msgstr "SysReq"
+
+#: src/input/keyboard_input.cpp:188
+msgid "ScrollLock"
+msgstr "ScrollLock"
+
+#: src/input/keyboard_input.cpp:189
+msgid "Pause"
+msgstr "Pause"
+
+#: src/input/keyboard_input.cpp:190
+msgid "Break"
+msgstr "Break"
+
+#: src/input/keyboard_input.cpp:191
+msgid "NumLock"
+msgstr "NumLock"
+
+#: src/input/keyboard_input.cpp:193
+msgid "Left"
+msgstr "Left"
+
+#: src/input/keyboard_input.cpp:194
+msgid "Right"
+msgstr "Right"
+
+#: src/input/keyboard_input.cpp:195
+msgid "Up"
+msgstr "Up"
+
+#: src/input/keyboard_input.cpp:196
+msgid "Down"
+msgstr "Down"
+
+#: src/input/keyboard_input.cpp:200
+msgid "F1"
+msgstr "F1"
+
+#: src/input/keyboard_input.cpp:201
+msgid "F2"
+msgstr "F2"
+
+#: src/input/keyboard_input.cpp:202
+msgid "F3"
+msgstr "F3"
+
+#: src/input/keyboard_input.cpp:203
+msgid "F4"
+msgstr "F4"
+
+#: src/input/keyboard_input.cpp:204
+msgid "F5"
+msgstr "F5"
+
+#: src/input/keyboard_input.cpp:205
+msgid "F6"
+msgstr "F6"
+
+#: src/input/keyboard_input.cpp:206
+msgid "F7"
+msgstr "F7"
+
+#: src/input/keyboard_input.cpp:207
+msgid "F8"
+msgstr "F8"
+
+#: src/input/keyboard_input.cpp:208
+msgid "F9"
+msgstr "F9"
+
+#: src/input/keyboard_input.cpp:209
+msgid "F10"
+msgstr "F10"
+
+#: src/input/keyboard_input.cpp:210
+msgid "F11"
+msgstr "F11"
+
+#: src/input/keyboard_input.cpp:211
+msgid "F12"
+msgstr "F12"
+
+#: src/input/keyboard_input.cpp:212
+msgid "F13"
+msgstr "F13"
+
+#: src/input/keyboard_input.cpp:213
+msgid "F14"
+msgstr "F14"
+
+#: src/input/keyboard_input.cpp:214
+msgid "F15"
+msgstr "F15"
+
+#: src/input/keyboard_input.cpp:215
+msgid "F16"
+msgstr "F16"
+
+#: src/input/keyboard_input.cpp:216
+msgid "F17"
+msgstr "F17"
+
+#: src/input/keyboard_input.cpp:217
+msgid "F18"
+msgstr "F18"
+
+#: src/input/keyboard_input.cpp:218
+msgid "F19"
+msgstr "F19"
+
+#: src/input/keyboard_input.cpp:219
+msgid "F20"
+msgstr "F20"
+
+#: src/input/keyboard_input.cpp:220
+msgid "F21"
+msgstr "F21"
+
+#: src/input/keyboard_input.cpp:221
+msgid "F22"
+msgstr "F22"
+
+#: src/input/keyboard_input.cpp:222
+msgid "F23"
+msgstr "F23"
+
+#: src/input/keyboard_input.cpp:223
+msgid "F24"
+msgstr "F24"
+
+#: src/input/keyboard_input.cpp:224
+msgid "F25"
+msgstr "F25"
+
+#: src/input/keyboard_input.cpp:225
+msgid "F26"
+msgstr "F26"
+
+#: src/input/keyboard_input.cpp:226
+msgid "F27"
+msgstr "F27"
+
+#: src/input/keyboard_input.cpp:227
+msgid "F28"
+msgstr "F28"
+
+#: src/input/keyboard_input.cpp:228
+msgid "F29"
+msgstr "F29"
+
+#: src/input/keyboard_input.cpp:229
+msgid "F30"
+msgstr "F30"
+
+#: src/input/keyboard_input.cpp:230
+msgid "F31"
+msgstr "F31"
+
+#: src/input/keyboard_input.cpp:231
+msgid "F32"
+msgstr "F32"
+
+#: src/input/keyboard_input.cpp:232
+msgid "F33"
+msgstr "F33"
+
+#: src/input/keyboard_input.cpp:233
+msgid "F34"
+msgstr "F34"
+
+#: src/input/keyboard_input.cpp:234
+msgid "F35"
+msgstr "F35"
+
+#: src/input/keyboard_input.cpp:239
+msgid "Shift-L"
+msgstr "Shift-L"
+
+#: src/input/keyboard_input.cpp:240
+msgid "Shift-R"
+msgstr "Shift-R"
+
+#: src/input/keyboard_input.cpp:241
+msgid "Control-L"
+msgstr "Control-L"
+
+#: src/input/keyboard_input.cpp:242
+msgid "Control-R"
+msgstr "Control-R"
+
+#: src/input/keyboard_input.cpp:243
+msgid "CapsLock"
+msgstr "CapsLock"
+
+#: src/input/keyboard_input.cpp:244
+msgid "ShiftLock"
+msgstr "ShiftLock"
+
+#: src/input/keyboard_input.cpp:246
+msgid "Meta-L"
+msgstr "Meta-L"
+
+#: src/input/keyboard_input.cpp:247
+msgid "Meta-R"
+msgstr "Meta-R"
+
+#: src/input/keyboard_input.cpp:248
+msgid "Alt-L"
+msgstr "Alt-L"
+
+#: src/input/keyboard_input.cpp:249
+msgid "Alt-R"
+msgstr "Alt-R"
+
+#: src/input/keyboard_input.cpp:250
+msgid "Super-L"
+msgstr "Super-L"
+
+#: src/input/keyboard_input.cpp:251
+msgid "Super-R"
+msgstr "Super-R"
+
+#: src/input/keyboard_input.cpp:252
+msgid "Hyper-L"
+msgstr "Hyper-L"
+
+#: src/input/keyboard_input.cpp:253
+msgid "Hyper-R"
+msgstr "Hyper-R"
+
+#: src/input/keyboard_input.cpp:257
+msgid "kp_0"
+msgstr "kp_0"
+
+#: src/input/keyboard_input.cpp:258
+msgid "kp_1"
+msgstr "kp_1"
+
+#: src/input/keyboard_input.cpp:259
+msgid "kp_2"
+msgstr "kp_2"
+
+#: src/input/keyboard_input.cpp:260
+msgid "kp_3"
+msgstr "kp_3"
+
+#: src/input/keyboard_input.cpp:261
+msgid "kp_4"
+msgstr "kp_4"
+
+#: src/input/keyboard_input.cpp:262
+msgid "kp_5"
+msgstr "kp_5"
+
+#: src/input/keyboard_input.cpp:263
+msgid "kp_6"
+msgstr "kp_6"
+
+#: src/input/keyboard_input.cpp:264
+msgid "kp_7"
+msgstr "kp_7"
+
+#: src/input/keyboard_input.cpp:265
+msgid "kp_8"
+msgstr "kp_8"
+
+#: src/input/keyboard_input.cpp:266
+msgid "kp_9"
+msgstr "kp_9"
+
+#: src/input/keyboard_input.cpp:268
+msgid "kp_Subtract"
+msgstr "kp_Subtract"
+
+#: src/input/keyboard_input.cpp:269
+msgid "kp_Multiply"
+msgstr "kp_Multiply"
+
+#: src/input/keyboard_input.cpp:270
+msgid "kp_Add"
+msgstr "kp_Add"
+
+#: src/input/keyboard_input.cpp:271
+msgid "kp_Divide"
+msgstr "kp_Divide"
+
+#: src/input/keyboard_input.cpp:272
+msgid "kp_Decimal"
+msgstr "kp_Decimal"
+
+#: src/input/keyboard_input.cpp:273
+msgid "kp_Equal"
+msgstr "kp_Equal"
+
+#: src/input/keyboard_input.cpp:275
+msgid "kp_Left"
+msgstr "kp_Left"
+
+#: src/input/keyboard_input.cpp:276
+msgid "kp_Right"
+msgstr "kp_Right"
+
+#: src/input/keyboard_input.cpp:277
+msgid "kp_Up"
+msgstr "kp_Up"
+
+#: src/input/keyboard_input.cpp:278
+msgid "kp_Down"
+msgstr "kp_Down"
+
+#: src/input/keyboard_input.cpp:280
+msgid "kp_Home"
+msgstr "kp_Home"
+
+#: src/input/keyboard_input.cpp:281
+msgid "kp_End"
+msgstr "kp_End"
+
+#: src/input/keyboard_input.cpp:282
+msgid "kp_PageUp"
+msgstr "kp_PageUp"
+
+#: src/input/keyboard_input.cpp:283
+msgid "kp_PageDown"
+msgstr "kp_PageDown"
+
+#: src/input/keyboard_input.cpp:284
+msgid "kp_Insert"
+msgstr "kp_Insert"
+
+#: src/input/keyboard_input.cpp:285
+msgid "kp_Delete"
+msgstr "kp_Delete"
+
+#: src/input/keyboard_input.cpp:286
+msgid "kp_Enter"
+msgstr "kp_Enter"
+
+#: src/input/keyboard_input.cpp:289
+msgid "kp_space"
+msgstr "kp_space"
+
+#: src/input/keyboard_input.cpp:290
+msgid "kp_tab"
+msgstr "kp_tab"
+
+#: src/input/keyboard_input.cpp:291
+msgid "kp_F1"
+msgstr "kp_F1"
+
+#: src/input/keyboard_input.cpp:292
+msgid "kp_F2"
+msgstr "kp_F2"
+
+#: src/input/keyboard_input.cpp:293
+msgid "kp_F3"
+msgstr "kp_F3"
+
+#: src/input/keyboard_input.cpp:294
+msgid "kp_F4"
+msgstr "kp_F4"
+
+#: src/input/keyboard_input.cpp:295
+msgid "kp_begin"
+msgstr "kp_begin"
+
+#: src/input/keyboard_input.cpp:296
+msgid "kp_separator"
+msgstr "kp_separator"
+
+#: src/input/keyboard_input.cpp:299
+msgid "nobreakspace"
+msgstr "nobreakspace"
+
+#: src/input/keyboard_input.cpp:300
+msgid "exclamdown"
+msgstr "exclamdown"
+
+#: src/input/keyboard_input.cpp:301
+msgid "cent"
+msgstr "cent"
+
+#: src/input/keyboard_input.cpp:302
+msgid "sterling"
+msgstr "sterling"
+
+#: src/input/keyboard_input.cpp:303
+msgid "currency"
+msgstr "currency"
+
+#: src/input/keyboard_input.cpp:304
+msgid "yen"
+msgstr "yen"
+
+#: src/input/keyboard_input.cpp:305
+msgid "brokenbar"
+msgstr "brokenbar"
+
+#: src/input/keyboard_input.cpp:306
+msgid "section"
+msgstr "section"
+
+#: src/input/keyboard_input.cpp:307
+msgid "diaeresis"
+msgstr "diaeresis"
+
+#: src/input/keyboard_input.cpp:308
+msgid "copyright"
+msgstr "copyright"
+
+#: src/input/keyboard_input.cpp:309
+msgid "registered"
+msgstr "registered"
+
+#: src/input/keyboard_input.cpp:310
+msgid "ordfeminine"
+msgstr "ordfeminine"
+
+#: src/input/keyboard_input.cpp:311
+msgid "guillemoleft"
+msgstr "guillemoleft"
+
+#: src/input/keyboard_input.cpp:312
+msgid "notsign"
+msgstr "notsign"
+
+#: src/input/keyboard_input.cpp:313
+msgid "hyphen"
+msgstr "hyphen"
+
+#: src/input/keyboard_input.cpp:314
+msgid "macron"
+msgstr "macron"
+
+#: src/input/keyboard_input.cpp:315
+msgid "degree"
+msgstr "degree"
+
+#: src/input/keyboard_input.cpp:316
+msgid "plusminus"
+msgstr "plusminus"
+
+#: src/input/keyboard_input.cpp:317
+msgid "onesuperior"
+msgstr "onesuperior"
+
+#: src/input/keyboard_input.cpp:318
+msgid "twosuperior"
+msgstr "twosuperior"
+
+#: src/input/keyboard_input.cpp:319
+msgid "threesuperior"
+msgstr "threesuperior"
+
+#: src/input/keyboard_input.cpp:320
+msgid "acute"
+msgstr "acute"
+
+#: src/input/keyboard_input.cpp:321
+msgid "mu"
+msgstr "mu"
+
+#: src/input/keyboard_input.cpp:322
+msgid "paragraph"
+msgstr "paragraph"
+
+#: src/input/keyboard_input.cpp:323
+msgid "periodcentered"
+msgstr "periodcentered"
+
+#: src/input/keyboard_input.cpp:324
+msgid "cedilla"
+msgstr "cedilla"
+
+#: src/input/keyboard_input.cpp:325
+msgid "masculine"
+msgstr "masculine"
+
+#: src/input/keyboard_input.cpp:326
+msgid "guillemotright"
+msgstr "guillemotright"
+
+#: src/input/keyboard_input.cpp:327
+msgid "onequarter"
+msgstr "onequarter"
+
+#: src/input/keyboard_input.cpp:328
+msgid "onehalf"
+msgstr "onehalf"
+
+#: src/input/keyboard_input.cpp:329
+msgid "threequarters"
+msgstr "threequarters"
+
+#: src/input/keyboard_input.cpp:330
+msgid "questiondown"
+msgstr "questiondown"
+
+#: src/input/keyboard_input.cpp:331
+msgid "Agrave"
+msgstr "Agrave"
+
+#: src/input/keyboard_input.cpp:332
+msgid "Aacute"
+msgstr "Aacute"
+
+#: src/input/keyboard_input.cpp:333
+msgid "Acircumflex"
+msgstr "Acircumflex"
+
+#: src/input/keyboard_input.cpp:334
+msgid "Atilde"
+msgstr "Atilde"
+
+#: src/input/keyboard_input.cpp:335
+msgid "Adiaeresis"
+msgstr "Adiaeresis"
+
+#: src/input/keyboard_input.cpp:336
+msgid "Aring"
+msgstr "Aring"
+
+#: src/input/keyboard_input.cpp:337
+msgid "AE"
+msgstr "AE"
+
+#: src/input/keyboard_input.cpp:338
+msgid "Ccedilla"
+msgstr "Ccedilla"
+
+#: src/input/keyboard_input.cpp:339
+msgid "Egrave"
+msgstr "Egrave"
+
+#: src/input/keyboard_input.cpp:340
+msgid "Eacute"
+msgstr "Eacute"
+
+#: src/input/keyboard_input.cpp:341
+msgid "Ecircumflex"
+msgstr "Ecircumflex"
+
+#: src/input/keyboard_input.cpp:342
+msgid "Ediaeresis"
+msgstr "Ediaeresis"
+
+#: src/input/keyboard_input.cpp:343
+msgid "Igrave"
+msgstr "Igrave"
+
+#: src/input/keyboard_input.cpp:344
+msgid "Iacute"
+msgstr "Iacute"
+
+#: src/input/keyboard_input.cpp:345
+msgid "Icircumflex"
+msgstr "Icircumflex"
+
+#: src/input/keyboard_input.cpp:346
+msgid "Idiaeresis"
+msgstr "Idiaeresis"
+
+#: src/input/keyboard_input.cpp:347
+msgid "ETH"
+msgstr "ETH"
+
+#: src/input/keyboard_input.cpp:348
+msgid "Ntilde"
+msgstr "Ntilde"
+
+#: src/input/keyboard_input.cpp:349
+msgid "Ograve"
+msgstr "Ograve"
+
+#: src/input/keyboard_input.cpp:350
+msgid "Oacute"
+msgstr "Oacute"
+
+#: src/input/keyboard_input.cpp:351
+msgid "Ocircumflex"
+msgstr "Ocircumflex"
+
+#: src/input/keyboard_input.cpp:352
+msgid "Otilde"
+msgstr "Otilde"
+
+#: src/input/keyboard_input.cpp:353
+msgid "Odiaeresis"
+msgstr "Odiaeresis"
+
+#: src/input/keyboard_input.cpp:354
+msgid "multiply"
+msgstr "multiply"
+
+#: src/input/keyboard_input.cpp:355
+msgid "Ooblique"
+msgstr "Ooblique"
+
+#: src/input/keyboard_input.cpp:356
+msgid "Ugrave"
+msgstr "Ugrave"
+
+#: src/input/keyboard_input.cpp:357
+msgid "Uacute"
+msgstr "Uacute"
+
+#: src/input/keyboard_input.cpp:358
+msgid "Ucircumflex"
+msgstr "Ucircumflex"
+
+#: src/input/keyboard_input.cpp:359
+msgid "Udiaeresis"
+msgstr "Udiaeresis"
+
+#: src/input/keyboard_input.cpp:360
+msgid "Yacute"
+msgstr "Yacute"
+
+#: src/input/keyboard_input.cpp:361
+msgid "THORN"
+msgstr "THORN"
+
+#: src/input/keyboard_input.cpp:362
+msgid "ssharp"
+msgstr "ssharp"
+
+#: src/input/keyboard_input.cpp:363
+msgid "agrave"
+msgstr "agrave"
+
+#: src/input/keyboard_input.cpp:364
+msgid "aacute"
+msgstr "aacute"
+
+#: src/input/keyboard_input.cpp:365
+msgid "acircumflex"
+msgstr "acircumflex"
+
+#: src/input/keyboard_input.cpp:366
+msgid "atilde"
+msgstr "atilde"
+
+#: src/input/keyboard_input.cpp:367
+msgid "adiaeresis"
+msgstr "adiaeresis"
+
+#: src/input/keyboard_input.cpp:368
+msgid "aring"
+msgstr "aring"
+
+#: src/input/keyboard_input.cpp:369
+msgid "ae"
+msgstr "ae"
+
+#: src/input/keyboard_input.cpp:370
+msgid "ccedilla"
+msgstr "ccedilla"
+
+#: src/input/keyboard_input.cpp:371
+msgid "egrave"
+msgstr "egrave"
+
+#: src/input/keyboard_input.cpp:372
+msgid "eacute"
+msgstr "eacute"
+
+#: src/input/keyboard_input.cpp:373
+msgid "ecircumflex"
+msgstr "ecircumflex"
+
+#: src/input/keyboard_input.cpp:374
+msgid "ediaeresis"
+msgstr "ediaeresis"
+
+#: src/input/keyboard_input.cpp:375
+msgid "igrave"
+msgstr "igrave"
+
+#: src/input/keyboard_input.cpp:376
+msgid "iacute"
+msgstr "iacute"
+
+#: src/input/keyboard_input.cpp:377
+msgid "icircumflex"
+msgstr "icircumflex"
+
+#: src/input/keyboard_input.cpp:378
+msgid "idiaeresis"
+msgstr "idiaeresis"
+
+#: src/input/keyboard_input.cpp:379
+msgid "eth"
+msgstr "eth"
+
+#: src/input/keyboard_input.cpp:380
+msgid "ntilde"
+msgstr "ntilde"
+
+#: src/input/keyboard_input.cpp:381
+msgid "ograve"
+msgstr "ograve"
+
+#: src/input/keyboard_input.cpp:382
+msgid "oacute"
+msgstr "oacute"
+
+#: src/input/keyboard_input.cpp:383
+msgid "ocircumflex"
+msgstr "ocircumflex"
+
+#: src/input/keyboard_input.cpp:384
+msgid "otilde"
+msgstr "otilde"
+
+#: src/input/keyboard_input.cpp:385
+msgid "odiaeresis"
+msgstr "odiaeresis"
+
+#: src/input/keyboard_input.cpp:386
+msgid "division"
+msgstr "division"
+
+#: src/input/keyboard_input.cpp:387
+msgid "oslash"
+msgstr "oslash"
+
+#: src/input/keyboard_input.cpp:388
+msgid "ugrave"
+msgstr "ugrave"
+
+#: src/input/keyboard_input.cpp:389
+msgid "uacute"
+msgstr "uacute"
+
+#: src/input/keyboard_input.cpp:390
+msgid "ucircumflex"
+msgstr "ucircumflex"
+
+#: src/input/keyboard_input.cpp:391
+msgid "udiaeresis"
+msgstr "udiaeresis"
+
+#: src/input/keyboard_input.cpp:392
+msgid "yacute"
+msgstr "yacute"
+
+#: src/input/keyboard_input.cpp:393
+msgid "thorn"
+msgstr "thorn"
+
+#: src/input/keyboard_input.cpp:394
+msgid "ydiaeresis"
+msgstr "ydiaeresis"
+
+#: src/input/keyboard_input.cpp:397
+msgid "Linefeed"
+msgstr "Linefeed"
+
+#: src/input/keyboard_input.cpp:398
+msgid "Clear"
+msgstr "Clear"
+
+#: src/input/keyboard_input.cpp:399
+msgid "Begin"
+msgstr "Begin"
+
+#: src/input/keyboard_input.cpp:400
+msgid "Select"
+msgstr "Select"
+
+#: src/input/keyboard_input.cpp:401
+msgid "Execute"
+msgstr "Execute"
+
+#: src/input/keyboard_input.cpp:402
+msgid "Undo"
+msgstr "Undo"
+
+#: src/input/keyboard_input.cpp:403
+msgid "Redo"
+msgstr "Redo"
+
+#: src/input/keyboard_input.cpp:404
+msgid "Menu"
+msgstr "Menu"
+
+#: src/input/keyboard_input.cpp:405
+msgid "Find"
+msgstr "Find"
+
+#: src/input/keyboard_input.cpp:406
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/input/keyboard_input.cpp:407
+msgid "Help"
+msgstr "Help"
+
+#: src/input/keyboard_input.cpp:408
+msgid "ModeSwitch"
+msgstr "ModeSwitch"

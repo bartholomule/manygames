@@ -3,5 +3,6 @@
 
 # Library header files (with inlined/templated stuff)
 include/manygames/raster.hpp
+src/input/keyboard_input.cpp
      
 # Other package source files

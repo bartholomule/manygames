@@ -13369,7 +13369,7 @@ echo "${ECHO_T}$EXPER_VAL" >&6
 
 
 
-                                                                                                                                                                ac_config_files="$ac_config_files Makefile doc/Makefile intl/Makefile po/Makefile.in po/Makefile m4/Makefile src/Makefile src/utils/Makefile src/generic/Makefile src/graphics/Makefile src/input/Makefile src/platform/Makefile src/platform/gtkmm/Makefile include/Makefile include/manygames/Makefile test/Makefile"
+                                                                                                                                                                ac_config_files="$ac_config_files Makefile intl/Makefile doc/Makefile po/Makefile.in po/Makefile m4/Makefile src/Makefile src/utils/Makefile src/generic/Makefile src/graphics/Makefile src/input/Makefile src/platform/Makefile src/platform/gtkmm/Makefile include/Makefile include/manygames/Makefile test/Makefile"
           ac_config_commands="$ac_config_commands default"
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -13934,8 +13934,8 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-  "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "intl/Makefile" ) CONFIG_FILES="$CONFIG_FILES intl/Makefile" ;;
+  "doc/Makefile" ) CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
   "po/Makefile.in" ) CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
   "po/Makefile" ) CONFIG_FILES="$CONFIG_FILES po/Makefile" ;;
   "m4/Makefile" ) CONFIG_FILES="$CONFIG_FILES m4/Makefile" ;;

@@ -337,9 +337,9 @@ AC_MSG_RESULT($EXPER_VAL)
 AC_SUBST(ARCH_MAKE_SHARED_OPTS)
 AC_SUBST(ARCH_PROG_SETLIBPATH)
   
-AC_OUTPUT([ Makefile         \
+AC_OUTPUT([ Makefile          intl/Makefile \
             doc/Makefile     \
-            intl/Makefile    \
+               \
             po/Makefile.in   \
             po/Makefile      \
             m4/Makefile      \

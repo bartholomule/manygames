@@ -27,7 +27,7 @@ gettextsrcdir = $(datadir)/gettext/po
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 MKINSTALLDIRS = @MKINSTALLDIRS@
-mkinstalldirs = $(SHELL) `case "$(MKINSTALLDIRS)" in /*) echo "$(MKINSTALLDIRS)" ;; *) echo "$(top_srcdir)/$(MKINSTALLDIRS)" ;; esac`
+mkinstalldirs = $(SHELL) `case "$(MKINSTALLDIRS)" in /*) echo "$(MKINSTALLDIRS)" ;; *) echo "$(top_builddir)/$(MKINSTALLDIRS)" ;; esac`
 
 GMSGFMT = @GMSGFMT@
 MSGFMT = @MSGFMT@
@@ -252,7 +252,7 @@ maintainer-clean: distclean
 	@echo "it deletes files that may require special tools to rebuild."
 	rm -f $(GMOFILES)
 
-distdir = $(top_srcdir)/$(PACKAGE)-$(VERSION)/$(subdir)
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 dist distdir:
 	$(MAKE) update-po
 	@$(MAKE) dist2
@@ -305,8 +305,8 @@ $(DUMMYPOFILES):
 update-gmo: Makefile $(GMOFILES)
 	@:
 
-Makefile: Makefile.in.in $(top_srcdir)/config.status POTFILES.in
-	cd $(top_srcdir) \
+Makefile: Makefile.in.in $(top_builddir)/config.status POTFILES.in
+	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@.in CONFIG_HEADERS= \
 	       $(SHELL) ./config.status
 
@@ -315,4 +315,3 @@ force:
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
-
