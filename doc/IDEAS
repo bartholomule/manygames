@@ -1,0 +1,19 @@
+Some investigating into the following will be required:
+
+*command line parsing: Check out option--, it may or may not work.
+     http://cholm.home.cern.ch/cholm/
+
+
+
+
+*other: yacc/lex-- http://cholm.home.cern.ch/cholm/
+
+
+Implement something to perform lookup translations, such as gamma, etc.
+For example... Something like:
+table barf = Tables.get_gamma_table(1.3);
+unsigned char foo = barf[10];
+Woubld be equivalent, but much faster, than the standard calculation:
+unsigned char foo = (unsigned char)(((unsigned char)(-1)) *
+				    pow(10 / double((unsigned char)(-1)),
+					1.3));

@@ -1,0 +1,130 @@
+<html>
+  <head><title>Many Games: Initial Project Information</title></head>
+<body>
+<p>
+  <b>Initial project information submitted for project approval</b>
+</p>
+<pre>
+What it is:
+-----------
+"Many Games" is to be a set of libraries which will create a framework
+used to create and play almost any type of two dimensional game.  The
+library itself will be written almost entirely in _C++_, with portions
+in other programming languages (only as required for the interface).
+
+The end goal would be to have a program (distributed with the package)
+which can be executed natively on any machine for which it can be
+compiled, and be able to load a plug-in or extension script for any
+type of user defined game.
+
+The games will be written in one of three languages (C++, Scheme, or
+Java [future option]), although initially it is likely that only C++
+and scheme will be supported.  Included with the distribution will be
+a small set of games such as checkers, chess, reversi, tetris (or
+similar), solitaire, ataxx, pong, breakout, etc. 
+
+In these libraries, there will be a hierarchy of classes which will
+allow the different windowing systems to display properly, provide for
+sound, music, scaled/rotated graphics, packaged game sets, text,
+user input, network play, and some forms of AI (scripted, TD-learning
+or Q-learning, and/or neural nets). 
+
+What makes it different:
+------------------------
+After a few hours of searching, I could not find any open source
+programs which can support a nearly endless number of user-defined
+games.  There are a few specialized libraries for supporting card
+games already in progress at sourceforge.net, but they do not have the
+scope of this project.  None of the preexisting projects are able to
+play both card based games, board games, and non turn-based 'action'
+(like in tetris or breakout) style games.
+
+What it will support:
+--------------------
+The initially supported platforms would be Linux console (curses or
+AA-Lib based), X Windows (using GTK--), and Windows (using DirectX --
+likely with CDX). 
+
+License Terms:
+--------------
+The library itself will be released under the GPL, although portions
+or sub-libraries may be LGPL. Programs (executables) will be GPL, and
+games will be released under the terms of their authors (although GPL
+will be encouraged).
+
+Short Description:
+------------------
+"Many Games" is a system for creating and running a nearly endless
+number of user-defined (or downloaded) games in a graphical
+system. It will support games, such as checkers, tetris, solitaire,
+breakout, and almost any other two dimensional game.
+
+---------------------------------------------------------------------------
+The first post in an attempt to gather comments about how things
+should work (20030218):
+---------------------------------------------------------------------------
+Background
+----------
+A few years back, I had the idea for this project, and did some minimal
+planning. Recently, I ran into a company who had implemented something with a
+scope somewhere close to what I had been thinking at the time. For information
+only, their website can be found at http://www.zillions-of-games.com 
+
+My goal in starting this project is NOT to produce something which is
+compatible to theirs; it is to create something which has a larger
+scope. Personally, I have not tried their product. I have only looked at what
+they have available, and only glanced over one sample game rather quickly
+(which was written in scheme or other form of lisp). 
+
+What I did notice about their product is that many of their freely available
+games come in two sizes, with graphics sets (and possibly specialized code) for
+each size. While this could be a possibility, I prefer a single game, for which
+the program can resize the graphics at runtime. If their product can do this,
+good. I would appreciate not having tons of posts saying that they can actually
+do that. I am not likely to refer to their product again, as we are starting
+this from scratch. 
+
+Implementation
+--------------
+"Many Games" will be implemented as abstraction layers above the features which
+we require. Here's a list of a few layers which I envision that we need (more
+will likely arise, and some of these may be merged or split): 
+* Environment -- Game start up, resource loading, etc.
+* Display -- Display of the game graphics (rasterized), responding to any
+update msgs 
+* Audio -- Plays sound effects, handles looping, background music, buffering,
+etc. 
+* Input -- Accepts input from the keyboard, mouse, and joysticks.
+* Network -- Chatting, network play, game location/distribution (if we provided
+it) 
+* Sound -- Loads digital audio in whatever formats accepted (wav, mp3, ogg,
+etc), performs conversion to the required output format
+* Packager -- Performs required munging/extraction of sounds, graphics, game
+code, and anything else we need to cram into game files for ease of
+distribution. 
+* Graphics -- Loads graphics (JPG, PNG, TGA, BMP, etc), performs modification
+(scaling, rotation, etc), renders fonts, performs blendings, transparency,
+etc. 
+* Play -- Handles game play (event based, or timer based)
+* AI -- Handles needed AI, such as neural nets, TD or Q learning, performing
+game state munging, etc. 
+* Security -- Signatures, licenses, copyright info, etc (if we need this
+stuff). 
+* Interpreter -- Handles interaction between other packages and any interpreted
+game programs. 
+* Executer -- Loads and executes precompiled games (like plugins).
+
+How you can help
+-------------
+I probably missed something (my hand-written diagrams are pretty messy), so if
+anyone is actually reading this and can think of something, go ahead a post
+it. 
+If you have any interest in anything here, go ahead and start a thread of
+discussion on it. 
+
+I am planning to begin the implementation of some of these packages (as stubs
+for starters) in about a month or less, so if anyone wants a say in what
+happens, it would be good to get your input in now. 
+</pre>
+</body>
+</html>
