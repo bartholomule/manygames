@@ -8,22 +8,22 @@ using std::endl;
  * Part of "Many Games" - A nearly infinitely expandable gaming framework
  * Copyright (C) 2003 Kevin Harris
  *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * This program is distributed in the hope that it will be useful, but  
- * WITHOUT ANY WARRANTY; without even the implied warranty of           
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    
- * General Public License for more details.                             
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
-#include <manygames_config.hpp>
+#include <manygames/manygames_config.hpp>
 #include <manygames/textized.hpp>
 #include "gtkmm_input_window.hpp"
 #include <manygames/xpm_image_loader.hpp>
@@ -490,7 +490,7 @@ void update()
 {
 
   framebuffer<unsigned char>* fb2 = fb;
-  
+
   int width,height;
 
   width = fb2->get_width();
@@ -503,9 +503,9 @@ void update()
     return;
   }
 
-  
+
   //  printf("Inside update: x shift=%d, y shift=%d\n", x_shift, y_shift);
-  
+
   static const manygames::rgbcolor<unsigned char> green(0,255,0);
   static const manygames::rgbcolor<unsigned char> blue(0,0,255);
   for(int y = 0; y < height; ++y)
@@ -529,7 +529,7 @@ void update()
 
           last_width = width;
           precalculated_color_gradient = new manygames::rgbcolor<unsigned char>[width];
-          
+
           const double fraction = 1.0 / 3.0;
           for( int dist = 0; dist < width; ++dist)
           {
@@ -566,7 +566,7 @@ void update()
     //    printf("Trying masked at %d,%d\n", x_mid, y_mid);
     fb2->bg_draw_image(barf, x_mid, y_mid);
     //    printf("Trying non-trasparent at %d,%d\n", x_mid, y_mid + barf.get_height());
-    fb2->bg_draw_image(*static_cast<manygames::image<unsigned char>*>(&barf), x_mid, y_mid + barf.get_height());    
+    fb2->bg_draw_image(*static_cast<manygames::image<unsigned char>*>(&barf), x_mid, y_mid + barf.get_height());
   }
 
   //  printf("About to flip...\n");
@@ -605,10 +605,10 @@ bool mouse_moved(int x, int y, int dx, int dy)
     if( us_diff > min_us_wait )
     {
       //      printf("td=%d, min=%d\n", us_diff, min_us_wait);
-             
+
       last_time.tv_sec = t.tv_sec;
       last_time.tv_usec = t.tv_usec;
-      
+
       fb->update();
       fb->draw();
     }
@@ -646,7 +646,7 @@ bool key_up(unsigned key, unsigned press_mods, unsigned release_mods)
   {
     fb->quit_window();
   }
-  
+
   return true;
 }
 
@@ -655,7 +655,7 @@ int main(int argc, char** argv)
 {
   x_shift = y_shift = 0;
   Gtk::Main kit(argc, argv);
-  
+
   fb = new gtkmm_input_window;
 
   fb->mouse_moved.connect(SigC::slot(mouse_moved));
@@ -666,12 +666,12 @@ int main(int argc, char** argv)
   fb->key_released.connect(SigC::slot(key_up));
 
   fb->add_modifier_ignore_mask(keyboard_input::keyboard_numlock);
-  
+
   fb->disable_repeat();
-  
+
   //  barf = xpm_convert_image<unsigned char,bool>(barf_xpm);
   //   barf = xpm_convert_image<unsigned char,bool>(wheelbarrow_xpm);
-  barf = xpm_convert_image<unsigned char,bool>(al_xpm);   
+  barf = xpm_convert_image<unsigned char,bool>(al_xpm);
   barf = scale_image(barf, 8);
 
   printf("Creating a rectangle...\n"); fflush(stdout);
@@ -682,10 +682,10 @@ int main(int argc, char** argv)
 
   printf("Trying to sub an image using a rectangle...\n");  fflush(stdout);
   barf = barf.sub_image(r);
-                        
+
   fb->run_window();
 
   delete fb;
-  
+
   return 0;
 }

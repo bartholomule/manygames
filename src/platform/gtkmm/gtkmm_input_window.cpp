@@ -4,18 +4,18 @@
  * Part of "Many Games" - A nearly infinitely expandable gaming framework
  * Copyright (C) 2003 Kevin Harris
  *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * This program is distributed in the hope that it will be useful, but  
- * WITHOUT ANY WARRANTY; without even the implied warranty of           
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    
- * General Public License for more details.                             
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
@@ -26,7 +26,7 @@
 #include <gtkmm/main.h>
 
 namespace manygames
-{ 
+{
 
   //------------------------------------------------
   // Default constructor for class gtkmm_input_window
@@ -36,7 +36,7 @@ namespace manygames
     Gtk::DrawingArea(),
     my_parent_window(win)
   {
-    set_flags(Gtk::CAN_FOCUS);    
+    set_flags(Gtk::CAN_FOCUS);
     add_events(Gdk::KEY_PRESS_MASK | Gdk::KEY_RELEASE_MASK);
     add_events(Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
     //    add_events(Gdk::VISIBILITY_NOTIFY_MASK);
@@ -48,7 +48,7 @@ namespace manygames
 
     my_parent_window->add(*this);
     this->show();
-    
+
   } // gtkmm_input_window()
 
   //---------------------------------------
@@ -56,7 +56,7 @@ namespace manygames
   //---------------------------------------
   gtkmm_input_window::~gtkmm_input_window()
   {
-  
+
   } // ~gtkmm_input_window()
 
   //---------------------------------------------
@@ -80,7 +80,7 @@ namespace manygames
     {
 
       input_window<guchar>::operator=(old);
-      
+
       // Gtk::DrawingArea::operator=(old);
     }
     return (*this);
@@ -91,7 +91,7 @@ namespace manygames
     if( is_drawable() && (get_width() != 0) && (get_height() != 0) )
     {
       Glib::RefPtr<Gdk::Window> window = get_window();
-      
+
       window->draw_rgb_image(get_style()->get_fg_gc(Gtk::STATE_NORMAL),
                              0, 0,
                              foreground->get_width(), foreground->get_height(),
@@ -104,12 +104,12 @@ namespace manygames
       printf("draw() called, but it is not yet drawable...\n");
     }
   }
-  
+
   unsigned translate_gtk_state(int button, unsigned state, unsigned previous_state)
   {
     // Note: I have put assertions in here, even for my own constants, so that
     // this function will detect changes (and let me know) if I change my
-    // constants, or the GDK constants change. 
+    // constants, or the GDK constants change.
     unsigned result = 0;
 
     // Translate the buttons....
@@ -117,7 +117,7 @@ namespace manygames
             (mouse_input::mouse_button_2 == (1 << 1)) &&
             (mouse_input::mouse_button_3 == (1 << 2)) &&
             (mouse_input::mouse_button_4 == (1 << 3)) &&
-            (mouse_input::mouse_button_5 == (1 << 4)) );    
+            (mouse_input::mouse_button_5 == (1 << 4)) );
 
     if( button > 0 )    // press
     {
@@ -148,7 +148,7 @@ namespace manygames
             (GDK_MOD2_MASK    == (1 << 4)) &&
             (GDK_MOD3_MASK    == (1 << 5)) &&
             (GDK_MOD4_MASK    == (1 << 6)) &&
-            (GDK_MOD5_MASK    == (1 << 7)) );      
+            (GDK_MOD5_MASK    == (1 << 7)) );
 
     assert( (mouse_input::mouse_control_down == (1 << 6)) &&
             (mouse_input::mouse_alt_down     == (1 << 7)) &&
@@ -161,7 +161,7 @@ namespace manygames
 
     return result;
   }
-  
+
   bool gtkmm_input_window::on_button_press_event(GdkEventButton* event)
   {
     int x = (int)event->x;
@@ -186,7 +186,7 @@ namespace manygames
     //    state |= get_button_state() & get_button_mask();
     // Remove the button from it...
     //    state &= ~(1 << (button - 1));
-    
+
     return handle_mouse_event(x,y,state);
   }
 
@@ -235,7 +235,7 @@ namespace manygames
     }
     if( state & GDK_CONTROL_MASK )
     {
-      state &= ~GDK_CONTROL_MASK;      
+      state &= ~GDK_CONTROL_MASK;
       translated_state |= keyboard_input::keyboard_control;
     }
     if( state & GDK_LOCK_MASK )
@@ -267,22 +267,22 @@ namespace manygames
     {
       state &= ~GDK_MOD5_MASK;
       translated_state |= keyboard_input::keyboard_mod5;
-    }    
+    }
 
     // FIXME! Do whatever remaining translation is required.
     return (state << 16) | translated_state;
-  }  
-  
+  }
+
   bool gtkmm_input_window::on_key_press_event(GdkEventKey* event)
   {
     handle_keyboard_event(keyboard_key_translate(event->keyval),
                           keyboard_state_translate(event->state) | keyboard_input::keyboard_key_pressed);
   }
-  
+
   bool gtkmm_input_window::on_key_release_event(GdkEventKey* event)
   {
     handle_keyboard_event(keyboard_key_translate(event->keyval),
-                          keyboard_state_translate(event->state) & ~keyboard_input::keyboard_key_pressed);    
+                          keyboard_state_translate(event->state) & ~keyboard_input::keyboard_key_pressed);
   }
 
   void gtkmm_input_window::run_window()
@@ -293,7 +293,7 @@ namespace manygames
   void gtkmm_input_window::quit_window()
   {
     my_parent_window->hide();
-  }  
-  
+  }
+
 } // namespace manygames
 

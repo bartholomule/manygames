@@ -4,18 +4,18 @@
  * Part of "Many Games" - A nearly infinitely expandable gaming framework
  * Copyright (C) 2003 Kevin Harris
  *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * This program is distributed in the hope that it will be useful, but  
- * WITHOUT ANY WARRANTY; without even the implied warranty of           
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    
- * General Public License for more details.                             
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
@@ -32,24 +32,24 @@
 
 
 namespace manygames
-{ 
+{
 
   /**
-   * 
+   *
    * ***CLASS DESCRIPTION GOES HERE*** (multiple lines are ok)
-   * 
+   *
    * @author Kevin Harris <kpharris@users.sourceforge.net>
    * @version $Revision$
-   * 
+   *
    */
   class gtkmm_input_window : public input_window<guchar>,
-                             public Gtk::DrawingArea 
+                             public Gtk::DrawingArea
   {
 
   private:
 
     Gtk::Window* my_parent_window;
-    
+
   protected:
 
   public:
@@ -68,12 +68,12 @@ namespace manygames
     virtual void draw(); // overridden pure virtual function.
 
     virtual bool on_button_press_event(GdkEventButton* event);
-    virtual bool on_button_release_event(GdkEventButton* event);  
+    virtual bool on_button_release_event(GdkEventButton* event);
     virtual bool on_motion_notify_event(GdkEventMotion* event);
 
     /** Check for size changes, and resize the buffers as needed. */
     virtual void size_change_check();
-    
+
     virtual bool on_expose_event(GdkEventExpose* e)
     {
       if( is_drawable() )
@@ -84,22 +84,22 @@ namespace manygames
       }
       return true;
     }
-    
+
     /** Get the width of the screen */
     unsigned get_width()  const { return framebuffer<guchar>::get_width(); }
     /** Get the height of the screen */
     unsigned get_height() const { return framebuffer<guchar>::get_height(); }
 
     virtual bool on_key_press_event(GdkEventKey* event);
-    virtual bool on_key_release_event(GdkEventKey* event);    
-    
+    virtual bool on_key_release_event(GdkEventKey* event);
+
     /** Enter the main message loop, returning only when the program is
         terminated, or if quit_window() below is called. . */
     virtual void run_window();
 
     /** Terminate any running message loop from above, allowing it to return */
-    virtual void quit_window();    
-    
+    virtual void quit_window();
+
   }; // class gtkmm_input_window
 
 } // namespace manygames
