@@ -57,6 +57,8 @@ namespace manygames
     raster() throw();
     /** Size-specified constructor.  Creates a width by height sized raster */
     raster(unsigned width, unsigned height);
+    /** Data-initialized, size-specified constructor. */
+    raster(unsigned width, unsigned height, const T* data);
 
     /** Destructor */
     virtual ~raster();
@@ -251,7 +253,7 @@ namespace manygames
   } // raster()
   
   //--------------------------------------
-  // Default constructor for class raster
+  // Size-specified contructor for raster
   //--------------------------------------
   template <class T>
   raster<T>::raster(unsigned w, unsigned h):
@@ -270,6 +272,34 @@ namespace manygames
       height = 0;
     }
   } // raster(unsigned,unsigned)
+
+  //---------------------------------------
+  // Data-initialized contructor for raster
+  //--------------------------------------- 
+  template <class T>
+  raster<T>::raster(unsigned w, unsigned h, const T* data) :
+    width(w), height(h),
+    raster_data(NULL)
+  {
+    unsigned linear_size = w * h;
+    if( linear_size > 0 )
+    {
+      raster_data = new T[linear_size];
+      if( data )
+      {
+	T* dest = raster_data;
+	for( unsigned i = 0; i < linear_size; ++i )
+	{
+	  *(dest++) = *(data++);
+	}
+      }
+    }
+    else
+    {
+      width = 0;
+      height = 0;
+    }
+  } // raster(T*,unsigned,unsigned)
   
   //-----------------------------
   // Destructor for class raster
@@ -487,8 +517,8 @@ namespace manygames
     // If it was requested to preserve data, copy as much as possible...
     if( preserve && old_data && raster_data )
     {
-      unsigned max_x = my_min(old_width, width);
-      unsigned max_y = my_min(old_height, height);
+      unsigned max_x = std::min(old_width, width);
+      unsigned max_y = std::min(old_height, height);
       for(unsigned y = 0; y < max_y; ++y)
       {
 	for(unsigned x = 0; x < max_x; ++x)
@@ -542,10 +572,10 @@ namespace manygames
       int oly = cy - old_mid_y;
       int ouy = cy + (old_height - old_mid_y);
 
-      unsigned min_x = my_max(olx, 0);
-      unsigned max_x = my_min(oux, int(width));
-      unsigned min_y = my_max(oly, 0);
-      unsigned max_y = my_min(ouy, int(height));
+      unsigned min_x = std::max(olx, 0);
+      unsigned max_x = std::min(oux, int(width));
+      unsigned min_y = std::max(oly, 0);
+      unsigned max_y = std::min(ouy, int(height));
 
 
       int x_shift = -olx;
