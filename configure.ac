@@ -103,6 +103,13 @@ dnl Check for special libraries
 dnl ---------------------------------------------------------------------------
 
 dnl ---------------
+dnl gtkmm-2.0
+dnl ---------------
+PKG_CHECK_MODULES(GTKMM, gtkmm-2.0)
+AC_SUBST(GTKMM_CFLAGS)
+AC_SUBST(GTKMM_LIBS)
+
+dnl ---------------
 dnl SigC++
 dnl ---------------
 echo -e "checking for SigC++... \c"
@@ -335,6 +342,8 @@ AC_OUTPUT([ Makefile         \
             src/utils/Makefile \
             src/generic/Makefile \
             src/graphics/Makefile \
+	    src/platform/Makefile \
+	    src/platform/gtkmm/Makefile \
             include/Makefile \
             include/manygames/Makefile \
 	    test/Makefile 

@@ -1,5 +1,5 @@
 EXTRA_DIST = 
-SUBDIRS = utils generic graphics
+SUBDIRS = utils generic graphics platform
 INCLUDES = -I@top_srcdir@/include
 lib_LTLIBRARIES = libmanygames.la
 
