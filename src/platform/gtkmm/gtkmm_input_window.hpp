@@ -19,13 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
-#if       !defined(__MANYGAMES__GTKMM_FRAMEBUFFER_HPP__)
-#define            __MANYGAMES__GTKMM_FRAMEBUFFER_HPP__
+#if       !defined(__MANYGAMES__GTKMM_INPUT_WINDOW_HPP__)
+#define            __MANYGAMES__GTKMM_INPUT_WINDOW_HPP__
 
 // --------------------------------------
 // Default include of parent class header
 // --------------------------------------
-#include "manygames/framebuffer.hpp"
+#include <manygames/input_window.hpp>
 #include <glib/gtypes.h>
 #include <gtkmm/drawingarea.h>
 
@@ -36,7 +36,7 @@ namespace manygames
 //-----------------------------------------------------------
 //#error You must customize this automatically generated class.
 // To do this, you must: 
-// (1) Provide the proper include for class framebuffer<unsigned char> (above).
+// (1) Provide the proper include for class input_window<unsigned char> (above).
 // (2) Enter a class description below, on the line requested.
 // (3) Add your own class members to the class.
 // (4) Provide the required operations in the copy constructor and assignment
@@ -52,7 +52,7 @@ namespace manygames
    * @version $Revision$
    * 
    */
-  class gtkmm_framebuffer : public framebuffer<guchar>,
+  class gtkmm_input_window : public input_window<guchar>,
 			    public Gtk::DrawingArea 
   {
 
@@ -62,24 +62,33 @@ namespace manygames
 
   public:
     /** Default constructor */
-    gtkmm_framebuffer();
+    gtkmm_input_window();
 
     /** Destructor */
-    virtual ~gtkmm_framebuffer();
+    virtual ~gtkmm_input_window();
 
     /** Copy constructor */
-    gtkmm_framebuffer(const gtkmm_framebuffer& old);
+    gtkmm_input_window(const gtkmm_input_window& old);
 
     /** Assignment operator */
-    gtkmm_framebuffer& operator= (const gtkmm_framebuffer& old);
+    gtkmm_input_window& operator= (const gtkmm_input_window& old);
 
-    virtual void update() = 0;
     virtual void draw(); // overridden pure virtual function.
 
-  }; // class gtkmm_framebuffer
+    virtual bool on_button_press_event(GdkEventButton* event);
+    virtual bool on_button_release_event(GdkEventButton* event);  
+    virtual bool on_motion_notify_event(GdkEventMotion* event);
+    
+    virtual bool on_expose_event(GdkEventExpose* e)
+    {
+      update(); /* temp */
+      draw();
+      return true;
+    }    
+  }; // class gtkmm_input_window
 
 } // namespace manygames
 
 
-#endif /* !defined(__MANYGAMES__GTKMM_FRAMEBUFFER_HPP__) */
+#endif /* !defined(__MANYGAMES__GTKMM_INPUT_WINDOW_HPP__) */
 
