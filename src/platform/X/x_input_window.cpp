@@ -24,6 +24,30 @@
 #include "x_input_window.hpp"
 #include <cassert>
 
+/*
+  TODO:
+  * Find some way to hook into the window destroy event, so that things can be
+    cleaned up nicely when someone hits the close button.  Right now, it just
+    terminates, and leaves things messed up, notably, the keyboard auto-repeat
+    settings will remain off for *EVERYTHING* if they were off for the window.
+    To combat this, (for now), quiting through the software interface, and not
+    through the window manager, will perform a clean shutdown.
+ */
+
+/*
+  Notes: When constructing a window, X sends events in this order (done by
+  testing): 
+  22 -- Configure
+  21 -- Reparent
+  22 -- Configure
+  22 -- Configure
+  19 -- Map
+  12 -- Expose
+  9  -- FocusIn
+
+  Somewhere in there, the 15 -- visibility event is sent.
+ */
+
 namespace manygames
 { 
 
@@ -35,23 +59,24 @@ namespace manygames
     display(disp),
     screen(scr),
     img(NULL),
-    image_buffer(NULL)
+    image_buffer(NULL),
+    drawable(false)
   {
     if( !display )
     {
       display = XOpenDisplay((char*)0);
       if( display )
       {
-	screen = DefaultScreen(display);
+        screen = DefaultScreen(display);
       
-	display_created = true;
+        display_created = true;
       }
     }
     if( display )
     {
       if( screen < 0 )
       {
-	screen = DefaultScreen(display);
+        screen = DefaultScreen(display);
       }
       
       unsigned long black, white;
@@ -64,29 +89,38 @@ namespace manygames
       unsigned long background = white;
       
       window = XCreateSimpleWindow(display, DefaultRootWindow(display), 0, 0,
-				   width, height, border_width, border_color,
-				   background);
+                                   width, height, border_width, border_color,
+                                   background);
       
       XSetStandardProperties(display, window,
-			     "Default window title",
-			     "Minimized window title",
-			     None,
-			     NULL,0,NULL); // Hints, params (argc,argv), etc.
+                             "Default window title",
+                             "Minimized window title",
+                             None,
+                             NULL,0,NULL); // Hints, params (argc,argv), etc.
       
       XSelectInput(display, window,
-		   ExposureMask |
-		   ButtonPressMask | ButtonReleaseMask |
-		   KeyPressMask | KeyReleaseMask |
-		   PointerMotionMask |
-		   Button1MotionMask | Button2MotionMask | Button3MotionMask |
-		   Button4MotionMask | Button5MotionMask);
+                   ExposureMask |
+                   ButtonPressMask | ButtonReleaseMask |
+                   KeyPressMask | KeyReleaseMask |
+                   PointerMotionMask |
+                   Button1MotionMask | Button2MotionMask | Button3MotionMask |
+                   Button4MotionMask | Button5MotionMask |
+                   FocusChangeMask  // Detects FocusIn, FocusOut
+      );
+      // SubstructureNotifyMask ???? nothing?
+      // OwnerGrabButtonMask ???? Nothing?
+      // PropertyChangeMask // Detects PropertyNotify, 
+      // EnterWindowMask | LeaveWindowMask   // Detects mouse in/out of window
+      // StructureNotifyMask | // Detects configure, reparent, map
+      // VisibilityChangeMask | // Detects Visibilty
       
       gc = XCreateGC(display, window, 0, 0);
       XSetBackground(display, gc, black);
       XSetForeground(display, gc, white);
       XClearWindow(display, window);
       XMapRaised(display, window);
-    }    
+    }
+    enable_repeat();
   } // x_input_window()
 
   //---------------------------------------
@@ -104,10 +138,12 @@ namespace manygames
     {
       XFreeGC(display, gc);
       XDestroyWindow(display, window);
+
+      XAutoRepeatOn(display);
       
       if( display_created )
       {
-	XCloseDisplay(display);
+        XCloseDisplay(display);
       }
     }
   } // ~x_input_window()
@@ -115,7 +151,7 @@ namespace manygames
 
   void x_input_window::draw()
   {
-    if( display && img )
+    if( display && img && drawable )
     {
       unsigned width = get_width();
       unsigned height = get_height();
@@ -123,21 +159,21 @@ namespace manygames
       const unsigned char* image_data = foreground->reinterpret<unsigned char*>();
       for(unsigned y = 0; y < height; ++y)
       {
-	unsigned y_offset = y * width;
-	for(unsigned x = 0; x < width; ++x)
-	{
-	  unsigned linear = y_offset + x;
-	  image_buf2[linear] = ( unsigned(image_data[linear*3 + 0]) << 16 |
-				 unsigned(image_data[linear*3 + 1]) << 8 |
-				 unsigned(image_data[linear*3 + 2]) << 0 );
-	}
+        unsigned y_offset = y * width;
+        for(unsigned x = 0; x < width; ++x)
+        {
+          unsigned linear = y_offset + x;
+          image_buf2[linear] = ( unsigned(image_data[linear*3 + 0]) << 16 |
+                                 unsigned(image_data[linear*3 + 1]) << 8 |
+                                 unsigned(image_data[linear*3 + 2]) << 0 );
+        }
       }
       
       // Draw it to the screen now (ignore any errors here)...
       XPutImage(display, window, gc, img,
-		0, 0, // Source X & Y (useful for subimages)
-		0, 0, // Dest   X & Y
-		width, height); // Width and height to draw (useful for subimages)          
+                0, 0, // Source X & Y (useful for subimages)
+                0, 0, // Dest   X & Y
+                width, height); // Width and height to draw (useful for subimages)          
     }
   }
 
@@ -145,7 +181,7 @@ namespace manygames
   {
     // Note: I have put assertions in here, even for my own constants, so that
     // this function will detect changes (and let me know) if I change my
-    // constants, or the GDK constants change. 
+    // constants, or the X constants change. 
     unsigned result = 0;
 
     // Translate the buttons....
@@ -199,6 +235,26 @@ namespace manygames
   }
 
 
+  void x_input_window::disable_repeat()
+  {
+    if( display )
+    {
+      // NOTE! using XAutoRepeatOn or XAutoRepeatOff is GLOBAL to the entire
+      // display, not the single window... I need to find a workaround. 
+      XAutoRepeatOff(display);
+    }
+    keyboard_input::disable_repeat();
+  }
+
+  void x_input_window::enable_repeat()
+  {
+    if( display )
+    {
+      XAutoRepeatOn(display);
+    }
+    keyboard_input::enable_repeat();    
+  }  
+  
   void x_input_window::size_change_check()
   {
     if( display )
@@ -217,45 +273,45 @@ namespace manygames
       
       if( (width != get_width()) || (height != get_height()) )
       {
-	resize(width, height);
-	size_changed = true;
+        resize(width, height);
+        size_changed = true;
       }
       
       // If the size changed...
       if( size_changed || !img || !image_buffer )
       {
-	int bytes_per_pixel = 4;
-	
-	if( (get_width() > 0) && (get_height() > 0) )
-	  
-	{
-	  if( img )
-	  {
-	    XDestroyImage(img);
-	    img = NULL;
-	  }
-	  image_buffer = (unsigned char*)malloc(get_width() * get_height() * bytes_per_pixel);
-	  
-	  img = XCreateImage(display,
-			     XDefaultVisual(display, screen),
-			     depth, // This one has to match the depth of
-			     // the screen or a crash will happen. 
-			     ZPixmap,
-			     0,  // offset...
-			     (char*)image_buffer,
-			     get_width(), get_height(),
-			     32, // bits per pixel (32 for 24 bit image)
-			     0); // Scanline width
-	}
-	else
-	{
-	  if( img )
-	  {
-	    XDestroyImage(img);
-	    img = NULL;
-	  }
-	  image_buffer = NULL;
-	}
+        int bytes_per_pixel = 4;
+        
+        if( (width > 0) && (height > 0) )
+          
+        {
+          if( img )
+          {
+            XDestroyImage(img);
+            img = NULL;
+          }
+          image_buffer = (unsigned char*)malloc(get_width() * get_height() * bytes_per_pixel);
+          
+          img = XCreateImage(display,
+                             XDefaultVisual(display, screen),
+                             depth, // This one has to match the depth of
+                             // the screen or a crash will happen. 
+                             ZPixmap,
+                             0,  // offset...
+                             (char*)image_buffer,
+                             get_width(), get_height(),
+                             32, // bits per pixel (32 for 24 bit image)
+                             0); // Scanline width
+        }
+        else
+        {
+          if( img )
+          {
+            XDestroyImage(img);
+            img = NULL;
+          }
+          image_buffer = NULL;
+        }
       }
     } // display is valid...
   }
@@ -319,90 +375,114 @@ namespace manygames
   {
     // Event loop!
     
-    XEvent event;		/* the XEvent declaration !!! */
-    KeySym key;		/* something to aid in handling KeyPress Events */
-    char text[255];	/* a buffer for KeyPress Events (as text)*/
+    XEvent event;               /* the XEvent declaration !!! */
+    KeySym key;         /* something to aid in handling KeyPress Events */
+    char text[255];     /* a buffer for KeyPress Events (as text)*/
     
     /* look for events forever... */
     while( display )
-    {		
+    {           
       /* get the next event and stuff it into our event variable.
-	 Note:  only events we set the mask for are detected!
+         Note:  only events we set the mask for are detected!
       */
       XNextEvent(display, &event);
+
+      //      printf("Event type %d\n", event.type);
       
       switch( event.type )
       {
       case Expose:
-	if( event.xexpose.count == 0 )
-	{
-	  /* the window was exposed redraw it! */
-	  size_change_check();
-	  update();
-	  draw();
-	}
-	break;
+        if( event.xexpose.count == 0 )
+        {
+          /* the window was exposed redraw it! */
+          drawable = true;
+          size_change_check();
+          update();
+          draw();
+        }
+        break;
       case KeyPress:
-	{
-	  // Note: I don't actually care if the lookup was successful.  All I 
-	  // want this to do is to get the key symbol (button) filled in, so
-	  // that it can be used. I'm generating my own strings anyways.
-	  XLookupString(&event.xkey,text,255,&key,0);
-	  handle_keyboard_event(keyboard_key_translate(key),
-				keyboard_state_translate(event.xkey.state) |
-				keyboard_input::keyboard_key_pressed);
-	}
-	break;
+        {
+          // Note: I don't actually care if the lookup was successful.  All I 
+          // want this to do is to get the key symbol (button) filled in, so
+          // that it can be used. I'm generating my own strings anyways.
+          XLookupString(&event.xkey,text,255,&key,0);
+          handle_keyboard_event(keyboard_key_translate(key),
+                                keyboard_state_translate(event.xkey.state) |
+                                keyboard_input::keyboard_key_pressed);
+        }
+        break;
       case KeyRelease:
-	{
-	  // See comments for key press above.
-	  XLookupString(&event.xkey,text,255,&key,0) != NoSymbol;
-	  handle_keyboard_event(keyboard_key_translate(key),
-				keyboard_state_translate(event.xkey.state) &
-				~keyboard_input::keyboard_key_pressed);
-	}
-	break;
+        {
+          // See comments for key press above.
+          XLookupString(&event.xkey,text,255,&key,0) != NoSymbol;
+          handle_keyboard_event(keyboard_key_translate(key),
+                                keyboard_state_translate(event.xkey.state) &
+                                ~keyboard_input::keyboard_key_pressed);
+        }
+        break;
       case ButtonPress:
-	{
-	  /* tell where the mouse Button was Pressed */
-	  int x=event.xbutton.x;
-	  int y=event.xbutton.y;
-	  unsigned state = event.xbutton.state;
-	  unsigned button = event.xbutton.button;
-	  
-	  state = translate_x_state(button, state, get_button_state());
+        {
+          /* tell where the mouse Button was Pressed */
+          int x=event.xbutton.x;
+          int y=event.xbutton.y;
+          unsigned state = event.xbutton.state;
+          unsigned button = event.xbutton.button;
+          
+          state = translate_x_state(button, state, get_button_state());
 
-	  handle_mouse_event(x,y,state);
-	}
-	break;
+          handle_mouse_event(x,y,state);
+        }
+        break;
       case ButtonRelease:
-	{
-	  /* tell where the mouse Button was Released */
-	  int x=event.xbutton.x;
-	  int y=event.xbutton.y;
-	  unsigned state = event.xbutton.state;
-	  unsigned button = event.xbutton.button;
-	  
-	  state = translate_x_state(-button, state, get_button_state());
+        {
+          /* tell where the mouse Button was Released */
+          int x=event.xbutton.x;
+          int y=event.xbutton.y;
+          unsigned state = event.xbutton.state;
+          unsigned button = event.xbutton.button;
+          
+          state = translate_x_state(-button, state, get_button_state());
 
-	  handle_mouse_event(x,y,state);	  
-	}
-	break;
+          handle_mouse_event(x,y,state);          
+        }
+        break;
       case MotionNotify:
-	{
-	  /* tell where the mouse is currently located */
-	  int x=event.xmotion.x;
-	  int y=event.xmotion.y;
+        {
+          /* tell where the mouse is currently located */
+          int x=event.xmotion.x;
+          int y=event.xmotion.y;
 
-	  unsigned state = translate_x_state(0, event.xmotion.state, get_button_state());
-	  handle_mouse_event(x,y,state);
-	}
-	break;      
+          unsigned state = translate_x_state(0, event.xmotion.state, get_button_state());
+          handle_mouse_event(x,y,state);
+        }
+        break;
+      case FocusIn:
+        {
+          if( display && !repeat_enabled() )
+          {
+            XAutoRepeatOff(display);
+          }
+        }
+        break;
+      case FocusOut:
+        {
+          if( display )
+          {
+            XAutoRepeatOn(display);
+          }       
+        }
+        break;
+      case DestroyNotify:
+        {
+          printf("It got a destroy event!\n"); fflush(stdout);
+        }
+        break;
       default:
-	{
-	  printf("X supplied event type %d\n", event.type);
-	}
-	break;	
+        {
+          printf("X supplied event type %d\n", event.type);
+        }
+        break;  
       }
     } // while 1
   }
@@ -419,10 +499,12 @@ namespace manygames
     {
       XFreeGC(display, gc);
       XDestroyWindow(display, window);
+
+      XAutoRepeatOn(display);
       
       if( display_created )
       {
-	XCloseDisplay(display);
+        XCloseDisplay(display);
       }      
     }
     display = NULL;
