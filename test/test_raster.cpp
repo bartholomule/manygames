@@ -56,87 +56,87 @@ int main(int argc, char** argv)
   {
     cout << "------------------------------" << endl;
     cout << ( "Creating a " +
-	      int_to_str(width) + "x" + int_to_str(height) +
-	      " raster" )
-	 << endl;
+              int_to_str(width) + "x" + int_to_str(height) +
+              " raster" )
+         << endl;
     cout << "------------------------------" << endl;
 
     irast sized(width,height);
     TEST_RESULT_NAMED(( "to see if the size of a " +
-			int_to_str(width) + "x" + int_to_str(height) +
-			" raster is " + int_to_str(width * height) ),
-		      sized.get_numpixels() == width * height,
-		      passed,
-		      ERROR_TEXT(failed));
+                        int_to_str(width) + "x" + int_to_str(height) +
+                        " raster is " + int_to_str(width * height) ),
+                      sized.get_numpixels() == width * height,
+                      passed,
+                      ERROR_TEXT(failed));
     
 
     TEST_EXCEPTION_NAMED("to assign within bounds",
-			 for(unsigned y = 0; y < height; ++y)
+                         for(unsigned y = 0; y < height; ++y)
                          {
-			   for(unsigned x = 0; x < width; ++x)
-			   {
-			     sized[y][x] = (x == y)?(x):(x + y);
-			   }
-			 }
-			 ,
-			 passed,
-			 ERROR_TEXT(failed));
+                           for(unsigned x = 0; x < width; ++x)
+                           {
+                             sized[y][x] = (x == y)?(x):(x + y);
+                           }
+                         }
+                         ,
+                         passed,
+                         ERROR_TEXT(failed));
 
     TEST_RESULT_NAMED("to see if assignments worked",
-		      (
-		       // All of the diagonal elements...
-		       (sized[0][0] == 0) &&
-		       (sized[1][1] == 1) &&
-		       (sized[2][2] == 2) &&
-		       (sized[3][3] == 3) &&
-		       (sized[4][4] == 4) &&
-		       (sized[5][5] == 5) &&
-		       (sized[6][6] == 6) &&
-		       (sized[7][7] == 7) &&
-		       (sized[8][8] == 8) &&
-		       (sized[9][9] == 9) &&
-		       // Some randomly chosen non-diag elements.
-		       (sized[4][7] == 11) &&	
-		       (sized[9][6] == 15) &&
-		       (sized[2][0] ==  2) &&	
-		       (sized[3][9] == 12)
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));
-		     
+                      (
+                       // All of the diagonal elements...
+                       (sized[0][0] == 0) &&
+                       (sized[1][1] == 1) &&
+                       (sized[2][2] == 2) &&
+                       (sized[3][3] == 3) &&
+                       (sized[4][4] == 4) &&
+                       (sized[5][5] == 5) &&
+                       (sized[6][6] == 6) &&
+                       (sized[7][7] == 7) &&
+                       (sized[8][8] == 8) &&
+                       (sized[9][9] == 9) &&
+                       // Some randomly chosen non-diag elements.
+                       (sized[4][7] == 11) &&   
+                       (sized[9][6] == 15) &&
+                       (sized[2][0] ==  2) &&   
+                       (sized[3][9] == 12)
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));
+                     
 
     TEST_EXCEPTION_NAMED("to copy same-sized raster scanlines",
-			 sized[0] = sized[4] = sized[9];
-			 sized[8] = sized[5] = sized[1];
-			 ,
-			 passed,
-			 ERROR_TEXT(failed));
+                         sized[0] = sized[4] = sized[9];
+                         sized[8] = sized[5] = sized[1];
+                         ,
+                         passed,
+                         ERROR_TEXT(failed));
 
     TEST_RESULT_NAMED("to see if scanline copy worked",
-		      (
-		       // All of the diagonal elements not modified...
-		       (sized[1][1] == 1) &&
-		       (sized[2][2] == 2) &&
-		       (sized[3][3] == 3) &&
-		       (sized[6][6] == 6) &&
-		       (sized[7][7] == 7) &&
-		       (sized[9][9] == 9) &&
-		       // Modified diags...
-		       (sized[0][0] == 9) &&
-		       (sized[4][4] == 13) &&
-		       (sized[5][5] == 6) &&
-		       (sized[8][8] == 9) &&
-		       // Some modified elements...
-		       (sized[0][0] == 9) && // copied from 9
-		       (sized[4][9] == 9) && // copied from 9 (on the diag)
-		       // Some randomly chosen non-diag elements.
-		       (sized[9][6] == 15) &&
-		       (sized[2][0] ==  2) &&	
-		       (sized[3][9] == 12)
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));    
-			 
+                      (
+                       // All of the diagonal elements not modified...
+                       (sized[1][1] == 1) &&
+                       (sized[2][2] == 2) &&
+                       (sized[3][3] == 3) &&
+                       (sized[6][6] == 6) &&
+                       (sized[7][7] == 7) &&
+                       (sized[9][9] == 9) &&
+                       // Modified diags...
+                       (sized[0][0] == 9) &&
+                       (sized[4][4] == 13) &&
+                       (sized[5][5] == 6) &&
+                       (sized[8][8] == 9) &&
+                       // Some modified elements...
+                       (sized[0][0] == 9) && // copied from 9
+                       (sized[4][9] == 9) && // copied from 9 (on the diag)
+                       // Some randomly chosen non-diag elements.
+                       (sized[9][6] == 15) &&
+                       (sized[2][0] ==  2) &&   
+                       (sized[3][9] == 12)
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));    
+                         
     //    cout << r << endl;
 
     cout << "------------------------" << endl;    
@@ -145,34 +145,34 @@ int main(int argc, char** argv)
     irast empty;
 
     TEST_RESULT_NAMED("to see if the size of an empty raster is 0",
-		      (empty.get_numpixels() == 0),
-		      passed,
-		      ERROR_TEXT(failed));
+                      (empty.get_numpixels() == 0),
+                      passed,
+                      ERROR_TEXT(failed));
 
     TEST_RESULT_NAMED("to see if raster::empty() works",
-		      (empty.empty() && !sized.empty()),
-		      passed,
-		      ERROR_TEXT(failed));
+                      (empty.empty() && !sized.empty()),
+                      passed,
+                      ERROR_TEXT(failed));
 
     TEST_RESULT_NAMED("to see if get_width() and get_height() work",
-		      (
-		       (sized.get_width() == width) &&
-		       (sized.get_height() == height) &&
-		       (empty.get_width() == 0) &&
-		       (empty.get_height() == 0)
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));    
+                      (
+                       (sized.get_width() == width) &&
+                       (sized.get_height() == height) &&
+                       (empty.get_width() == 0) &&
+                       (empty.get_height() == 0)
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));    
     
     TEST_EXCEPTION_NAMED("to assign outside bounds",
-			 empty[0][0] = 100,
-			 ERROR_TEXT(failed),
-			 passed);
+                         empty[0][0] = 100,
+                         ERROR_TEXT(failed),
+                         passed);
 
     TEST_EXCEPTION_NAMED("to see if empty rasters forbids indexing",
-			 empty[0];,
-			 ERROR_TEXT(failed),
-			 passed);        
+                         empty[0];,
+                         ERROR_TEXT(failed),
+                         passed);        
 
     cout << "---------------------------" << endl;
     cout << "Creating full-raster copies" << endl;
@@ -182,71 +182,71 @@ int main(int argc, char** argv)
     // This is a modified copy of a test above... Just the name and variable
     // were changed.  
     TEST_RESULT_NAMED("to see if raster's copy constructor worked",
-		      (
-		       (copied_cons.get_width()  == width) &&
-		       (copied_cons.get_height() == height) &&		       
-		       // All of the diagonal elements not modified...
-		       (copied_cons[1][1] == 1) &&
-		       (copied_cons[2][2] == 2) &&
-		       (copied_cons[3][3] == 3) &&
-		       (copied_cons[6][6] == 6) &&
-		       (copied_cons[7][7] == 7) &&
-		       (copied_cons[9][9] == 9) &&
-		       // Modified diags...
-		       (copied_cons[0][0] == 9) &&
-		       (copied_cons[4][4] == 13) &&
-		       (copied_cons[5][5] == 6) &&
-		       (copied_cons[8][8] == 9) &&
-		       // Some modified elements...
-		       (copied_cons[0][0] == 9) && // copied from 9
-		       (copied_cons[4][9] == 9) && // copied from 9 (on the diag)
-		       // Some randomly chosen non-diag elements.
-		       (copied_cons[9][6] == 15) &&
-		       (copied_cons[2][0] ==  2) &&	
-		       (copied_cons[3][9] == 12)
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));
+                      (
+                       (copied_cons.get_width()  == width) &&
+                       (copied_cons.get_height() == height) &&                 
+                       // All of the diagonal elements not modified...
+                       (copied_cons[1][1] == 1) &&
+                       (copied_cons[2][2] == 2) &&
+                       (copied_cons[3][3] == 3) &&
+                       (copied_cons[6][6] == 6) &&
+                       (copied_cons[7][7] == 7) &&
+                       (copied_cons[9][9] == 9) &&
+                       // Modified diags...
+                       (copied_cons[0][0] == 9) &&
+                       (copied_cons[4][4] == 13) &&
+                       (copied_cons[5][5] == 6) &&
+                       (copied_cons[8][8] == 9) &&
+                       // Some modified elements...
+                       (copied_cons[0][0] == 9) && // copied from 9
+                       (copied_cons[4][9] == 9) && // copied from 9 (on the diag)
+                       // Some randomly chosen non-diag elements.
+                       (copied_cons[9][6] == 15) &&
+                       (copied_cons[2][0] ==  2) &&     
+                       (copied_cons[3][9] == 12)
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));
 
     irast copied_assign; copied_assign = sized;
     // This is a modified copy of a test above... Just the name and variable
     // were changed.  
     TEST_RESULT_NAMED("to see if raster's assignment operator worked",
-		      (
-		       (copied_assign.get_width()  == width) &&
-		       (copied_assign.get_height() == height) &&
-		       // All of the diagonal elements not modified...
-		       (copied_assign[1][1] == 1) &&
-		       (copied_assign[2][2] == 2) &&
-		       (copied_assign[3][3] == 3) &&
-		       (copied_assign[6][6] == 6) &&
-		       (copied_assign[7][7] == 7) &&
-		       (copied_assign[9][9] == 9) &&
-		       // Modified diags...
-		       (copied_assign[0][0] == 9) &&
-		       (copied_assign[4][4] == 13) &&
-		       (copied_assign[5][5] == 6) &&
-		       (copied_assign[8][8] == 9) &&
-		       // Some modified elements...
-		       (copied_assign[0][0] == 9) && // copied from 9
-		       (copied_assign[4][9] == 9) && // copied from 9 (on the diag)
-		       // Some randomly chosen non-diag elements.
-		       (copied_assign[9][6] == 15) &&
-		       (copied_assign[2][0] ==  2) &&	
-		       (copied_assign[3][9] == 12)
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));    
+                      (
+                       (copied_assign.get_width()  == width) &&
+                       (copied_assign.get_height() == height) &&
+                       // All of the diagonal elements not modified...
+                       (copied_assign[1][1] == 1) &&
+                       (copied_assign[2][2] == 2) &&
+                       (copied_assign[3][3] == 3) &&
+                       (copied_assign[6][6] == 6) &&
+                       (copied_assign[7][7] == 7) &&
+                       (copied_assign[9][9] == 9) &&
+                       // Modified diags...
+                       (copied_assign[0][0] == 9) &&
+                       (copied_assign[4][4] == 13) &&
+                       (copied_assign[5][5] == 6) &&
+                       (copied_assign[8][8] == 9) &&
+                       // Some modified elements...
+                       (copied_assign[0][0] == 9) && // copied from 9
+                       (copied_assign[4][9] == 9) && // copied from 9 (on the diag)
+                       // Some randomly chosen non-diag elements.
+                       (copied_assign[9][6] == 15) &&
+                       (copied_assign[2][0] ==  2) &&   
+                       (copied_assign[3][9] == 12)
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));    
 
     TEST_EXCEPTION_NAMED("to see if raster::operator() throws properly",
-			 copied_cons(100,100),
-			 ERROR_TEXT(failed),
-			 passed);
+                         copied_cons(100,100),
+                         ERROR_TEXT(failed),
+                         passed);
     
     TEST_EXCEPTION_NAMED("to see if raster::operator()const throws properly",
-			 copied_assign(100,100),
-			 ERROR_TEXT(failed),
-			 passed);
+                         copied_assign(100,100),
+                         ERROR_TEXT(failed),
+                         passed);
 
     cout << "-----------------------" << endl;
     cout << "Creating sub-rasters..." << endl;
@@ -255,25 +255,25 @@ int main(int argc, char** argv)
     irast sub_sized;
 
     TEST_EXCEPTION_NAMED("to see that sub rasters cannot be created out of range",
-			 sub_sized = sized.sub_raster(0,0, 100,100),
-			 ERROR_TEXT(failed),
-			 passed);
+                         sub_sized = sized.sub_raster(0,0, 100,100),
+                         ERROR_TEXT(failed),
+                         passed);
     
     TEST_EXCEPTION_NAMED("to see if sub rasters can be created in proper range",
-			 sub_sized = sized.sub_raster(1,1, 8,10),
-			 passed,
-			 ERROR_TEXT(failed));
+                         sub_sized = sized.sub_raster(1,1, 8,10),
+                         passed,
+                         ERROR_TEXT(failed));
 
     TEST_RESULT_NAMED("to see if the copied raster has a proper size",
-		      ((sub_sized.get_width() == 8) &&
-		       (sub_sized.get_height() == 10)),
-		      passed,
-		      ERROR_TEXT(failed));
+                      ((sub_sized.get_width() == 8) &&
+                       (sub_sized.get_height() == 10)),
+                      passed,
+                      ERROR_TEXT(failed));
     
     TEST_EXCEPTION_NAMED("to copy different-sized scanlines (disallowed)",
-			 sub_sized[0] = sized[0],
-			 ERROR_TEXT(failed),
-			 passed);
+                         sub_sized[0] = sized[0],
+                         ERROR_TEXT(failed),
+                         passed);
 
     cout << "-------------------------------------------------------------------" << endl;
     cout << "Reinterpreting rasters (normally dangerous, if done incorrectly)..." << endl;
@@ -293,14 +293,14 @@ int main(int argc, char** argv)
     {
       for(unsigned x = 0; x < hello_rast.get_width(); ++x)
       {
-	hello_rast[y][x] = hello_data[y * cw1 + x];
+        hello_rast[y][x] = hello_data[y * cw1 + x];
       }
     }
     TEST_RESULT_NAMED("to see if reinterpretation gives correct results",
-		      (strcmp(hello_data,
-			      hello_rast.reinterpret<const char*>()) == 0),
-		      passed,
-		      ERROR_TEXT(failed));
+                      (strcmp(hello_data,
+                              hello_rast.reinterpret<const char*>()) == 0),
+                      passed,
+                      ERROR_TEXT(failed));
 
 
     cout << "-------------------" << endl;
@@ -314,20 +314,20 @@ int main(int argc, char** argv)
     // shift everything by 1 in both x and y, by way of a resize.
     crast char_rast01 = hello_rast;
     char_rast01.resize(char_rast01.get_width(),
-		       char_rast01.get_height(),
-		       (char_rast01.get_width() / 2) + 1,
-		       (char_rast01.get_height() / 2) - 1,
-		       '*');
+                       char_rast01.get_height(),
+                       (char_rast01.get_width() / 2) + 1,
+                       (char_rast01.get_height() / 2) - 1,
+                       '*');
     TEST_RESULT_NAMED("to see if resizing can do simple shifts",
-		      ((hello_rast.get_numpixels() == char_rast01.get_numpixels()) &&
-		       (char_rast01[0][0] == '*') &&
-		       (char_rast01[3][0] == '*') &&
-		       (char_rast01[3][10] == '*') &&
-		       (char_rast01[1][6] == hello_rast[2][5]) &&
-		       (char_rast01[0][3] == hello_rast[1][2])
-		      ),
-		      passed,
-		      ERROR_TEXT(failed));
+                      ((hello_rast.get_numpixels() == char_rast01.get_numpixels()) &&
+                       (char_rast01[0][0] == '*') &&
+                       (char_rast01[3][0] == '*') &&
+                       (char_rast01[3][10] == '*') &&
+                       (char_rast01[1][6] == hello_rast[2][5]) &&
+                       (char_rast01[0][3] == hello_rast[1][2])
+                      ),
+                      passed,
+                      ERROR_TEXT(failed));
 
     cout << endl;
     cout << "FIXME! Insert more tests for both raster::resize functions here!" << endl;
