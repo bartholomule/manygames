@@ -78,6 +78,9 @@ namespace manygames
 
     /** Size-specified constructor.  Creates a width by height sized image */
     image(unsigned width, unsigned height);
+
+    /** Size-specified constructor.  Creates a width by height sized image */
+    image(unsigned width, unsigned height, const rgbcolor<T>* pdata);    
     
     /** Destructor */
     virtual ~image();
@@ -107,7 +110,18 @@ namespace manygames
     raster<rgbcolor<T> >(width, height)
   {
   
-  } // image(w,h)  
+  } // image(w,h)
+
+  //--------------------------------------------------------
+  // Size-specified, initialized constructor for class image
+  //--------------------------------------------------------
+  template <class T>
+  image<T>::image(unsigned width, unsigned height, const rgbcolor<T>* pdata):
+    raster<rgbcolor<T> >(width, height, pdata)
+  {
+  
+  } // image(w,h,rgb*)  
+    
 
   //---------------------------
   // Destructor for class image
