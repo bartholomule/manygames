@@ -88,9 +88,19 @@ namespace manygames
   template <class T>  
   input_window<T>::input_window():
     framebuffer<T>(),
-    mouse_input()
+    mouse_input(),
+    keyboard_input()
   {
   
+  } // input_window()
+
+  template <class T>  
+  input_window<T>::input_window(int width, int height):
+    framebuffer<T>(),
+    mouse_input(),
+    keyboard_input()
+  {
+    framebuffer<T>::resize(width, height);
   } // input_window()
 
   //----------------------------------
@@ -108,7 +118,8 @@ namespace manygames
   template <class T>
   input_window<T>::input_window(const input_window<T>& old):
     framebuffer<T>(old),
-    mouse_input(old)
+    mouse_input(old),
+    keyboard_input(old)
   {
 
   } // input_window(input_window)
@@ -124,6 +135,7 @@ namespace manygames
     {
       framebuffer<T>::operator=(old);
       mouse_input::operator=(old);
+      keyboard_input::operator=(old);      
     }
     return (*this);
   } // input_window::operator=(input_window)
