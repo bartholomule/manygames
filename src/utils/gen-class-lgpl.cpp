@@ -58,9 +58,9 @@ string GenerateFileHeader()
   
   
   string header = (string("/*\n") + 
-		   " * " + CVS_HEADER + "\n *\n" +
-		   " * " + PackageText + "\n" +
-		   " * Copyright (C) " + year_text + " " + AuthorName + "\n" +
+                   " * " + CVS_HEADER + "\n *\n" +
+                   " * " + PackageText + "\n" +
+                   " * Copyright (C) " + year_text + " " + AuthorName + "\n" +
                    " *\n\
  * This library is free software; you can redistribute it and/or           \n\
  * modify it under the terms of the GNU Lesser General Public              \n\
@@ -80,8 +80,8 @@ string GenerateFileHeader()
 }
 
 string GenerateClassDeclaration(const string& classname,
-				const string& indent = string(""),
-				const string& parentname = string(""))
+                                const string& indent = string(""),
+                                const string& parentname = string(""))
 {
   string declaration;
 
@@ -94,16 +94,16 @@ declaration += "//-----------------------------------------------------------\n"
   if( !parentname.empty() )
   {
     declaration += ("// (" + last_num_used + ") " +
-		    "Provide the proper include for class " + parentname +
-		    " (above).\n");
+                    "Provide the proper include for class " + parentname +
+                    " (above).\n");
     ++last_num_used[0];
   }
   declaration += ("// (" + last_num_used + ") " + 
-		  "Enter a class description below, on the line requested.\n");
+                  "Enter a class description below, on the line requested.\n");
   ++last_num_used[0];
   
   declaration += ("// (" + last_num_used + ") " +
-		  "Add your own class members to the class.\n");
+                  "Add your own class members to the class.\n");
   ++last_num_used[0];
   
   declaration += ("// (" + last_num_used + ") " +
@@ -155,8 +155,8 @@ declaration += "//-----------------------------------------------------------\n"
 
 
 string GenerateClassDefinition(const string& classname,
-			       const string& indent = string(""),
-			       const string& parentname = string(""))
+                               const string& indent = string(""),
+                               const string& parentname = string(""))
 {
   string definition;
   string dash_name = string(classname.size(), '-');
@@ -241,10 +241,10 @@ string GenerateClassDefinition(const string& classname,
 void RemoveSwitches(int& argc, char** argv, string& munged_class, string& parent, string& file_base)
 {
   static struct option long_options[] = { {"output", 1, 0, 'o'},
-					  {"parent", 1, 0, 'p'},
-					  {"help", 0, 0, 'h'},
-					  {"version", 0, 0, 'v'},
-					  {0, 0, 0, 0} };
+                                          {"parent", 1, 0, 'p'},
+                                          {"help", 0, 0, 'h'},
+                                          {"version", 0, 0, 'v'},
+                                          {0, 0, 0, 0} };
 
   int c;
   while ( 1 )
@@ -261,27 +261,27 @@ void RemoveSwitches(int& argc, char** argv, string& munged_class, string& parent
     {
     case 'o':
       {
-	file_base = string(optarg);
-	count_to_remove = 2;
-      }	break;
+        file_base = string(optarg);
+        count_to_remove = 2;
+      } break;
     case 'p':
       {
-	parent = string(optarg);
-	count_to_remove = 2;
+        parent = string(optarg);
+        count_to_remove = 2;
       } break;
     case 'v':
       {
-	cout << "Class Stub Generator version $Revision$" << endl;
-	cout << "Copyright (C) 2003 Kevin Harris" << endl;
-	cout << endl;
-	cout << "This is free software, released under terms of the GNU Public License (GPL)" << endl;
-	cout << "version 2 or later (at your option). See http://www.gnu.org/licenses/gpl.txt " << endl;
-	exit(1);
+        cout << "Class Stub Generator version $Revision$" << endl;
+        cout << "Copyright (C) 2003 Kevin Harris" << endl;
+        cout << endl;
+        cout << "This is free software, released under terms of the GNU Public License (GPL)" << endl;
+        cout << "version 2 or later (at your option). See http://www.gnu.org/licenses/gpl.txt " << endl;
+        exit(1);
       }
     case 'h':
       {
-	cout << "Class Stub Generator version $Revision$" << endl;
-	cout << "  This is a program to generate class stubs. \n\
+        cout << "Class Stub Generator version $Revision$" << endl;
+        cout << "  This is a program to generate class stubs. \n\
   As arguments, it accepts one non-switch argument, which is the classname.\n\
   ie. giving it 'foo.baz' would generate a class baz in namespace foo.\n\
 \n\
@@ -291,7 +291,7 @@ void RemoveSwitches(int& argc, char** argv, string& munged_class, string& parent
 \n\
   --version   - displays the version number and copyright/license \n\
   --help      - displays this help" << endl;
-	exit(1);
+        exit(1);
       }
     default:
       {
@@ -347,7 +347,7 @@ string GenerateNamespaceBegin(const vector<string>& namespaces, string& indent)
   for(vector<string>::const_iterator i = namespaces.begin(); i != namespaces.end(); ++i)
   {
     result += (indent + "namespace " + *i + "\n" + 
-	       indent + "{ \n");
+               indent + "{ \n");
     indent += "  ";
   }
   return result;
