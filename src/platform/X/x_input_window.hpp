@@ -53,6 +53,7 @@ namespace manygames
     GC gc;
     XImage* img;
     unsigned char* image_buffer; // Required for display on X.
+    bool drawable;
 
     /** Copy constructor -- Not implemented */
     x_input_window(const x_input_window& old); 
@@ -76,7 +77,8 @@ namespace manygames
     /** Get the height of the screen */
     unsigned get_height() const { return framebuffer<unsigned char>::get_height(); }
 
-
+    virtual void disable_repeat();
+    virtual void enable_repeat(); 
 
     /** Check for size changes, and resize the buffers as needed. */
     virtual void size_change_check();
