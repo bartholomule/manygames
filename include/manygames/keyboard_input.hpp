@@ -38,18 +38,6 @@
 
 namespace manygames
 { 
-
-// BEGIN(DELETEME)
-//-----------------------------------------------------------
-//#error You must customize this automatically generated class.
-// To do this, you must: 
-// (1) Enter a class description below, on the line requested.
-// (2) Add your own class members to the class.
-// (3) Provide the required operations in the copy constructor and assignment
-//  operator (in the corresponding .cpp file).
-//-----------------------------------------------------------
-// END(DELETEME)
-
   /**
    * 
    * A basic class for keyboard input (to be subclassed by the class which
