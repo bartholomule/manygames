@@ -174,7 +174,7 @@ target_cpu = @target_cpu@
 target_os = @target_os@
 target_vendor = @target_vendor@
 lib_LTLIBRARIES = libmanygames_input.la
-libmanygames_input_la_SOURCES = mouse_input.cpp
+libmanygames_input_la_SOURCES = mouse_input.cpp keyboard_input.cpp
 libmanygames_input_la_LDFLAGS = -module -shared -rpath @prefix@/lib
 AM_CXXFLAGS = -I@top_srcdir@/include $(SIGC_CFLAGS)
 INCLUDES = -I@top_srcdir@/include
@@ -186,13 +186,14 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(lib_LTLIBRARIES)
 
 libmanygames_input_la_LIBADD =
-am_libmanygames_input_la_OBJECTS = mouse_input.lo
+am_libmanygames_input_la_OBJECTS = mouse_input.lo keyboard_input.lo
 libmanygames_input_la_OBJECTS = $(am_libmanygames_input_la_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)/src
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/mouse_input.Plo
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/keyboard_input.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/mouse_input.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -251,6 +252,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/keyboard_input.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mouse_input.Plo@am__quote@
 
 .cpp.o:
