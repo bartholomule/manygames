@@ -76,41 +76,6 @@ std::ostream& operator <<(std::ostream& o, const std::vector<T>& vt)
 }
 
 /**
- * Return the max of two items (by means of the > operator)
- * Some implementations have 'max' or 'MAX' defined as a macro, but it is
- * sometimes useful to take the address of such a function.
- * USE THIS INSTEAD (assuming that your compiler can take the address of a
- * templated function).
- * @author Kevin Harris
- */
-template <class T>
-T my_max(const T& t1, const T& t2)
-{
-  if(t1 > t2)
-    return(t1);
-  else
-    return(t2);
-}
-
-/**
- * Return the min of two items (by means of the < operator)
- * Some implementations have 'min' or 'MIN' defined as a macro, but it is
- * sometimes useful to take the address of such a function.
- * USE THIS INSTEAD (assuming that your compiler can take the address of a
- * templated function).
- * @author Kevin Harris
- */
-template <class T>
-T my_min(const T& t1, const T& t2)
-{
-  if(t1 < t2)
-    return(t1);
-  else
-    return(t2);
-}
-
-
-/**
  * Return the absolute value of an item (uses the < operator and a conversion
  * to the required type from an int)
  * @author Kevin Harris
