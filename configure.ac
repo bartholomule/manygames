@@ -117,6 +117,17 @@ PKG_CHECK_MODULES(SIGC, sigc++-1.2)
 AC_SUBST(SIGC_CFLAGS)
 AC_SUBST(SIGC_LIBS)
 
+
+AC_PATH_XTRA
+if test -n "$no_x"; then
+dnl AC_MSG_ERROR([Can't find X, you need X!])
+  USE_X=false
+else
+  USE_X=true
+fi
+AC_SUBST(X_INCLUDE_DIRS)
+AC_SUBST(X_LIB_DIRS)
+
 dnl echo -e "checking for SigC++... \c"
 dnl dnl AC_CHECK_PROG(sigcxx_val,"sigc-config --cflags","yes","no")
 dnl if [ `sigc-config --cflags >/dev/null 2>/dev/null` ]
@@ -350,6 +361,7 @@ AC_OUTPUT([ Makefile          intl/Makefile \
             src/input/Makefile \
 	    src/platform/Makefile \
 	    src/platform/gtkmm/Makefile \
+	    src/platform/X/Makefile \
             include/Makefile \
             include/manygames/Makefile \
 	    test/Makefile 
