@@ -140,7 +140,7 @@ namespace manygames
     }
     if( state & GDK_LOCK_MASK )
     {
-      result |= mouse_input::mouse_capslock_down;
+      result |= mouse_input::mouse_capslock_on;
     }
 
     assert( (GDK_CONTROL_MASK == (1 << 2)) &&
@@ -151,10 +151,10 @@ namespace manygames
             (GDK_MOD5_MASK    == (1 << 7)) );
 
     assert( (mouse_input::mouse_control_down == (1 << 6)) &&
-            (mouse_input::mouse_mod1_down    == (1 << 7)) &&
-            (mouse_input::mouse_mod2_down    == (1 << 8)) &&
+            (mouse_input::mouse_alt_down     == (1 << 7)) &&
+            (mouse_input::mouse_numlock_on   == (1 << 8)) &&
             (mouse_input::mouse_mod3_down    == (1 << 9)) &&
-            (mouse_input::mouse_mod4_down    == (1 << 10)) &&
+            (mouse_input::mouse_super_down   == (1 << 10)) &&
             (mouse_input::mouse_mod5_down    == (1 << 11)) );
 
     result |= ((state >> 2) & 0x3F) << 6;
@@ -246,12 +246,12 @@ namespace manygames
     if( state & GDK_MOD1_MASK )
     {
       state &= ~GDK_MOD1_MASK;
-      translated_state |= keyboard_input::keyboard_mod1;
+      translated_state |= keyboard_input::keyboard_alt;
     }
     if( state & GDK_MOD2_MASK )
     {
       state &= ~GDK_MOD2_MASK;
-      translated_state |= keyboard_input::keyboard_mod2;
+      translated_state |= keyboard_input::keyboard_numlock;
     }
     if( state & GDK_MOD3_MASK )
     {
@@ -261,7 +261,7 @@ namespace manygames
     if( state & GDK_MOD4_MASK )
     {
       state &= ~GDK_MOD4_MASK;
-      translated_state |= keyboard_input::keyboard_mod4;
+      translated_state |= keyboard_input::keyboard_super;
     }
     if( state & GDK_MOD5_MASK )
     {
@@ -285,27 +285,6 @@ namespace manygames
                           keyboard_state_translate(event->state) & ~keyboard_input::keyboard_key_pressed);    
   }
 
-
-  std::string gtkmm_input_window::keyname(unsigned key) const
-  {
-    assert("finish this" == NULL);
-  }
-
-  std::string gtkmm_input_window::keyname(unsigned key, unsigned modifiers, bool shortened) const
-  {
-    assert("finish this" == NULL);
-  }  
-
-  void gtkmm_input_window::override_keyname(unsigned key, const std::string& new_name)
-  {
-    assert("finish this" == NULL);
-  }
-  
-  void gtkmm_input_window::override_keyname(unsigned key, unsigned modifiers, const std::string& new_name)
-  {
-    assert("finish this" == NULL);
-  }  
-  
   void gtkmm_input_window::run_window()
   {
     Gtk::Main::run(*my_parent_window);

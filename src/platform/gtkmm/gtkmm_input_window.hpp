@@ -93,12 +93,6 @@ namespace manygames
     virtual bool on_key_press_event(GdkEventKey* event);
     virtual bool on_key_release_event(GdkEventKey* event);    
     
-    virtual std::string keyname(unsigned key) const;
-    virtual std::string keyname(unsigned key, unsigned modifiers, bool shortened) const;
-
-    virtual void override_keyname(unsigned key, const std::string& new_name);
-    virtual void override_keyname(unsigned key, unsigned modifiers, const std::string& new_name);
-
     /** Enter the main message loop, returning only when the program is
         terminated, or if quit_window() below is called. . */
     virtual void run_window();

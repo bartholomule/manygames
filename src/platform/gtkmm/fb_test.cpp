@@ -628,15 +628,21 @@ bool drag(int,int,int,int,unsigned)
 
 bool key_down(unsigned key, unsigned mods)
 {
-  printf("::key_down(0x%06x,0x%06x) -- %d keys are now down\n", key, mods, fb->num_keys_down());
+  printf("::key_down(0x%06x,0x%06x)==%s -- %d keys are now down\n", key, mods,
+	 fb->keyname(key, mods, false).c_str(),
+	 fb->num_keys_down());
+
   return true;
 }
 
 bool key_up(unsigned key, unsigned press_mods, unsigned release_mods)
 {
-  printf("::key_up(0x%06x,0x%06x,0x%06x) -- %d keys are now down\n", key, press_mods, release_mods, fb->num_keys_down());
+  printf("::key_up(0x%06x,0x%06x,0x%06x)==%s -- %d keys are now down\n", key, press_mods, release_mods,
+	 fb->keyname(key, release_mods, false).c_str(),
+	 fb->num_keys_down());
 
-  if( key == 'q' )
+  // Quit when they let up on Q or escape.
+  if( (key == 'q') || (key == 'Q') || (key == keyboard_input::KEY_escape) )
   {
     fb->quit_window();
   }
@@ -659,6 +665,8 @@ int main(int argc, char** argv)
   fb->key_pressed.connect(SigC::slot(key_down));
   fb->key_released.connect(SigC::slot(key_up));
 
+  fb->add_modifier_ignore_mask(keyboard_input::keyboard_numlock);
+  
   fb->disable_repeat();
   
   //  barf = xpm_convert_image<unsigned char,bool>(barf_xpm);
