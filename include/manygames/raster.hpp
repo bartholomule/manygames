@@ -26,6 +26,7 @@
 #include <manygames/extra_exceptions.hpp>
 #include <manygames/template_functions.hpp>
 #include <manygames/useful_functions.hpp>
+#include <manygames/rectangle.hpp>
 #include <string>
 
 namespace manygames
@@ -108,7 +109,15 @@ namespace manygames
      * @returns a new raster that contains the data from the specified region.
      */
     raster<T> sub_raster(unsigned x1, unsigned y1,
-                         unsigned x2, unsigned y2) const throw(out_of_range); 
+                         unsigned x2, unsigned y2) const throw(out_of_range);
+
+    /**
+     * Return a raster which contains the elements in the range
+     * (rect.left, rect.top) to (rect.right, rect.bottom) inclusive.
+     * @throws out_of_range if any of the rect coords are out of range.
+     * @returns a new raster that contains the data from the specified region.
+     */    
+    raster<T> sub_raster(const rectangle<unsigned>& rect) const throw(out_of_range);    
 
     /**
      * Resize the current raster to the given width and height.  If preserve is
@@ -486,6 +495,13 @@ namespace manygames
     }
   }
 
+  template <class T>
+  raster<T> raster<T>::sub_raster(const rectangle<unsigned>& rect) const
+    throw(out_of_range)    
+  {
+    return sub_raster(rect.left, rect.top, rect.right, rect.bottom);
+  }
+  
   template <class T>
   void raster<T>::resize(unsigned width, unsigned height, bool preserve)
   {

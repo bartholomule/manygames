@@ -60,7 +60,7 @@ namespace manygames
     masked_image(unsigned width, unsigned height);
 
     masked_image(unsigned width, unsigned height,
-		 const rgbcolor<T>* pdata, const mask_base* mdata);    
+                 const rgbcolor<T>* pdata, const mask_base* mdata);    
 
     /** Destructor */
     virtual ~masked_image();
@@ -107,12 +107,39 @@ namespace manygames
      * filling the rest with the given fill data.
      */
     void resize(unsigned width, unsigned height,
-		int cx, int cy, const rgbcolor<T>& fill1, const mask_base& fill2)
+                int cx, int cy, const rgbcolor<T>& fill1, const mask_base& fill2)
     {
       raster<rgbcolor<T> >::resize(width, height, cx, cy, fill1);
       my_mask.resize(width, height, cx, cy, fill2);
     }
-		 
+
+    
+    /**
+     * Return a image which contains the elements in the range
+     * (x1,y1) to (x2,y2) inclusive.
+     * @throws out_of_range if any of x1, y1, x2, or y2 are out of range.
+     * @returns a new image that contains the data from the specified region.
+     */
+    masked_image sub_image(unsigned x1, unsigned y1,
+                           unsigned x2, unsigned y2) const throw(out_of_range)
+    {
+      return masked_image<T,mask_base>(image<T>::sub_image(x1,y1,x2,y2),
+                                       my_mask.sub_raster(x1,y1,x2,y2));
+    }
+
+    /**
+     * Return a image which contains the elements in the range
+     * (rect.left, rect.top) to (rect.right, rect.bottom) inclusive.
+     * @throws out_of_range if any of the rect coords are out of range.
+     * @returns a new image that contains the data from the specified region.
+     */    
+    masked_image sub_image(const rectangle<unsigned>& rect) const throw(out_of_range)
+    {
+      return masked_image<T,mask_base>(image<T>::sub_image(rect),
+                                       my_mask.sub_raster(rect));      
+    }
+
+    
   }; // class masked_image
 
 
@@ -144,20 +171,20 @@ namespace manygames
   //-------------------------------------------
   template <class T, class mask_base>  
   masked_image<T,mask_base>::masked_image(const image<T>& img,
-					  const raster<mask_base>& msk): 
+                                          const raster<mask_base>& msk): 
     image<T>(img),
     my_mask(msk)
   {
 
     // Make sure the sizes are the same....
     my_mask.resize(get_width(), get_height(), true);
-		   
+                   
   } // masked_image(image,raster)  
 
   template <class T, class mask_base>  
   masked_image<T,mask_base>::masked_image(unsigned width, unsigned height,
-					  const rgbcolor<T>* pdata,
-					  const mask_base* mdata):
+                                          const rgbcolor<T>* pdata,
+                                          const mask_base* mdata):
     image<T>(width, height, pdata),
     my_mask(width, height, mdata)
   {
@@ -208,7 +235,7 @@ namespace manygames
 
     //    printf("scale_image -- called with scale=%d\n", scale);fflush(stdout);
     masked_image<T,mask_base> ret_image(image.get_width() * scale,
-					image.get_height() * scale);
+                                        image.get_height() * scale);
 
     //    printf("ri w=%d, h=%d, orig w=%d, h=%d\n",  ret_image.get_width(),  ret_image.get_height(),  image.get_width(),  image.get_height()); fflush(stdout);
     
@@ -217,9 +244,9 @@ namespace manygames
       unsigned y_norm = y / scale;
       for(unsigned x = 0; x < ret_image.get_width(); ++x)
       {
-	unsigned x_norm = x / scale;
-	ret_image(x,y) = image(x_norm, y_norm);
-	ret_image.mask(x,y) = image.mask(x_norm, y_norm);
+        unsigned x_norm = x / scale;
+        ret_image(x,y) = image(x_norm, y_norm);
+        ret_image.mask(x,y) = image.mask(x_norm, y_norm);
       }
     }
     printf("Returning the scaled image...\n"); fflush(stdout);

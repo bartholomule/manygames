@@ -76,6 +76,9 @@ namespace manygames
     /** Default constructor */
     image();
 
+    /** Raster-copying constructor */
+    image(const raster<rgbcolor<T> >& r):raster<rgbcolor<T> >(r) { }
+    
     /** Size-specified constructor.  Creates a width by height sized image */
     image(unsigned width, unsigned height);
 
@@ -90,6 +93,31 @@ namespace manygames
 
     /** Assignment operator */
     image& operator= (const image& old);
+
+
+    /**
+     * Return a image which contains the elements in the range
+     * (x1,y1) to (x2,y2) inclusive.
+     * @throws out_of_range if any of x1, y1, x2, or y2 are out of range.
+     * @returns a new image that contains the data from the specified region.
+     */
+    image<T> sub_image(unsigned x1, unsigned y1,
+                       unsigned x2, unsigned y2) const throw(out_of_range)
+    {
+      return sub_raster(x1,y1,x2,y2);
+    }
+
+    /**
+     * Return a image which contains the elements in the range
+     * (rect.left, rect.top) to (rect.right, rect.bottom) inclusive.
+     * @throws out_of_range if any of the rect coords are out of range.
+     * @returns a new image that contains the data from the specified region.
+     */    
+    image<T> sub_image(const rectangle<unsigned>& rect) const throw(out_of_range)
+    {
+      return sub_raster(rect);
+    }
+    
 
   }; // class image
 

@@ -193,6 +193,7 @@ manygamesinclude_HEADERS = \
 	keyboard_input.hpp \
 	input_window.hpp \
 	\
+	rectangle.hpp \
 	xpm_image_loader.hpp \
 	\
 	ref_count_object.hpp \
