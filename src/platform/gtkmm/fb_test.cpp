@@ -25,9 +25,9 @@ using std::endl;
 
 #include <manygames_config.hpp>
 #include <manygames/textized.hpp>
+#include "gtkmm_input_window.hpp"
 #include <manygames/xpm_image_loader.hpp>
 #include <sys/time.h>
-#include "fb_test.hpp"
 
 static manygames::masked_image<guchar,bool> barf;
 int x_shift, y_shift;
@@ -479,52 +479,33 @@ static const char* const barf_xpm[] = {
 
 
 
+#include <gtkmm/main.h>
+#include <gtkmm/window.h>
 
-//--------------------------------------
-// Default constructor for class fb_test
-//--------------------------------------
-fb_test::fb_test():
-  manygames::gtkmm_input_window()
-  // Class initializers go here. DELETEME
-{
-  dragging = false;
+using namespace manygames;
 
-} // fb_test()
+// icky, nasty, global variable...
+gtkmm_input_window* fb;
 
-//-----------------------------
-// Destructor for class fb_test
-//-----------------------------
-fb_test::~fb_test()
+
+void update()
 {
 
-} // ~fb_test()
-
-//-----------------------------------
-// Copy constructor for class fb_test
-//-----------------------------------
-fb_test::fb_test(const fb_test& old):
-  manygames::gtkmm_input_window(old)
-  // Class initializers go here. DELETEME
-{
-  // Insert any copy-assignment here. DELETEME
-} // fb_test(fb_test)
-
-
-void fb_test::update()
-{
-   
-  Glib::RefPtr<Gdk::Window> window = get_window();
+  framebuffer<guchar>* fb2 = fb;
+  
   int width,height;
-  window->get_size(width,height);
 
-  // [FIXME] Find an event or signal to catch which will auto resize this
-  // thing... 
-  if( get_background().get_width() != width ||
-      get_background().get_height() != height )
+  width = fb2->get_width();
+  height = fb2->get_height();
+
+  //  printf("::update called (size=[%d,%d])\n", width, height);
+
+  if( (width == 0) || (height == 0) )
   {
-    resize(width, height, false);
+    return;
   }
 
+  
   //  printf("Inside update: x shift=%d, y shift=%d\n", x_shift, y_shift);
   
   static const manygames::rgbcolor<unsigned char> green(0,255,0);
@@ -544,6 +525,7 @@ void fb_test::update()
 
         if( (width != last_width) || !precalculated_color_gradient )
         {
+          //      printf("Recalculating gradient\n");
           // Deleting NULL is safe!
           delete[] precalculated_color_gradient;
 
@@ -557,16 +539,18 @@ void fb_test::update()
                             ((255 *(1 - fraction)) * dist / float(width)));
             precalculated_color_gradient[dist] = manygames::rgbcolor<unsigned char>(0, value, 0);
           }
+          //      printf("Gradient calculated...\n");
         }
 
-        setpixel_back(x,y,precalculated_color_gradient[distance]);
+        //      printf("Setting pixel from gradient\n");
+        fb2->setpixel_back(x,y,precalculated_color_gradient[distance]);
         ++distance;
 
 //      setpixel_back(x,y,green);
       }
       else
       {
-        setpixel_back(x,y,blue);
+        fb2->setpixel_back(x,y,blue);
         distance = 0;
       }
       /*
@@ -576,25 +560,21 @@ void fb_test::update()
 
     }
   }
+  //  printf("Everything should be drawn now...\n");
   if( !barf.empty() )
   {
     int x_mid = (int(width) - int(barf.get_width())) / 2;
     int y_mid = (int(height) - int(barf.get_height())) / 2;
     //    printf("Trying masked at %d,%d\n", x_mid, y_mid);
-    bg_draw_image(barf, x_mid, y_mid);
+    fb2->bg_draw_image(barf, x_mid, y_mid);
     //    printf("Trying non-trasparent at %d,%d\n", x_mid, y_mid + barf.get_height());
-    bg_draw_image(*static_cast<manygames::image<guchar>*>(&barf), x_mid, y_mid + barf.get_height());    
+    fb2->bg_draw_image(*static_cast<manygames::image<guchar>*>(&barf), x_mid, y_mid + barf.get_height());    
   }
-  
-  flip();
+
+  //  printf("About to flip...\n");
+  fb2->flip();
+  //  printf("flipped!\n");
 }
-
-#include <gtkmm/main.h>
-#include <gtkmm/window.h>
-
-using namespace manygames;
-
-fb_test* fb;
 
 
 bool mouse_moved(int x, int y, int dx, int dy)
@@ -603,7 +583,7 @@ bool mouse_moved(int x, int y, int dx, int dy)
 
   //  printf("::mouse_moved(%d,%d,%d,%d)\n", x,y,dx,dy);
 
-  unsigned buttons_down = fb->get_button_state() & mouse_input::MouseButtonMask;
+  unsigned buttons_down = fb->get_button_state() & mouse_input::mouse_button_mask;
 
   if( buttons_down != 0 )
   {
@@ -648,6 +628,19 @@ bool drag(int,int,int,int,unsigned)
   printf("That was a drag!\n");
 }
 
+bool key_down(unsigned key, unsigned mods)
+{
+  printf("::key_down(0x%06x,0x%06x) -- %d keys are now down\n", key, mods, fb->num_keys_down());
+  return true;
+}
+
+bool key_up(unsigned key, unsigned press_mods, unsigned release_mods)
+{
+  printf("::key_up(0x%06x,0x%06x,0x%06x) -- %d keys are now down\n", key, press_mods, release_mods, fb->num_keys_down());
+  return true;
+}
+
+
 int main(int argc, char** argv)
 {
   x_shift = y_shift = 0;
@@ -655,11 +648,16 @@ int main(int argc, char** argv)
   
   Gtk::Window win;
 
-  fb = new fb_test;
+  fb = new gtkmm_input_window;
 
-  fb->moved.connect(SigC::slot(mouse_moved));
-  fb->clicked.connect(SigC::slot(click));
-  fb->dragged.connect(SigC::slot(drag));  
+  fb->mouse_moved.connect(SigC::slot(mouse_moved));
+  fb->mouse_clicked.connect(SigC::slot(click));
+  fb->mouse_dragged.connect(SigC::slot(drag));
+  fb->buffer_update.connect(SigC::slot(update));
+  fb->key_pressed.connect(SigC::slot(key_down));
+  fb->key_released.connect(SigC::slot(key_up));
+
+  fb->disable_repeat();
   
   win.add(*fb);
   fb->show();

@@ -78,13 +78,35 @@ namespace manygames
     virtual bool on_button_press_event(GdkEventButton* event);
     virtual bool on_button_release_event(GdkEventButton* event);  
     virtual bool on_motion_notify_event(GdkEventMotion* event);
+
+    /** Check for size changes, and resize the buffers as needed. */
+    virtual void size_change_check();
     
     virtual bool on_expose_event(GdkEventExpose* e)
     {
-      update(); /* temp */
-      draw();
+      if( is_drawable() )
+      {
+	size_change_check();
+	update();
+	draw();
+      }
       return true;
-    }    
+    }
+    
+    /** Get the width of the screen */
+    unsigned get_width()  const { return framebuffer<guchar>::get_width(); }
+    /** Get the height of the screen */
+    unsigned get_height() const { return framebuffer<guchar>::get_height(); }
+
+    virtual bool on_key_press_event(GdkEventKey* event);
+    virtual bool on_key_release_event(GdkEventKey* event);    
+    
+    virtual std::string keyname(unsigned key) const;
+    virtual std::string keyname(unsigned key, unsigned modifiers, bool shortened) const;
+
+    virtual void override_keyname(unsigned key, const std::string& new_name);
+    virtual void override_keyname(unsigned key, unsigned modifiers, const std::string& new_name);
+    
   }; // class gtkmm_input_window
 
 } // namespace manygames

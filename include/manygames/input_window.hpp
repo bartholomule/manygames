@@ -26,6 +26,7 @@
 // Include of parent class headers
 // --------------------------------------
 #include <manygames/mouse_input.hpp>
+#include <manygames/keyboard_input.hpp>
 #include <manygames/framebuffer.hpp>
 #include <sigc++/sigc++.h>
 
@@ -43,7 +44,7 @@ namespace manygames
    * 
    */
   template <class T>
-  class input_window : public framebuffer<T>, public mouse_input
+  class input_window : public framebuffer<T>, public mouse_input, public keyboard_input
   {
 
   private:
@@ -66,9 +67,9 @@ namespace manygames
     /** Assignment operator */
     input_window& operator= (const input_window& old);
 
-    virtual void update() { update_hook(); }
+    virtual void update() { buffer_update(); }
     
-    SigC::Signal0<void> update_hook;
+    SigC::Signal0<void> buffer_update;
     
   }; // class input_window
 
