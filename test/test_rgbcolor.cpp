@@ -19,13 +19,13 @@ int main(int,char**)
   const char* failed = "FAILED!";
 
   typedef manygames::rgbcolor<int> color;
-  
+
   color blah01;
 
   cout << "-------------------------------------" << endl;
   cout << "Testing rgbcolor member functions/ops" << endl;
   cout << "-------------------------------------" << endl;
-  
+
   TEST_RESULT_NAMED("to see if get/set functions work",
                     ((blah01.set_r(1),(blah01.r() == 1)) && // single r
                      (blah01.set_g(2),(blah01.g() == 2)) && // single g
@@ -38,7 +38,7 @@ int main(int,char**)
                     ERROR_TEXT(failed));
 
   // Check both const/non-const [] operators
-  TEST_RESULT_NAMED("to see if operator[] works", 
+  TEST_RESULT_NAMED("to see if operator[] works",
                     (((blah01[0] = 1),(((const color)blah01)[0] == 1)) &&
                      ((blah01[1] = 2),(((const color)blah01)[1] == 2)) &&
                      ((blah01[2] = 3),(((const color)blah01)[2] == 3))
@@ -51,12 +51,12 @@ int main(int,char**)
                     ((blah02[0] == 1) && (blah02[1] == 2) && (blah02[2] == 3)),
                     passed,
                     ERROR_TEXT(failed));
-  
+
   color blah03; blah03 = blah01;
   TEST_RESULT_NAMED("to see if the assignment operator works",
                     ((blah03[0] == 1) && (blah03[1] == 2) && (blah03[2] == 3)),
                     passed,
-                    ERROR_TEXT(failed));  
+                    ERROR_TEXT(failed));
 
   //
   // NOTE: These tests rely on integer truncation (always rounding down).
@@ -66,7 +66,7 @@ int main(int,char**)
                     ((blah04[0] == 2) && (blah04[1] == 4) && (blah04[2] == 6)),
                     passed,
                     ERROR_TEXT(failed));
-  
+
   color blah05 = blah01; blah05 *= 2.5;
   TEST_RESULT_NAMED("to see if operator *= (general) works",
                     ((blah05[0] == 2) && (blah05[1] == 5) && (blah05[2] == 7)),
@@ -78,7 +78,7 @@ int main(int,char**)
                     ((blah06[0] == 1) && (blah06[1] == 2) && (blah06[2] == 3)),
                     passed,
                     ERROR_TEXT(failed));
-  
+
   color blah07 = blah05; blah07 /= 2.5;
   TEST_RESULT_NAMED("to see if operator /= (general) works",
                     ((blah07[0] == 0) && (blah07[1] == 2) && (blah07[2] == 2)),
@@ -95,18 +95,18 @@ int main(int,char**)
   TEST_RESULT_NAMED("to see if operator -= works",
                     ((blah09[0] == 0) && (blah09[1] == 1) && (blah09[2] == 1)),
                     passed,
-                    ERROR_TEXT(failed));  
+                    ERROR_TEXT(failed));
 
   cout << "-------------------------------------" << endl;
   cout << "Testing rgbcolor global functions/ops" << endl;
   cout << "-------------------------------------" << endl;
-  
+
   color blah10 = 2 * blah01;
   TEST_RESULT_NAMED("to see if global binary operator * (specific) works",
                     ((blah10[0] == 2) && (blah10[1] == 4) && (blah10[2] == 6)),
                     passed,
                     ERROR_TEXT(failed));
-  
+
   color blah11 = 2.5 * blah01;
   TEST_RESULT_NAMED("to see if global binary operator * (general) works",
                     ((blah11[0] == 2) && (blah11[1] == 5) && (blah11[2] == 7)),
@@ -129,7 +129,7 @@ int main(int,char**)
   TEST_RESULT_NAMED("to see if global unary operator - works",
                     ((blah14[0] == -4) && (blah14[1] == -9) && (blah14[2] == -13)),
                     passed,
-                    ERROR_TEXT(failed));  
+                    ERROR_TEXT(failed));
 
   int barfola[] = {0,  1,  2,
                    3,  4,  5,
@@ -140,7 +140,7 @@ int main(int,char**)
   cout << "------------------------" << endl;
   cout << "Testing reinterpretation" << endl;
   cout << "------------------------" << endl;
-  
+
   TEST_RESULT_NAMED("to see if reverse reinterpretation works as required",
                     (((foo[0][0] == 0) && (foo[0][1] == 1) && (foo[0][2] == 2)) &&
                      ((foo[1][0] == 3) && (foo[1][1] == 4) && (foo[1][2] == 5)) &&
@@ -148,7 +148,7 @@ int main(int,char**)
                      ((foo[3][0] == 9) && (foo[3][1] == 10) && (foo[3][2] == 11))),
                     passed,
                     ERROR_TEXT(failed));
-  
+
 
   color bar[4];
 
@@ -170,24 +170,24 @@ int main(int,char**)
                       (bar_rp[ 8] == 18) && (bar_rp[ 9] == 19) &&
                       (bar_rp[10] == 20) && (bar_rp[11] == 21) ),
                     passed,
-                    ERROR_TEXT(failed));  
-  
+                    ERROR_TEXT(failed));
+
   if( !error_count )
   {
-    
-    cout << "----------------------------------" << endl;    
+
+    cout << "----------------------------------" << endl;
     cout << "*** All rgbcolor tests passed. ***" << endl;
-    cout << "----------------------------------" << endl;    
+    cout << "----------------------------------" << endl;
     return 0;
   }
   else
   {
-    cout << "---------------------------------" << endl;    
+    cout << "---------------------------------" << endl;
     cout << "ERROR: Failed " << error_count << " rgbcolor tests." << endl;
     cout << "---------------------------------" << endl;
     return(2);
-  }  
-  
+  }
+
 }
 
 //(templated) class rgbcolor

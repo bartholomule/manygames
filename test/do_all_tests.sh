@@ -39,7 +39,7 @@ cat <<EOF
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version. 
+  (at your option) any later version.
 
   This program is distributed in the hope that it will be useful, but
   WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -48,7 +48,7 @@ cat <<EOF
 
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA 
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
 
 EOF
     exit 0
@@ -89,14 +89,14 @@ do
     # Handle execution, redirecting output if a quiet flag was given.
     if [ $quiet -eq 0 ]
     then
-      $test_name
+      ./$test_name
     else
-      $test_name > /dev/null 2>/dev/null
+      ./$test_name > /dev/null 2>/dev/null
     fi
 
     # Check the return code, printing a success or failure.
     if [ $? -ne 0 ]
-    then 
+    then
       failed_something=1
       echo "-------------------------------------------"
       echo " Test $test_name failed!"

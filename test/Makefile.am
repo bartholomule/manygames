@@ -5,4 +5,4 @@ test_rgbcolor_SOURCES = test_rgbcolor.cpp
 test_rgbacolor_SOURCES = test_rgbacolor.cpp
 INCLUDES=-I@top_srcdir@/include
 # Turn off optimizations, so that these tests will actually execute.
-CXXFLAGS=-O0 -ggdb
+AM_CXXFLAGS:=-O0 -ggdb

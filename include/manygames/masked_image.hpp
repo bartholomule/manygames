@@ -4,18 +4,18 @@
  * Part of "Many Games" - A nearly infinitely expandable gaming framework
  * Copyright (C) 2003 Kevin Harris
  *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * This program is distributed in the hope that it will be useful, but  
- * WITHOUT ANY WARRANTY; without even the implied warranty of           
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    
- * General Public License for more details.                             
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
@@ -29,26 +29,26 @@
 #include <manygames/raster.hpp>
 
 namespace manygames
-{ 
+{
 
   /**
-   * 
+   *
    * An image which has a mask for use in determining weather or not the color
-   * value should be used. 
-   * 
+   * value should be used.
+   *
    * @author Kevin Harris <kpharris@users.sourceforge.net>
    * @version $Revision$
-   * 
+   *
    */
   template <class T, class mask_base = bool>
   class masked_image : public image<T>
   {
 
   private:
-    
+
   protected:
     raster<mask_base> my_mask;
-    
+
   public:
     /** Default constructor */
     masked_image();
@@ -60,7 +60,7 @@ namespace manygames
     masked_image(unsigned width, unsigned height);
 
     masked_image(unsigned width, unsigned height,
-                 const rgbcolor<T>* pdata, const mask_base* mdata);    
+                 const rgbcolor<T>* pdata, const mask_base* mdata);
 
     /** Destructor */
     virtual ~masked_image();
@@ -76,10 +76,10 @@ namespace manygames
      * @param x The column.
      * @param y The row.
      * @throws out_of_range if either x or y is out of range.
-     */    
+     */
     mask_base& mask(unsigned x, unsigned y) throw(out_of_range)
     { return my_mask(x,y); }
-    
+
     /**
      * Get the mask element at the given (x,y)
      * @param x The column.
@@ -93,7 +93,7 @@ namespace manygames
      * Resize the current masked image to the given width and height.  If
      * preserve is given, the current data (if any), is copied across. If
      * either width or height is zero, the current masked image will be resized
-     * to 0. 
+     * to 0.
      */
     void resize(unsigned width, unsigned height, bool preserve = true)
     {
@@ -113,7 +113,7 @@ namespace manygames
       my_mask.resize(width, height, cx, cy, fill2);
     }
 
-    
+
     /**
      * Return a image which contains the elements in the range
      * (x1,y1) to (x2,y2) inclusive.
@@ -132,72 +132,72 @@ namespace manygames
      * (rect.left, rect.top) to (rect.right, rect.bottom) inclusive.
      * @throws out_of_range if any of the rect coords are out of range.
      * @returns a new image that contains the data from the specified region.
-     */    
+     */
     masked_image sub_image(const rectangle<unsigned>& rect) const throw(out_of_range)
     {
       return masked_image<T,mask_base>(image<T>::sub_image(rect),
-                                       my_mask.sub_raster(rect));      
+                                       my_mask.sub_raster(rect));
     }
 
-    
+
   }; // class masked_image
 
 
   //-------------------------------------------
   // Default constructor for class masked_image
   //-------------------------------------------
-  template <class T, class mask_base>  
+  template <class T, class mask_base>
   masked_image<T,mask_base>::masked_image():
     image<T>(),
     my_mask()
   {
-  
+
   } // masked_image()
 
   //-------------------------------------------
   // Sized constructor for class masked_image
   //-------------------------------------------
-  template <class T, class mask_base>  
+  template <class T, class mask_base>
   masked_image<T,mask_base>::masked_image(unsigned w, unsigned h):
     image<T>(w, h),
     my_mask(w, h)
   {
-  
-  } // masked_image(w,h)  
+
+  } // masked_image(w,h)
 
 
   //-------------------------------------------
   // Secondary constructor for class masked_image
   //-------------------------------------------
-  template <class T, class mask_base>  
+  template <class T, class mask_base>
   masked_image<T,mask_base>::masked_image(const image<T>& img,
-                                          const raster<mask_base>& msk): 
+                                          const raster<mask_base>& msk):
     image<T>(img),
     my_mask(msk)
   {
 
     // Make sure the sizes are the same....
-    my_mask.resize(get_width(), get_height(), true);
-                   
-  } // masked_image(image,raster)  
+    my_mask.resize(this->get_width(), this->get_height(), true);
 
-  template <class T, class mask_base>  
+  } // masked_image(image,raster)
+
+  template <class T, class mask_base>
   masked_image<T,mask_base>::masked_image(unsigned width, unsigned height,
                                           const rgbcolor<T>* pdata,
                                           const mask_base* mdata):
     image<T>(width, height, pdata),
     my_mask(width, height, mdata)
   {
-    
+
   } // masked_image(unsigned,unsigned,rgbcolor*,mask_base*)
-  
+
   //----------------------------------
   // Destructor for class masked_image
   //----------------------------------
   template <class T, class mask_base>
   masked_image<T,mask_base>::~masked_image()
   {
-    
+
   } // ~masked_image()
 
   //----------------------------------------
@@ -208,13 +208,13 @@ namespace manygames
     image<T>(old),
     my_mask(old.my_mask)
   {
-    
+
   } // masked_image(masked_image)
 
   //-------------------------------------------
   // Assignment operator for class masked_image
   //-------------------------------------------
-  template <class T, class mask_base>  
+  template <class T, class mask_base>
   masked_image<T,mask_base>& masked_image<T,mask_base>::operator= (const masked_image& old)
   {
     // Generic check for self-assignment
@@ -238,7 +238,7 @@ namespace manygames
                                         image.get_height() * scale);
 
     //    printf("ri w=%d, h=%d, orig w=%d, h=%d\n",  ret_image.get_width(),  ret_image.get_height(),  image.get_width(),  image.get_height()); fflush(stdout);
-    
+
     for(unsigned y = 0; y < ret_image.get_height(); ++y)
     {
       unsigned y_norm = y / scale;
@@ -252,7 +252,7 @@ namespace manygames
     printf("Returning the scaled image...\n"); fflush(stdout);
     return ret_image;
   }
-  
+
 } // namespace manygames
 
 

@@ -4,29 +4,31 @@
  * Part of "Many Games" - A nearly infinitely expandable gaming framework
  * Copyright (C) 2003 Kevin Harris
  *
- * This program is free software; you can redistribute it and/or modify 
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation; either version 2 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * This program is distributed in the hope that it will be useful, but  
- * WITHOUT ANY WARRANTY; without even the implied warranty of           
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU    
- * General Public License for more details.                             
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with this program; if not, write to the Free Software          
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
 #if       !defined(__MANYGAMES__RGBCOLOR_HPP__)
 #define            __MANYGAMES__RGBCOLOR_HPP__
 
+#include <algorithm>
+
 namespace manygames
-{ 
+{
 
   /**
-   * 
+   *
    * A generic class to represent RGB colors.  Note that only built-in (or
    * native) types (char, float, etc), are usable in this class.  The design of
    * this class was chosen so that array accesses ([]) and direct accesses
@@ -50,7 +52,7 @@ namespace manygames
    *
    * @author Kevin Harris <kpharris@users.sourceforge.net>
    * @version $Revision$
-   * 
+   *
    */
   template <class T>
   class rgbcolor
@@ -64,7 +66,7 @@ namespace manygames
       T g; ///< Green component of RGB color
       T b; ///< Blue  component of RGB color
     };
-    /** A struct of three items array accessible. */    
+    /** A struct of three items array accessible. */
     struct rgbcolor_array
     {
       T components[3]; ///< Components of RGB in an 'array'
@@ -73,7 +75,7 @@ namespace manygames
      * A union to allow accesses to both indirectly through an array, and
      * directly athrough a name, without adding any extra processing time or
      * space requirements
-     */        
+     */
     union rgbcolor_union
     {
       rgbcolor_union() { }
@@ -82,7 +84,7 @@ namespace manygames
       {
         direct.r = r;
         direct.g = g;
-        direct.b = b;   
+        direct.b = b;
       }
       /** Operator for simplification of access. */
       T& operator[](unsigned index)       { return array.components[index]; }
@@ -99,9 +101,9 @@ namespace manygames
   public:
     /** Default constructor (does nothing) */
     rgbcolor() { }
-    
+
     /** Secondary constructor (initializes) */
-    rgbcolor(T r, T g, T b):rgb(r,g,b) { }    
+    rgbcolor(T r, T g, T b):rgb(r,g,b) { }
 
     /** Destructor -- NON VIRTUAL! (does nothing) */
     ~rgbcolor() { }
@@ -119,10 +121,10 @@ namespace manygames
     inline T g() const { return rgb.direct.g; } ///< Get the green component
     inline T b() const { return rgb.direct.b; } ///< Get the blue component
 
-    
-    
+
+
     /** Get the element specified.  No bounds checking is performed */
-    inline T& operator[](unsigned index)       { return rgb[index]; }    
+    inline T& operator[](unsigned index)       { return rgb[index]; }
     /** Get the element specified.  No bounds checking is performed */
     inline T  operator[](unsigned index) const { return rgb[index]; }
 
@@ -133,11 +135,11 @@ namespace manygames
     rgbcolor& operator /=(T factor);          ///< Divide by factor
     template <class U>
     rgbcolor& operator *=(U factor);          ///< Multiply by factor (general)
-    template <class U>    
+    template <class U>
     rgbcolor& operator /=(U factor);          ///< Divide by factor (general)
     rgbcolor& operator +=(const rgbcolor& r); ///< Add the given to these
     rgbcolor& operator -=(const rgbcolor& r); ///< Sub the given from these
-    
+
   }; // class rgbcolor
 
   /** Copy constructor */
@@ -158,7 +160,7 @@ namespace manygames
     rgb.direct.r = old.rgb.direct.r;
     rgb.direct.g = old.rgb.direct.g;
     rgb.direct.b = old.rgb.direct.b;
-    return (*this);    
+    return (*this);
   } // rgbcolor::operator=(rgbcolor)
 
   /** Sets the data... */
@@ -189,7 +191,7 @@ namespace manygames
     rgb.direct.b /= factor;
     return *this;
   } // rgbcolor::operator/=(T)
-  
+
   /** Multiplication by a factor/assign (general) */
   template <class T>
   template <class U>
@@ -201,7 +203,7 @@ namespace manygames
     return *this;
   } // rgbcolor::operator*=(U)
 
-  /** Division by a factor/assign (general) */  
+  /** Division by a factor/assign (general) */
   template <class T>
   template <class U>
   rgbcolor<T>& rgbcolor<T>::operator /=(U factor)
@@ -209,7 +211,7 @@ namespace manygames
     rgb.direct.r = T(rgb.direct.r / factor);
     rgb.direct.g = T(rgb.direct.g / factor);
     rgb.direct.b = T(rgb.direct.b / factor);
-    return *this;    
+    return *this;
   } // rgbcolor::operator/=(U)
 
   /** addition/assign */
@@ -241,7 +243,7 @@ namespace manygames
     retval *= factor;
     return retval;
   } // operator*(T,rgbcolor)
-  
+
   /** Multiplication of a color by a factor (non-member, general) */
   template <class T, class U>
   rgbcolor<T> operator*(U factor, const rgbcolor<T>& r)
@@ -259,7 +261,7 @@ namespace manygames
     retval += c2;
     return retval;
   } // operator+(rgbcolor,rgbcolor)
-  
+
   /** Subtraction of two colors. */
   template <class T>
   rgbcolor<T> operator-(const rgbcolor<T>& c1, const rgbcolor<T>& c2)
@@ -274,8 +276,8 @@ namespace manygames
   rgbcolor<T> operator-(const rgbcolor<T>& c)
   {
     return rgbcolor<T>(-c.r(),-c.g(),-c.b());
-  } // operator-(rgbcolor,rgbcolor)  
-  
+  } // operator-(rgbcolor,rgbcolor)
+
 
   template <class T>
   rgbcolor<T> clamp(const rgbcolor<T>& c, T min, T max)
@@ -283,7 +285,7 @@ namespace manygames
     rgbcolor<T> ret_color( std::min(std::max(c.r(), min), max),
                            std::min(std::max(c.g(), min), max),
                            std::min(std::max(c.b(), min), max) );
-  }  
+  }
 } // namespace manygames
 
 

@@ -22,6 +22,11 @@
 #if       !defined(__MANYGAMES__TEXTIZED_HPP__)
 #define            __MANYGAMES__TEXTIZED_HPP__
 
+// FIXME! This file isn't being generated.  Remove the following define as well.
+//#include <manygames/manygames_config.hpp>
+#define ENABLE_NLS 1
+
+
 // Define this value to effectively remove internationalization
 #if !defined(ENABLE_NLS) || !ENABLE_NLS
 

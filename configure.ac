@@ -15,7 +15,7 @@ dnl Change the version number here when required.
 AM_INIT_AUTOMAKE(manygames, 0.00.00)
 AC_PREFIX_DEFAULT(/usr/local/games)
 
-AM_CONFIG_HEADER(src/manygames_config.hpp)
+AM_CONFIG_HEADER(include/manygames/manygames_config.hpp)
 
 
 dnl ---------------------------------------------------------------------------
