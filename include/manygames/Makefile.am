@@ -1,6 +1,7 @@
 # add *.h, if there are any .h files.
 manygamesincludedir=$(includedir)/$(PACKAGE)
 manygamesinclude_HEADERS = \
+	framebuffer.hpp \
 	raster.hpp \
 	rgbcolor.hpp \
 	rgbacolor.hpp \
