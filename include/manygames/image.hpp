@@ -73,6 +73,8 @@ namespace manygames
   protected:
 
   public:
+    typedef rgbcolor<T> color_type;
+
     /** Default constructor */
     image();
 
@@ -104,7 +106,7 @@ namespace manygames
     image<T> sub_image(unsigned x1, unsigned y1,
                        unsigned x2, unsigned y2) const throw(out_of_range)
     {
-      return sub_raster(x1,y1,x2,y2);
+      return raster<color_type>::sub_raster(x1,y1,x2,y2);
     }
 
     /**
@@ -115,7 +117,7 @@ namespace manygames
      */    
     image<T> sub_image(const rectangle<unsigned>& rect) const throw(out_of_range)
     {
-      return sub_raster(rect);
+      return raster<color_type>::sub_raster(rect);
     }
     
 
