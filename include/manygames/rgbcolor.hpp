@@ -80,9 +80,9 @@ namespace manygames
       /** A constructor, to simplify things. */
       rgbcolor_union(T r, T g, T b)
       {
-	direct.r = r;
-	direct.g = g;
-	direct.b = b;	
+        direct.r = r;
+        direct.g = g;
+        direct.b = b;   
       }
       /** Operator for simplification of access. */
       T& operator[](unsigned index)       { return array.components[index]; }
@@ -276,7 +276,14 @@ namespace manygames
     return rgbcolor<T>(-c.r(),-c.g(),-c.b());
   } // operator-(rgbcolor,rgbcolor)  
   
-  
+
+  template <class T>
+  rgbcolor<T> clamp(const rgbcolor<T>& c, T min, T max)
+  {
+    rgbcolor<T> ret_color( std::min(std::max(c.r(), min), max),
+                           std::min(std::max(c.g(), min), max),
+                           std::min(std::max(c.b(), min), max) );
+  }  
 } // namespace manygames
 
 
