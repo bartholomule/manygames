@@ -10,6 +10,7 @@
 failed_something=0
 missing_stuff=0
 quiet=0
+files_tested=0
 
 while [ $# -ge 1 ]
 do
@@ -110,6 +111,7 @@ do
     echo "*** Skipping test \"$test_name\", executable missing"
     missing_stuff=1
   fi
+  let "files_tested+=1"
 done
 
 
@@ -119,6 +121,7 @@ then
   echo "--------------------------------------------"
   echo "|           All tests passed!              |"
   echo "--------------------------------------------"
+  echo "             Files tested=$files_tested     "
 else
   echo "--------------------------------------------"
   echo "|   WARNING: One or more tests failed!     |"

@@ -4,3 +4,4 @@
 Makefile
 test_raster
 test_rgbcolor
+test_rgbacolor
