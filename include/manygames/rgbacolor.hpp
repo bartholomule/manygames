@@ -22,6 +22,9 @@
 #if       !defined(__MANYGAMES__RGBACOLOR_HPP__)
 #define            __MANYGAMES__RGBACOLOR_HPP__
 
+#include <manygames/rgbcolor.hpp>
+#include <manygames/template_functions.hpp>
+
 namespace manygames
 { 
 
@@ -29,25 +32,27 @@ namespace manygames
    * 
    * A generic class to represent RGBA colors (RGB with Alpha).  Note that only
    * built-in (or native) types (char, float, etc), are usable in this class.
-   * The design of this class was chosen so that array accesses ([]) and direct
-   * accesses (.N()) would be almost the same speed.  Also, this class *may* be
-   * able to be used in an array and reinterpreted as an array of the base
-   * type. 
+   * Note that this differs from the rgbcolor class in that reinterpretation
+   * probably is NOT going to work.
    *
-   * For example:
-   *<pre>
-   *@@ rgbacolor<unsigned char> foo[100];
-   *@@ unsigned char* foo_reinterpreted = reinterpret_cast<char*>(foo);
-   *@@ ...
-   *</pre>
    *
-   * The opposite should also be possible.  In either case, BE CAREFUL to make
-   * sure that the correct type of destructor would be called (especially with
-   * memory allocated by 'new').
+   * Since I had not previously defined any ground work here, as to what an
+   * RGBA color is, I'm going to do it now (30Oct2003).
    *
-   * Whatver changes or additions are made in the future, NO virtual functions
-   * should be added, as they would likely break the ability to reinterpret the
-   * class as an array of three ints.
+   * The alpha component is of type T2, which is assumed to be a floating point
+   * value, although it could be of some other type, such as fixed point, or
+   * other.  In any case, it will now be assumed that an alpha value can range
+   * from 0 (completely opaque), to 1 (completely transparent).
+   *
+   * I am going to define things such that alpha values, when added,
+   * subtracted, multiplied, or otherwise, will always remain positive, and
+   * between 0 and 1.  If an alpha color is added to another, then the
+   * transparency is multiplied.  If they are subtracted, then the transparency
+   * is divided (to undo an addition).  If an alpha color is multiplied by a
+   * constant, then its OPACITY is multiplied, not its transparency.
+   * Conversly, if it is divided by a constant, it's opacity is divided.
+   *
+   * Make sure to note that the opacity is 1 - alpha.
    *
    * @author Kevin Harris <kpharris@users.sourceforge.net>
    * @version $Revision$
@@ -59,45 +64,47 @@ namespace manygames
 
   protected:
     /** A struct of three items directly accessible. */
-    struct rgbacolor_direct
+    struct rgbcolor_direct
     {
       T r; ///< Red   component of RGBA color
       T g; ///< Green component of RGBA color
       T b; ///< Blue  component of RGBA color
     };
     /** A struct of three items array accessible. */    
-    struct rgbacolor_array
+    struct rgbcolor_array
     {
-      T components[4]; ///< Components of RGBA in an 'array'
+      T components[3]; ///< Components of RGB in an 'array'
     };
     /**
      * A union to allow accesses to both indirectly through an array, and
      * directly athrough a name, without adding any extra processing time or
      * space requirements
      */        
-    union rgbacolor_union
+    union rgbcolor_union
     {
-      rgbacolor_union() { }
+      rgbcolor_union() { }
       /** A constructor, to simplify things. */
-      rgbacolor_union(T r, T g, T b)
+      rgbcolor_union(T r, T g, T b)
       {
-	direct.r = r;
-	direct.g = g;
-	direct.b = b;
+        direct.r = r;
+        direct.g = g;
+        direct.b = b;
       }
       /** Operator for simplification of access. */
       T& operator[](unsigned index)       { return array.components[index]; }
       /** Operator for simplification of access. */
       T  operator[](unsigned index) const { return array.components[index]; }
 
-      rgbacolor_direct direct; ///< The directly accessible part
-      rgbacolor_array  array;  ///< The array accessible part
+      rgbcolor_direct direct; ///< The directly accessible part
+      rgbcolor_array  array;  ///< The array accessible part
     };
 
     /** The actual RGB data */
-    rgbacolor_union rgb;
+    rgbcolor_union rgb;
 
-    /** The alpha */
+    /** The alpha.  Note that this is NOT included in the above union, as
+        the alpha may need to be a different type, and it would mess up the
+        ability to use the [] operators. */
     T2 alpha;
 
   public:
@@ -116,19 +123,19 @@ namespace manygames
     /** Assignment operator */
     rgbacolor& operator= (const rgbacolor& old);
 
-    inline void set_r(T r)  { rgba.direct.r = r; } ///< Set the red component
-    inline void set_g(T g)  { rgba.direct.g = g; } ///< Set the green component
-    inline void set_b(T b)  { rgba.direct.b = b; } ///< Set the blue component
-    inline void set_a(T2 a) { alpha = a; }         ///< Set the alpha component
-    inline T r() const { return rgba.direct.r; } ///< Get the red component
-    inline T g() const { return rgba.direct.g; } ///< Get the green component
-    inline T b() const { return rgba.direct.b; } ///< Get the blue component
-    inline T a() const { return alpha; }         ///< Get the alpha component
+    inline void set_r(T r)  { rgb.direct.r = r; } ///< Set the red component
+    inline void set_g(T g)  { rgb.direct.g = g; } ///< Set the green component
+    inline void set_b(T b)  { rgb.direct.b = b; } ///< Set the blue component
+    inline void set_a(T2 a) { alpha = a; }        ///< Set the alpha component
+    inline T r() const { return rgb.direct.r; }   ///< Get the red component
+    inline T g() const { return rgb.direct.g; }   ///< Get the green component
+    inline T b() const { return rgb.direct.b; }   ///< Get the blue component
+    inline T2 a() const { return alpha; }         ///< Get the alpha component
     
     /** Get the element specified.  No bounds checking is performed */
-    inline T& operator[](unsigned index)       { return rgba[index]; }    
+    inline T& operator[](unsigned index)       { return rgb[index]; }    
     /** Get the element specified.  No bounds checking is performed */
-    inline T  operator[](unsigned index) const { return rgba[index]; }
+    inline T  operator[](unsigned index) const { return rgb[index]; }
 
     /** Set the components to the given values */
     void set(T r, T g, T b, T2 a);
@@ -160,9 +167,9 @@ namespace manygames
     // already been specified that the type given MUST be a native type.  Thus,
     // it should be really fast to do the assignment, and the branch could be
     // very slow.
-    rgba.direct.r = old.rgba.direct.r;
-    rgba.direct.g = old.rgba.direct.g;
-    rgba.direct.b = old.rgba.direct.b;
+    rgb.direct.r = old.rgb.direct.r;
+    rgb.direct.g = old.rgb.direct.g;
+    rgb.direct.b = old.rgb.direct.b;
     alpha = old.alpha;    
     return (*this);    
   } // rgbacolor::operator=(rgbacolor)
@@ -171,9 +178,9 @@ namespace manygames
   template <class T, class T2>
   void rgbacolor<T,T2>::set(T r, T g, T b, T2 a)
   {
-    rgba.direct.r = r;
-    rgba.direct.g = g;
-    rgba.direct.b = b;
+    rgb.direct.r = r;
+    rgb.direct.g = g;
+    rgb.direct.b = b;
     alpha = a;    
   } // rgbacolor::set(r,g,b,a)
 
@@ -181,10 +188,13 @@ namespace manygames
   template <class T, class T2>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator *=(T factor)
   {
-    rgba.direct.r *= factor;
-    rgba.direct.g *= factor;
-    rgba.direct.b *= factor;
-    alpha *= factor;    
+    rgb.direct.r *= factor;
+    rgb.direct.g *= factor;
+    rgb.direct.b *= factor;
+    // multiply the OPACITY by the factor, not the transparency.
+    alpha = T2(1) - T2((1 - alpha) * factor);
+    ::clamp(alpha, T2(0), T2(1));
+    
     return *this;
   } // rgbacolor::operator*=(T)
 
@@ -192,10 +202,12 @@ namespace manygames
   template <class T, class T2>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator /=(T factor)
   {
-    rgba.direct.r /= factor;
-    rgba.direct.g /= factor;
-    rgba.direct.b /= factor;
-    alpha /= factor;    
+    rgb.direct.r /= factor;
+    rgb.direct.g /= factor;
+    rgb.direct.b /= factor;
+    // divide the OPACITY by the factor, not the transparency.
+    alpha = T2(1) - T2((1 - alpha) / factor);
+    ::clamp(alpha, T2(0), T2(1));    
     return *this;
   } // rgbacolor::operator/=(T)
   
@@ -204,10 +216,14 @@ namespace manygames
   template <class U>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator *=(U factor)
   {
-    rgba.direct.r = T(rgba.direct.r * factor);
-    rgba.direct.g = T(rgba.direct.g * factor);
-    rgba.direct.b = T(rgba.direct.b * factor);
-    alpha = T2(alpha * factor);    
+    rgb.direct.r = T(rgb.direct.r * factor);
+    rgb.direct.g = T(rgb.direct.g * factor);
+    rgb.direct.b = T(rgb.direct.b * factor);
+    
+    // multiply the OPACITY by the factor, not the transparency.
+    alpha = T2(1) - T2((1 - alpha) * factor);
+    ::clamp(alpha, T2(0), T2(1));
+    
     return *this;
   } // rgbacolor::operator*=(U)
 
@@ -216,10 +232,14 @@ namespace manygames
   template <class U>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator /=(U factor)
   {
-    rgba.direct.r = T(rgba.direct.r / factor);
-    rgba.direct.g = T(rgba.direct.g / factor);
-    rgba.direct.b = T(rgba.direct.b / factor);
-    alpha = T2(alpha / factor);    
+    rgb.direct.r = T(rgb.direct.r / factor);
+    rgb.direct.g = T(rgb.direct.g / factor);
+    rgb.direct.b = T(rgb.direct.b / factor);
+
+    // divide the OPACITY by the factor, not the transparency.
+    alpha = T2(1) - T2(((1 - alpha) / factor));
+    ::clamp(alpha, T2(0), T2(1));
+    
     return *this;    
   } // rgbacolor::operator/=(U)
 
@@ -227,10 +247,13 @@ namespace manygames
   template <class T, class T2>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator +=(const rgbacolor<T,T2>& r)
   {
-    rgba.direct.r += r.rgba.direct.r;
-    rgba.direct.g += r.rgba.direct.g;
-    rgba.direct.b += r.rgba.direct.b;
-    alpha += r.alpha;    
+    rgb.direct.r += r.rgb.direct.r;
+    rgb.direct.g += r.rgb.direct.g;
+    rgb.direct.b += r.rgb.direct.b;
+
+    alpha *= r.alpha;
+    ::clamp(alpha, T2(0), T2(1));
+
     return *this;
   } // rgbacolor::operator+=(rgbacolor)
 
@@ -238,10 +261,13 @@ namespace manygames
   template <class T, class T2>
   rgbacolor<T,T2>& rgbacolor<T,T2>::operator -=(const rgbacolor<T,T2>& r)
   {
-    rgba.direct.r -= r.rgba.direct.r;
-    rgba.direct.g -= r.rgba.direct.g;
-    rgba.direct.b -= r.rgba.direct.b;
-    alpha -= r.alpha;
+    rgb.direct.r -= r.rgb.direct.r;
+    rgb.direct.g -= r.rgb.direct.g;
+    rgb.direct.b -= r.rgb.direct.b;
+    
+    alpha = alpha / r.alpha;
+    ::clamp(alpha, T2(0), T2(1));
+
     return *this;
   } // rgbacolor::operator-=(rgbacolor)
 
@@ -256,7 +282,7 @@ namespace manygames
   } // operator*(T,rgbacolor)
   
   /** Multiplication of an rgba color by a factor (non-member, general) */
-  template <class T, class U>
+  template <class T, class T2, class U>
   rgbacolor<T,T2> operator*(U factor, const rgbacolor<T,T2>& r)
   {
     rgbacolor<T,T2> retval(r);
@@ -286,11 +312,67 @@ namespace manygames
   template <class T, class T2>
   rgbacolor<T,T2> operator-(const rgbacolor<T,T2>& c)
   {
-    // [FIXME] Question... What effect does this have on the alpha?
-    return rgbacolor<T,T2>(-c.r(),-c.g(),-c.b(),-c.a());
+    T2 alpha = T2(1) - c.a();
+    ::clamp(alpha, T2(0), T2(1));
+    return rgbacolor<T,T2>(-c.r(),-c.g(),-c.b(),alpha);
   } // operator-(rgbacolor,rgbacolor)  
+
+
+  /** Now a group of rgb/rgba color manipulations -- They all revert to being
+      plain old RGB colors, after integrating their alphas into their
+      components. */
+
+  template <class T, class T2>
+  rgbcolor<T> operator+(const rgbcolor<T>& c1, const rgbacolor<T,T2>& c2)
+  {
+    T2 opacity = T2(1) - c2.a();
+    return rgbcolor<T>( c1.r() + c2.r() * opacity,
+                        c1.g() + c2.g() * opacity,
+                        c1.b() + c2.b() * opacity );                    
+  } // operator+(rgbcolor,rgbacolor)
+
+  template <class T, class T2>
+  rgbcolor<T> operator+(const rgbacolor<T,T2>& c1, const rgbcolor<T>& c2)
+  {
+    T2 opacity = T2(1) - c1.a();
+    return rgbcolor<T>( c1.r() * opacity + c2.r(),
+                        c1.g() * opacity + c2.g(),
+                        c1.b() * opacity + c2.b() );                    
+  } // operator+(rgbacolor,rgbcolor)
+
   
-  
+  template <class T, class T2>
+  rgbcolor<T> operator-(const rgbcolor<T>& c1, const rgbacolor<T,T2>& c2)
+  {
+    T2 opacity = T2(1) - c2.a();
+    return rgbcolor<T>( c1.r() - c2.r() * opacity,
+                        c1.g() - c2.g() * opacity,
+                        c1.b() - c2.b() * opacity );                    
+  } // operator-(rgbcolor,rgbacolor)
+
+  template <class T, class T2>
+  rgbcolor<T> operator-(const rgbacolor<T,T2>& c1, const rgbcolor<T>& c2)
+  {
+    T2 opacity = T2(1) - c1.a();
+    return rgbcolor<T>( c1.r() * opacity - c2.r(),
+                        c1.g() * opacity - c2.g(),
+                        c1.b() * opacity - c2.b() );                    
+  } // operator-(rgbacolor,rgbcolor)    
+
+  template <class T, class T2>
+  rgbcolor<T> scaled_convert_color(const rgbacolor<T,T2>& c)
+  {
+    T2 factor = T2(1) - c.a();
+    return rgbcolor<T>(c.r() * factor,
+                       c.g() * factor,
+                       c.b() * factor);
+  }
+
+  template <class T, class T2>
+  rgbcolor<T> convert_color(const rgbacolor<T,T2>& c)
+  {
+    return rgbcolor<T>(c.r(),c.g(),c.b());
+  }
 } // namespace manygames
 
 
