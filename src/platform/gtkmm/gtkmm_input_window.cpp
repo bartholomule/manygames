@@ -148,7 +148,7 @@ namespace manygames
             (GDK_MOD2_MASK    == (1 << 4)) &&
             (GDK_MOD3_MASK    == (1 << 5)) &&
             (GDK_MOD4_MASK    == (1 << 6)) &&
-            (GDK_MOD5_MASK    == (1 << 7)) );
+            (GDK_MOD5_MASK    == (1 << 7)) );      
 
     assert( (mouse_input::mouse_control_down == (1 << 6)) &&
             (mouse_input::mouse_alt_down     == (1 << 7)) &&
