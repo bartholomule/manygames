@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.7.3 -*- Autoconf -*-
+# generated automatically by aclocal 1.7.7 -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002
 # Free Software Foundation, Inc.
@@ -16,7 +16,7 @@
 # This macro actually does too much some checks are only needed if
 # your package does certain things.  But this isn't really a big deal.
 
-# Copyright 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
 # Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -34,14 +34,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 # 02111-1307, USA.
 
-# serial 9
-
-# There are a few dirty hacks below to avoid letting `AC_PROG_CC' be
-# written in clear, in which case automake, when reading aclocal.m4,
-# will think it sees a *use*, and therefore will trigger all it's
-# C support machinery.  Also note that it means that autoscan, seeing
-# CC etc. in the Makefile, will ask for an AC_PROG_CC use...
-
+# serial 10
 
 AC_PREREQ([2.54])
 
@@ -170,7 +163,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION],[am__api_version="1.7"])
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.7.3])])
+	 [AM_AUTOMAKE_VERSION([1.7.7])])
 
 # Helper functions for option handling.                    -*- Autoconf -*-
 
@@ -552,18 +545,32 @@ AC_CACHE_CHECK([dependency style of $depcc],
   # using a relative directory.
   cp "$am_depcomp" conftest.dir
   cd conftest.dir
+  # We will build objects and dependencies in a subdirectory because
+  # it helps to detect inapplicable dependency modes.  For instance
+  # both Tru64's cc and ICC support -MD to output dependencies as a
+  # side effect of compilation, but ICC will put the dependencies in
+  # the current directory while Tru64 will put them in the object
+  # directory.
+  mkdir sub
 
   am_cv_$1_dependencies_compiler_type=none
   if test "$am_compiler_list" = ""; then
      am_compiler_list=`sed -n ['s/^#*\([a-zA-Z0-9]*\))$/\1/p'] < ./depcomp`
   fi
   for depmode in $am_compiler_list; do
+    # Setup a source with many dependencies, because some compilers
+    # like to wrap large dependency lists on column 80 (with \), and
+    # we should not choose a depcomp mode which is confused by this.
+    #
     # We need to recreate these files for each test, as the compiler may
     # overwrite some of them when testing with obscure command lines.
     # This happens at least with the AIX C compiler.
-    echo '#include "conftest.h"' > conftest.c
-    echo 'int i;' > conftest.h
-    echo "${am__include} ${am__quote}conftest.Po${am__quote}" > confmf
+    : > sub/conftest.c
+    for i in 1 2 3 4 5 6; do
+      echo '#include "conftst'$i'.h"' >> sub/conftest.c
+      : > sub/conftst$i.h
+    done
+    echo "${am__include} ${am__quote}sub/conftest.Po${am__quote}" > confmf
 
     case $depmode in
     nosideeffect)
@@ -581,11 +588,12 @@ AC_CACHE_CHECK([dependency style of $depcc],
     # mode.  It turns out that the SunPro C++ compiler does not properly
     # handle `-M -o', and we need to detect this.
     if depmode=$depmode \
-       source=conftest.c object=conftest.o \
-       depfile=conftest.Po tmpdepfile=conftest.TPo \
-       $SHELL ./depcomp $depcc -c -o conftest.o conftest.c \
+       source=sub/conftest.c object=sub/conftest.${OBJEXT-o} \
+       depfile=sub/conftest.Po tmpdepfile=sub/conftest.TPo \
+       $SHELL ./depcomp $depcc -c -o sub/conftest.${OBJEXT-o} sub/conftest.c \
          >/dev/null 2>conftest.err &&
-       grep conftest.h conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftst6.h sub/conftest.Po > /dev/null 2>&1 &&
+       grep sub/conftest.${OBJEXT-o} sub/conftest.Po > /dev/null 2>&1 &&
        ${MAKE-make} -s -f confmf > /dev/null 2>&1; then
       # icc doesn't choke on unknown options, it will just issue warnings
       # (even with -Werror).  So we grep stderr for any message
@@ -720,7 +728,7 @@ AC_DEFUN([AM_OUTPUT_DEPENDENCY_COMMANDS],
 
 # Check to see how 'make' treats includes.	-*- Autoconf -*-
 
-# Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -745,8 +753,9 @@ AC_DEFUN([AM_OUTPUT_DEPENDENCY_COMMANDS],
 AC_DEFUN([AM_MAKE_INCLUDE],
 [am_make=${MAKE-make}
 cat > confinc << 'END'
-doit:
+am__doit:
 	@echo done
+.PHONY: am__doit
 END
 # If we don't find an include directive, just comment out the code.
 AC_MSG_CHECKING([for style of include used by $am_make])
@@ -774,9 +783,9 @@ if test "$am__include" = "#"; then
       _am_result=BSD
    fi
 fi
-AC_SUBST(am__include)
-AC_SUBST(am__quote)
-AC_MSG_RESULT($_am_result)
+AC_SUBST([am__include])
+AC_SUBST([am__quote])
+AC_MSG_RESULT([$_am_result])
 rm -f confinc confmf
 ])
 
@@ -912,6 +921,8 @@ AC_REQUIRE([AC_PROG_CC])dnl
 AC_REQUIRE([AC_PROG_LD])dnl
 AC_REQUIRE([AC_PROG_LD_RELOAD_FLAG])dnl
 AC_REQUIRE([AC_PROG_NM])dnl
+AC_REQUIRE([LT_AC_PROG_SED])dnl
+
 AC_REQUIRE([AC_PROG_LN_S])dnl
 AC_REQUIRE([AC_DEPLIBS_CHECK_METHOD])dnl
 AC_REQUIRE([AC_OBJEXT])dnl
@@ -1079,8 +1090,11 @@ hpux*) # Its linker distinguishes data from code symbols
   lt_cv_global_symbol_to_cdecl="sed -n -e 's/^T .* \(.*\)$/extern char \1();/p' -e 's/^$symcode* .* \(.*\)$/extern char \1;/p'"
   lt_cv_global_symbol_to_c_name_address="sed -n -e 's/^: \([[^ ]]*\) $/  {\\\"\1\\\", (lt_ptr) 0},/p' -e 's/^$symcode* \([[^ ]]*\) \([[^ ]]*\)$/  {\"\2\", (lt_ptr) \&\2},/p'"
   ;;
-irix*)
+irix* | nonstopux*)
   symcode='[[BCDEGRST]]'
+  ;;
+osf*)
+  symcode='[[BCDEGQRST]]'
   ;;
 solaris* | sysv5*)
   symcode='[[BDT]]'
@@ -1178,7 +1192,7 @@ EOF
 	  save_CFLAGS="$CFLAGS"
 	  LIBS="conftstm.$ac_objext"
 	  CFLAGS="$CFLAGS$no_builtin_flag"
-	  if AC_TRY_EVAL(ac_link) && test -s conftest; then
+	  if AC_TRY_EVAL(ac_link) && test -s conftest$ac_exeext; then
 	    pipe_works=yes
 	  fi
 	  LIBS="$save_LIBS"
@@ -1722,7 +1736,7 @@ AC_CACHE_VAL(lt_cv_prog_cc_pic,
       # like `-m68040'.
       lt_cv_prog_cc_pic='-m68020 -resident32 -malways-restore-a4'
       ;;
-    beos* | irix5* | irix6* | osf3* | osf4* | osf5*)
+    beos* | irix5* | irix6* | nonstopux* | osf3* | osf4* | osf5*)
       # PIC is the default for these OSes.
       ;;
     darwin* | rhapsody*)
@@ -1765,7 +1779,7 @@ AC_CACHE_VAL(lt_cv_prog_cc_pic,
       lt_cv_prog_cc_pic='+Z'
       ;;
 
-    irix5* | irix6*)
+    irix5* | irix6* | nonstopux*)
       lt_cv_prog_cc_wl='-Wl,'
       lt_cv_prog_cc_static='-non_shared'
       # PIC (with -KPIC) is the default.
@@ -1809,11 +1823,7 @@ AC_CACHE_VAL(lt_cv_prog_cc_pic,
     sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
       lt_cv_prog_cc_pic='-KPIC'
       lt_cv_prog_cc_static='-Bstatic'
-      if test "x$host_vendor" = xsni; then
-	lt_cv_prog_cc_wl='-LD'
-      else
-	lt_cv_prog_cc_wl='-Wl,'
-      fi
+      lt_cv_prog_cc_wl='-Wl,'
       ;;
 
     uts4*)
@@ -2178,7 +2188,7 @@ EOF
     # If the export-symbols file already is a .def file (1st line
     # is EXPORTS), use it as is.
     # If DATA tags from a recent dlltool are present, honour them!
-    archive_expsym_cmds='if test "x`head -1 $export_symbols`" = xEXPORTS; then
+    archive_expsym_cmds='if test "x`sed 1q $export_symbols`" = xEXPORTS; then
 	cp $export_symbols $output_objdir/$soname-def;
       else
 	echo EXPORTS > $output_objdir/$soname-def;
@@ -2187,6 +2197,7 @@ EOF
 	 set dummy \$symbol;
 	 case \[$]# in
 	   2) echo "   \[$]2 @ \$_lt_hint ; " >> $output_objdir/$soname-def;;
+	   4) echo "   \[$]2 \[$]3 \[$]4 ; " >> $output_objdir/$soname-def; _lt_hint=`expr \$_lt_hint - 1`;;
 	   *) echo "     \[$]2 @ \$_lt_hint \[$]3 ; " >> $output_objdir/$soname-def;;
 	 esac;
 	 _lt_hint=`expr 1 + \$_lt_hint`;
@@ -2299,10 +2310,12 @@ else
       # need to do runtime linking.
       case $host_os in aix4.[[23]]|aix4.[[23]].*|aix5*)
 	for ld_flag in $LDFLAGS; do
-	  if (test $ld_flag = "-brtl" || test $ld_flag = "-Wl,-brtl"); then
+	  case $ld_flag in
+	  *-brtl*)
 	    aix_use_runtimelinking=yes
 	    break
-	  fi
+	  ;;
+	  esac
 	done
       esac
 
@@ -2416,8 +2429,9 @@ else
     esac
     # FIXME: Relying on posixy $() will cause problems for
     #        cross-compilation, but unfortunately the echo tests do not
-    #        yet detect zsh echo's removal of \ escapes.
-    archive_cmds='$nonopt $(test "x$module" = xyes && echo -bundle || echo -dynamiclib) $allow_undefined_flag -o $lib $libobjs $deplibs$linker_flags -install_name $rpath/$soname $verstring'
+    #        yet detect zsh echo's removal of \ escapes.  Also zsh mangles
+    #	     `"' quotes if we put them in here... so don't!
+    archive_cmds='$CC -r -keep_private_externs -nostdlib -o ${lib}-master.o $libobjs && $CC $(test .$module = .yes && echo -bundle || echo -dynamiclib) $allow_undefined_flag -o $lib ${lib}-master.o $deplibs$linker_flags $(test .$module != .yes && echo -install_name $rpath/$soname $verstring)'
     # We need to add '_' to the symbols in $export_symbols first
     #archive_expsym_cmds="$archive_cmds"' && strip -s $export_symbols'
     hardcode_direct=yes
@@ -2469,13 +2483,14 @@ else
     export_dynamic_flag_spec='${wl}-E'
     ;;
 
-  irix5* | irix6*)
+  irix5* | irix6* | nonstopux*)
     if test "$GCC" = yes; then
       archive_cmds='$CC -shared $libobjs $deplibs $compiler_flags ${wl}-soname ${wl}$soname `test -n "$verstring" && echo ${wl}-set_version ${wl}$verstring` ${wl}-update_registry ${wl}${output_objdir}/so_locations -o $lib'
+      hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
     else
       archive_cmds='$LD -shared $libobjs $deplibs $linker_flags -soname $soname `test -n "$verstring" && echo -set_version $verstring` -update_registry ${output_objdir}/so_locations -o $lib'
+      hardcode_libdir_flag_spec='-rpath $libdir'
     fi
-    hardcode_libdir_flag_spec='${wl}-rpath ${wl}$libdir'
     hardcode_libdir_separator=:
     link_all_deplibs=yes
     ;;
@@ -2503,7 +2518,7 @@ else
     hardcode_direct=yes
     hardcode_shlibpath_var=no
     if test -z "`echo __ELF__ | $CC -E - | grep __ELF__`" || test "$host_os-$host_cpu" = "openbsd2.8-powerpc"; then
-      archive_cmds='$CC -shared $pic_flag -o $lib $libobjs $deplibs $linker_flags'
+      archive_cmds='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
       hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
       export_dynamic_flag_spec='${wl}-E'
     else
@@ -2513,7 +2528,7 @@ else
 	hardcode_libdir_flag_spec='-R$libdir'
         ;;
       *)
-        archive_cmds='$CC -shared $pic_flag -o $lib $libobjs $deplibs $linker_flags'
+        archive_cmds='$CC -shared $pic_flag -o $lib $libobjs $deplibs $compiler_flags'
         hardcode_libdir_flag_spec='${wl}-rpath,$libdir'
         ;;
       esac
@@ -2625,13 +2640,23 @@ EOF
     ;;
 
   sysv4)
-    if test "x$host_vendor" = xsno; then
-      archive_cmds='$LD -G -Bsymbolic -h $soname -o $lib $libobjs $deplibs $linker_flags'
-      hardcode_direct=yes # is this really true???
-    else
-      archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
-      hardcode_direct=no #Motorola manual says yes, but my tests say they lie
-    fi
+    case $host_vendor in
+      sni)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_direct=yes # is this really true???
+        ;;
+      siemens)
+        ## LD is ld it makes a PLAMLIB
+        ## CC just makes a GrossModule.
+        archive_cmds='$LD -G -o $lib $libobjs $deplibs $linker_flags'
+        reload_cmds='$CC -r -o $output$reload_objs'
+        hardcode_direct=no
+        ;;
+      motorola)
+        archive_cmds='$LD -G -h $soname -o $lib $libobjs $deplibs $linker_flags'
+        hardcode_direct=no #Motorola manual says yes, but my tests say they lie
+        ;;
+    esac
     runpath_var='LD_RUN_PATH'
     hardcode_shlibpath_var=no
     ;;
@@ -2772,6 +2797,9 @@ aix3*)
 
 aix4* | aix5*)
   version_type=linux
+  need_lib_prefix=no
+  need_version=no
+  hardcode_into_libs=yes
   if test "$host_cpu" = ia64; then
     # AIX 5 supports IA64
     library_names_spec='${libname}${release}.so$major ${libname}${release}.so$versuffix $libname.so'
@@ -2810,6 +2838,7 @@ aix4* | aix5*)
     fi
     shlibpath_var=LIBPATH
   fi
+  hardcode_into_libs=yes
   ;;
 
 amigaos*)
@@ -2857,7 +2886,7 @@ cygwin* | mingw* | pw32*)
     ;;
   yes,mingw*)
     library_names_spec='${libname}`echo ${release} | sed -e 's/[[.]]/-/g'`${versuffix}.dll'
-    sys_lib_search_path_spec=`$CC -print-search-dirs | grep "^libraries:" | sed -e "s/^libraries://" -e "s/;/ /g"`
+    sys_lib_search_path_spec=`$CC -print-search-dirs | grep "^libraries:" | sed -e "s/^libraries://" -e "s/;/ /g" -e "s,=/,/,g"`
     ;;
   yes,pw32*)
     library_names_spec='`echo ${libname} | sed -e 's/^lib/pw/'``echo ${release} | sed -e 's/[.]/-/g'`${versuffix}.dll'
@@ -2940,14 +2969,17 @@ hpux9* | hpux10* | hpux11*)
   postinstall_cmds='chmod 555 $lib'
   ;;
 
-irix5* | irix6*)
-  version_type=irix
+irix5* | irix6* | nonstopux*)
+  case $host_os in
+    nonstopux*) version_type=nonstopux ;;
+    *)          version_type=irix ;;
+  esac
   need_lib_prefix=no
   need_version=no
   soname_spec='${libname}${release}.so$major'
   library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major ${libname}${release}.so $libname.so'
   case $host_os in
-  irix5*)
+  irix5* | nonstopux*)
     libsuff= shlibsuff=
     ;;
   *)
@@ -3051,11 +3083,12 @@ os2*)
 osf3* | osf4* | osf5*)
   version_type=osf
   need_version=no
-  soname_spec='${libname}${release}.so'
-  library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so $libname.so'
+  soname_spec='${libname}${release}.so$major'
+  library_names_spec='${libname}${release}.so$versuffix ${libname}${release}.so$major $libname.so'
   shlibpath_var=LD_LIBRARY_PATH
   sys_lib_search_path_spec="/usr/shlib /usr/ccs/lib /usr/lib/cmplrs/cc /usr/lib /usr/local/lib /var/shlib"
   sys_lib_dlsearch_path_spec="$sys_lib_search_path_spec"
+  hardcode_into_libs=yes
   ;;
 
 sco3.2v5*)
@@ -3098,6 +3131,12 @@ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
   case $host_vendor in
     sni)
       shlibpath_overrides_runpath=no
+      need_lib_prefix=no
+      export_dynamic_flag_spec='${wl}-Blargedynsym'
+      runpath_var=LD_RUN_PATH
+      ;;
+    siemens)
+      need_lib_prefix=no
       ;;
     motorola)
       need_lib_prefix=no
@@ -3252,7 +3291,7 @@ if test -f "$ltmain"; then
   # Now quote all the things that may contain metacharacters while being
   # careful not to overquote the AC_SUBSTed values.  We take copies of the
   # variables and quote the copies for generation of the libtool script.
-  for var in echo old_CC old_CFLAGS \
+  for var in echo old_CC old_CFLAGS SED \
     AR AR_FLAGS CC LD LN_S NM SHELL \
     reload_flag reload_cmds wl \
     pic_flag link_static_flag no_builtin_flag export_dynamic_flag_spec \
@@ -3314,8 +3353,11 @@ if test -f "$ltmain"; then
 # configuration script generated by Autoconf, you may include it under
 # the same distribution terms that you use for the rest of that program.
 
+# A sed that does not truncate output.
+SED=$lt_SED
+
 # Sed that helps us avoid accidentally triggering echo(1) options like -n.
-Xsed="sed -e s/^X//"
+Xsed="${SED} -e s/^X//"
 
 # The HP-UX ksh and POSIX shell print the target directory to stdout
 # if CDPATH is set.
@@ -4076,7 +4118,7 @@ test -n "$reload_flag" && reload_flag=" $reload_flag"
 # AC_DEPLIBS_CHECK_METHOD - how to check for library dependencies
 #  -- PORTME fill in with the dynamic library characteristics
 AC_DEFUN([AC_DEPLIBS_CHECK_METHOD],
-[AC_CACHE_CHECK([how to recognise dependant libraries],
+[AC_CACHE_CHECK([how to recognise dependent libraries],
 lt_cv_deplibs_check_method,
 [lt_cv_file_magic_cmd='$MAGIC_CMD'
 lt_cv_file_magic_test_file=
@@ -4151,9 +4193,9 @@ hpux10.20*|hpux11*)
   lt_cv_file_magic_test_file=/usr/lib/libc.sl
   ;;
 
-irix5* | irix6*)
+irix5* | irix6* | nonstopux*)
   case $host_os in
-  irix5*)
+  irix5* | nonstopux*)
     # this will be overridden with pass_all, but let us keep it just in case
     lt_cv_deplibs_check_method="file_magic ELF 32-bit MSB dynamic lib MIPS - version 1"
     ;;
@@ -4175,7 +4217,7 @@ irix5* | irix6*)
 # This must be Linux ELF.
 linux-gnu*)
   case $host_cpu in
-  alpha* | hppa* | i*86 | powerpc* | sparc* | ia64* )
+  alpha* | hppa* | i*86 | mips | mipsel | powerpc* | sparc* | ia64*)
     lt_cv_deplibs_check_method=pass_all ;;
   *)
     # glibc up to 2.1.1 does not perform some relocations on ARM
@@ -4246,6 +4288,9 @@ sysv4 | sysv4.2uw2* | sysv4.3* | sysv5*)
     lt_cv_deplibs_check_method="file_magic ELF [[0-9]][[0-9]]*-bit [[LM]]SB dynamic lib"
     lt_cv_file_magic_test_file=/lib/libc.so
     ;;
+  siemens)
+    lt_cv_deplibs_check_method=pass_all
+    ;;
   esac
   ;;
 esac
@@ -4311,12 +4356,12 @@ esac
 ])
 
 # AC_LIBLTDL_CONVENIENCE[(dir)] - sets LIBLTDL to the link flags for
-# the libltdl convenience library and INCLTDL to the include flags for
+# the libltdl convenience library and LTDLINCL to the include flags for
 # the libltdl header and adds --enable-ltdl-convenience to the
-# configure arguments.  Note that LIBLTDL and INCLTDL are not
+# configure arguments.  Note that LIBLTDL and LTDLINCL are not
 # AC_SUBSTed, nor is AC_CONFIG_SUBDIRS called.  If DIR is not
 # provided, it is assumed to be `libltdl'.  LIBLTDL will be prefixed
-# with '${top_builddir}/' and INCLTDL will be prefixed with
+# with '${top_builddir}/' and LTDLINCL will be prefixed with
 # '${top_srcdir}/' (note the single quotes!).  If your package is not
 # flat and you're not using automake, define top_builddir and
 # top_srcdir appropriately in the Makefiles.
@@ -4328,16 +4373,18 @@ AC_DEFUN([AC_LIBLTDL_CONVENIENCE],
       ac_configure_args="$ac_configure_args --enable-ltdl-convenience" ;;
   esac
   LIBLTDL='${top_builddir}/'ifelse($#,1,[$1],['libltdl'])/libltdlc.la
-  INCLTDL='-I${top_srcdir}/'ifelse($#,1,[$1],['libltdl'])
+  LTDLINCL='-I${top_srcdir}/'ifelse($#,1,[$1],['libltdl'])
+  # For backwards non-gettext consistent compatibility...
+  INCLTDL="$LTDLINCL"
 ])
 
 # AC_LIBLTDL_INSTALLABLE[(dir)] - sets LIBLTDL to the link flags for
-# the libltdl installable library and INCLTDL to the include flags for
+# the libltdl installable library and LTDLINCL to the include flags for
 # the libltdl header and adds --enable-ltdl-install to the configure
-# arguments.  Note that LIBLTDL and INCLTDL are not AC_SUBSTed, nor is
+# arguments.  Note that LIBLTDL and LTDLINCL are not AC_SUBSTed, nor is
 # AC_CONFIG_SUBDIRS called.  If DIR is not provided and an installed
 # libltdl is not found, it is assumed to be `libltdl'.  LIBLTDL will
-# be prefixed with '${top_builddir}/' and INCLTDL will be prefixed
+# be prefixed with '${top_builddir}/' and LTDLINCL will be prefixed
 # with '${top_srcdir}/' (note the single quotes!).  If your package is
 # not flat and you're not using automake, define top_builddir and
 # top_srcdir appropriately in the Makefiles.
@@ -4355,12 +4402,14 @@ AC_DEFUN([AC_LIBLTDL_INSTALLABLE],
   if test x"$enable_ltdl_install" = x"yes"; then
     ac_configure_args="$ac_configure_args --enable-ltdl-install"
     LIBLTDL='${top_builddir}/'ifelse($#,1,[$1],['libltdl'])/libltdl.la
-    INCLTDL='-I${top_srcdir}/'ifelse($#,1,[$1],['libltdl'])
+    LTDLINCL='-I${top_srcdir}/'ifelse($#,1,[$1],['libltdl'])
   else
     ac_configure_args="$ac_configure_args --enable-ltdl-install=no"
     LIBLTDL="-lltdl"
-    INCLTDL=
+    LTDLINCL=
   fi
+  # For backwards non-gettext consistent compatibility...
+  INCLTDL="$LTDLINCL"
 ])
 
 # old names
@@ -4375,7 +4424,96 @@ AC_DEFUN([AM_PROG_NM],        [AC_PROG_NM])
 # This is just to silence aclocal about the macro not being used
 ifelse([AC_DISABLE_FAST_INSTALL])
 
-# gettext.m4 serial 14 (gettext-0.11.2)
+# NOTE: This macro has been submitted for inclusion into   #
+#  GNU Autoconf as AC_PROG_SED.  When it is available in   #
+#  a released version of Autoconf we should remove this    #
+#  macro and use it instead.                               #
+# LT_AC_PROG_SED
+# --------------
+# Check for a fully-functional sed program, that truncates
+# as few characters as possible.  Prefer GNU sed if found.
+AC_DEFUN([LT_AC_PROG_SED],
+[AC_MSG_CHECKING([for a sed that does not truncate output])
+AC_CACHE_VAL(lt_cv_path_SED,
+[# Loop through the user's path and test for sed and gsed.
+# Then use that list of sed's as ones to test for truncation.
+as_executable_p="test -f"
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_prog in sed gsed; do
+    for ac_exec_ext in '' $ac_executable_extensions; do
+      if $as_executable_p "$as_dir/$ac_prog$ac_exec_ext"; then
+        _sed_list="$_sed_list $as_dir/$ac_prog$ac_exec_ext"
+      fi
+    done
+  done
+done
+
+  # Create a temporary directory, and hook for its removal unless debugging.
+$debug ||
+{
+  trap 'exit_status=$?; rm -rf $tmp && exit $exit_status' 0
+  trap '{ (exit 1); exit 1; }' 1 2 13 15
+}
+
+# Create a (secure) tmp directory for tmp files.
+: ${TMPDIR=/tmp}
+{
+  tmp=`(umask 077 && mktemp -d -q "$TMPDIR/sedXXXXXX") 2>/dev/null` &&
+  test -n "$tmp" && test -d "$tmp"
+}  ||
+{
+  tmp=$TMPDIR/sed$$-$RANDOM
+  (umask 077 && mkdir $tmp)
+} ||
+{
+   echo "$me: cannot create a temporary directory in $TMPDIR" >&2
+   { (exit 1); exit 1; }
+}
+  _max=0
+  _count=0
+  # Add /usr/xpg4/bin/sed as it is typically found on Solaris
+  # along with /bin/sed that truncates output.
+  for _sed in $_sed_list /usr/xpg4/bin/sed; do
+    test ! -f ${_sed} && break
+    cat /dev/null > "$tmp/sed.in"
+    _count=0
+    echo ${ECHO_N-$ac_n} "0123456789${ECHO_C-$ac_c}" >"$tmp/sed.in"
+    # Check for GNU sed and select it if it is found.
+    if "${_sed}" --version 2>&1 < /dev/null | egrep '(GNU)' > /dev/null; then
+      lt_cv_path_SED=${_sed}
+      break
+    fi
+    while true; do
+      cat "$tmp/sed.in" "$tmp/sed.in" >"$tmp/sed.tmp"
+      mv "$tmp/sed.tmp" "$tmp/sed.in"
+      cp "$tmp/sed.in" "$tmp/sed.nl"
+      echo >>"$tmp/sed.nl"
+      ${_sed} -e 's/a$//' < "$tmp/sed.nl" >"$tmp/sed.out" || break
+      cmp -s "$tmp/sed.out" "$tmp/sed.nl" || break
+      # 40000 chars as input seems more than enough
+      test $_count -gt 10 && break
+      _count=`expr $_count + 1`
+      if test $_count -gt $_max; then
+        _max=$_count
+        lt_cv_path_SED=$_sed
+      fi
+    done
+  done
+  rm -rf "$tmp"
+])
+if test "X$SED" != "X"; then
+  lt_cv_path_SED=$SED
+else
+  SED=$lt_cv_path_SED
+fi
+AC_MSG_RESULT([$SED])
+])
+
+# gettext.m4 serial 17 (gettext-0.11.5)
 dnl Copyright (C) 1995-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -4410,7 +4548,9 @@ dnl    AM-DISABLE-SHARED). If INTLSYMBOL is 'no-libtool', a static library
 dnl    $(top_builddir)/intl/libintl.a will be created.
 dnl If NEEDSYMBOL is specified and is 'need-ngettext', then GNU gettext
 dnl    implementations (in libc or libintl) without the ngettext() function
-dnl    will be ignored.
+dnl    will be ignored.  If NEEDSYMBOL is specified and is
+dnl    'need-formatstring-macros', then GNU gettext implementations that don't
+dnl    support the ISO C 99 <inttypes.h> formatstring macros will be ignored.
 dnl INTLDIR is used to find the intl libraries.  If empty,
 dnl    the value `$(top_builddir)/intl/' is used.
 dnl
@@ -4437,9 +4577,9 @@ AC_DEFUN([AM_GNU_GETTEXT],
   ifelse([$1], [], , [ifelse([$1], [external], , [ifelse([$1], [no-libtool], , [ifelse([$1], [use-libtool], ,
     [errprint([ERROR: invalid first argument to AM_GNU_GETTEXT
 ])])])])])
-  ifelse([$2], [], , [ifelse([$2], [need-ngettext], ,
+  ifelse([$2], [], , [ifelse([$2], [need-ngettext], , [ifelse([$2], [need-formatstring-macros], ,
     [errprint([ERROR: invalid second argument to AM_GNU_GETTEXT
-])])])
+])])])])
   define(gt_included_intl, ifelse([$1], [external], [no], [yes]))
   define(gt_libtool_suffix_prefix, ifelse([$1], [use-libtool], [l], []))
 
@@ -4451,6 +4591,21 @@ AC_DEFUN([AM_GNU_GETTEXT],
   dnl Prerequisites of AC_LIB_LINKFLAGS_BODY.
   AC_REQUIRE([AC_LIB_PREPARE_PREFIX])
   AC_REQUIRE([AC_LIB_RPATH])
+
+  dnl Sometimes libintl requires libiconv, so first search for libiconv.
+  dnl Ideally we would do this search only after the
+  dnl      if test "$USE_NLS" = "yes"; then
+  dnl        if test "$gt_cv_func_gnugettext_libc" != "yes"; then
+  dnl tests. But if configure.in invokes AM_ICONV after AM_GNU_GETTEXT
+  dnl the configure script would need to contain the same shell code
+  dnl again, outside any 'if'. There are two solutions:
+  dnl - Invoke AM_ICONV_LINKFLAGS_BODY here, outside any 'if'.
+  dnl - Control the expansions in more detail using AC_PROVIDE_IFELSE.
+  dnl Since AC_PROVIDE_IFELSE is only in autoconf >= 2.52 and not
+  dnl documented, we avoid it.
+  ifelse(gt_included_intl, yes, , [
+    AC_REQUIRE([AM_ICONV_LINKFLAGS_BODY])
+  ])
 
   AC_MSG_CHECKING([whether NLS is requested])
   dnl Default is enabled NLS
@@ -4487,13 +4642,20 @@ AC_DEFUN([AM_GNU_GETTEXT],
         dnl to fall back to GNU NLS library.
 
         dnl Add a version number to the cache macros.
-        define([gt_api_version], ifelse([$2], [need-ngettext], 2, 1))
+        define([gt_api_version], ifelse([$2], [need-formatstring-macros], 3, ifelse([$2], [need-ngettext], 2, 1)))
         define([gt_cv_func_gnugettext_libc], [gt_cv_func_gnugettext]gt_api_version[_libc])
         define([gt_cv_func_gnugettext_libintl], [gt_cv_func_gnugettext]gt_api_version[_libintl])
 
         AC_CACHE_CHECK([for GNU gettext in libc], gt_cv_func_gnugettext_libc,
          [AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern int *_nl_domain_bindings;],
             [bindtextdomain ("", "");
 return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_domain_bindings],
@@ -4518,7 +4680,14 @@ return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", 
             LIBS="$LIBS $LIBINTL"
             dnl Now see whether libintl exists and does not depend on libiconv.
             AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -4532,7 +4701,14 @@ return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", 
             if test "$gt_cv_func_gnugettext_libintl" != yes && test -n "$LIBICONV"; then
               LIBS="$LIBS $LIBICONV"
               AC_TRY_LINK([#include <libintl.h>
-extern int _nl_msg_cat_cntr;
+]ifelse([$2], [need-formatstring-macros],
+[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+#define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
+#endif
+changequote(,)dnl
+typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
+changequote([,])dnl
+], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -4827,7 +5003,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
         ;;
       esac
     done],
-   [# Capture the value of obsolete $ALL_LINGUAS because we need it to compute
+   [# Capture the value of obsolete ALL_LINGUAS because we need it to compute
     # POFILES, GMOFILES, UPDATEPOFILES, DUMMYPOFILES, CATALOGS. But hide it
     # from automake.
     eval 'ALL_LINGUAS''="$ALL_LINGUAS"'
@@ -4856,6 +5032,10 @@ AC_DEFUN([AM_INTL_SUBDIR],
   AC_REQUIRE([AC_FUNC_ALLOCA])dnl
   AC_REQUIRE([AC_FUNC_MMAP])dnl
   AC_REQUIRE([jm_GLIBC21])dnl
+  AC_REQUIRE([gt_INTDIV0])dnl
+  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])dnl
+  AC_REQUIRE([gt_HEADER_INTTYPES_H])dnl
+  AC_REQUIRE([gt_INTTYPES_PRI])dnl
 
   AC_CHECK_HEADERS([argz.h limits.h locale.h nl_types.h malloc.h stddef.h \
 stdlib.h string.h unistd.h sys/param.h])
@@ -4865,7 +5045,9 @@ strcasecmp strdup strtoul tsearch __argz_count __argz_stringify __argz_next])
 
   AM_ICONV
   AM_LANGINFO_CODESET
-  AM_LC_MESSAGES
+  if test $ac_cv_header_locale_h = yes; then
+    AM_LC_MESSAGES
+  fi
 
   dnl intl/plural.c is generated from intl/plural.y. It requires bison,
   dnl because plural.y uses bison specific features. It requires at least
@@ -4914,6 +5096,10 @@ AC_DEFUN([AM_MKINSTALLDIRS],
   fi
   AC_SUBST(MKINSTALLDIRS)
 ])
+
+
+dnl Usage: AM_GNU_GETTEXT_VERSION([gettext-version])
+AC_DEFUN([AM_GNU_GETTEXT_VERSION], [])
 
 # lib-prefix.m4 serial 1 (gettext-0.11)
 dnl Copyright (C) 2001-2002 Free Software Foundation, Inc.
@@ -5064,7 +5250,7 @@ AC_DEFUN([AC_LIB_WITH_FINAL_PREFIX],
   prefix="$acl_save_prefix"
 ])
 
-# lib-link.m4 serial 2 (gettext-0.11.2)
+# lib-link.m4 serial 3 (gettext-0.11.3)
 dnl Copyright (C) 2001-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5182,6 +5368,10 @@ AC_DEFUN([AC_LIB_RPATH],
   hardcode_minus_L="$acl_cv_hardcode_minus_L"
   sys_lib_search_path_spec="$acl_cv_sys_lib_search_path_spec"
   sys_lib_dlsearch_path_spec="$acl_cv_sys_lib_dlsearch_path_spec"
+  dnl Determine whether the user wants rpath handling at all.
+  AC_ARG_ENABLE(rpath,
+    [  --disable-rpath         do not hardcode runtime library paths],
+    :, enable_rpath=yes)
 ])
 
 dnl AC_LIB_LINKFLAGS_BODY(name [, dependencies]) searches for libname and
@@ -5311,7 +5501,7 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
               dnl Linking with a shared library. We attempt to hardcode its
               dnl directory into the executable's runpath, unless it's the
               dnl standard /usr/lib.
-              if test "X$found_dir" = "X/usr/lib"; then
+              if test "$enable_rpath" = no || test "X$found_dir" = "X/usr/lib"; then
                 dnl No hardcoding is needed.
                 LIB[]NAME="${LIB[]NAME}${LIB[]NAME:+ }$found_so"
               else
@@ -5502,29 +5692,31 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
                     ;;
                   -R*)
                     dir=`echo "X$dep" | sed -e 's/^X-R//'`
-                    dnl Potentially add DIR to rpathdirs.
-                    dnl The rpathdirs will be appended to $LIBNAME at the end.
-                    haveit=
-                    for x in $rpathdirs; do
-                      if test "X$x" = "X$dir"; then
-                        haveit=yes
-                        break
+                    if test "$enable_rpath" != no; then
+                      dnl Potentially add DIR to rpathdirs.
+                      dnl The rpathdirs will be appended to $LIBNAME at the end.
+                      haveit=
+                      for x in $rpathdirs; do
+                        if test "X$x" = "X$dir"; then
+                          haveit=yes
+                          break
+                        fi
+                      done
+                      if test -z "$haveit"; then
+                        rpathdirs="$rpathdirs $dir"
                       fi
-                    done
-                    if test -z "$haveit"; then
-                      rpathdirs="$rpathdirs $dir"
-                    fi
-                    dnl Potentially add DIR to ltrpathdirs.
-                    dnl The ltrpathdirs will be appended to $LTLIBNAME at the end.
-                    haveit=
-                    for x in $ltrpathdirs; do
-                      if test "X$x" = "X$dir"; then
-                        haveit=yes
-                        break
+                      dnl Potentially add DIR to ltrpathdirs.
+                      dnl The ltrpathdirs will be appended to $LTLIBNAME at the end.
+                      haveit=
+                      for x in $ltrpathdirs; do
+                        if test "X$x" = "X$dir"; then
+                          haveit=yes
+                          break
+                        fi
+                      done
+                      if test -z "$haveit"; then
+                        ltrpathdirs="$ltrpathdirs $dir"
                       fi
-                    done
-                    if test -z "$haveit"; then
-                      ltrpathdirs="$ltrpathdirs $dir"
                     fi
                     ;;
                   -l*)
@@ -5711,7 +5903,7 @@ test -z "$LD" && AC_MSG_ERROR([no acceptable ld found in \$PATH])
 AC_LIB_PROG_LD_GNU
 ])
 
-# iconv.m4 serial AM3 (gettext-0.11)
+# iconv.m4 serial AM4 (gettext-0.11.3)
 dnl Copyright (C) 2000-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5721,11 +5913,8 @@ dnl the same distribution terms as the rest of that program.
 
 dnl From Bruno Haible.
 
-AC_DEFUN([AM_ICONV_LINK],
+AC_DEFUN([AM_ICONV_LINKFLAGS_BODY],
 [
-  dnl Some systems have iconv in libc, some have it in libiconv (OSF/1 and
-  dnl those with the standalone portable GNU libiconv installed).
-
   dnl Prerequisites of AC_LIB_LINKFLAGS_BODY.
   AC_REQUIRE([AC_LIB_PREPARE_PREFIX])
   AC_REQUIRE([AC_LIB_RPATH])
@@ -5733,6 +5922,16 @@ AC_DEFUN([AM_ICONV_LINK],
   dnl Search for libiconv and define LIBICONV, LTLIBICONV and INCICONV
   dnl accordingly.
   AC_LIB_LINKFLAGS_BODY([iconv])
+])
+
+AC_DEFUN([AM_ICONV_LINK],
+[
+  dnl Some systems have iconv in libc, some have it in libiconv (OSF/1 and
+  dnl those with the standalone portable GNU libiconv installed).
+
+  dnl Search for libiconv and define LIBICONV, LTLIBICONV and INCICONV
+  dnl accordingly.
+  AC_REQUIRE([AM_ICONV_LINKFLAGS_BODY])
 
   dnl Add $INCICONV to CPPFLAGS before performing the following checks,
   dnl because if the user has installed libiconv and not disabled its use
@@ -5782,7 +5981,7 @@ AC_DEFUN([AM_ICONV_LINK],
 
 AC_DEFUN([AM_ICONV],
 [
-  AC_REQUIRE([AM_ICONV_LINK])
+  AM_ICONV_LINK
   if test "$am_cv_func_iconv" = yes; then
     AC_MSG_CHECKING([for iconv declaration])
     AC_CACHE_VAL(am_cv_proto_iconv, [
@@ -5928,6 +6127,252 @@ AC_DEFUN([jm_GLIBC21],
   ]
 )
 
+# intdiv0.m4 serial 1 (gettext-0.11.3)
+dnl Copyright (C) 2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Bruno Haible.
+
+AC_DEFUN([gt_INTDIV0],
+[
+  AC_REQUIRE([AC_PROG_CC])dnl
+  AC_REQUIRE([AC_CANONICAL_HOST])dnl
+
+  AC_CACHE_CHECK([whether integer division by zero raises SIGFPE],
+    gt_cv_int_divbyzero_sigfpe,
+    [
+      AC_TRY_RUN([
+#include <stdlib.h>
+#include <signal.h>
+
+static void
+#ifdef __cplusplus
+sigfpe_handler (int sig)
+#else
+sigfpe_handler (sig) int sig;
+#endif
+{
+  /* Exit with code 0 if SIGFPE, with code 1 if any other signal.  */
+  exit (sig != SIGFPE);
+}
+
+int x = 1;
+int y = 0;
+int z;
+int nan;
+
+int main ()
+{
+  signal (SIGFPE, sigfpe_handler);
+/* IRIX and AIX (when "xlc -qcheck" is used) yield signal SIGTRAP.  */
+#if (defined (__sgi) || defined (_AIX)) && defined (SIGTRAP)
+  signal (SIGTRAP, sigfpe_handler);
+#endif
+/* Linux/SPARC yields signal SIGILL.  */
+#if defined (__sparc__) && defined (__linux__)
+  signal (SIGILL, sigfpe_handler);
+#endif
+
+  z = x / y;
+  nan = y / y;
+  exit (1);
+}
+], gt_cv_int_divbyzero_sigfpe=yes, gt_cv_int_divbyzero_sigfpe=no,
+        [
+          # Guess based on the CPU.
+          case "$host_cpu" in
+            alpha* | i[34567]86 | m68k | s390*)
+              gt_cv_int_divbyzero_sigfpe="guessing yes";;
+            *)
+              gt_cv_int_divbyzero_sigfpe="guessing no";;
+          esac
+        ])
+    ])
+  case "$gt_cv_int_divbyzero_sigfpe" in
+    *yes) value=1;;
+    *) value=0;;
+  esac
+  AC_DEFINE_UNQUOTED(INTDIV0_RAISES_SIGFPE, $value,
+    [Define if integer division by zero raises signal SIGFPE.])
+])
+
+# uintmax_t.m4 serial 6 (gettext-0.11)
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Paul Eggert.
+
+AC_PREREQ(2.13)
+
+# Define uintmax_t to `unsigned long' or `unsigned long long'
+# if <inttypes.h> does not exist.
+
+AC_DEFUN([jm_AC_TYPE_UINTMAX_T],
+[
+  AC_REQUIRE([jm_AC_HEADER_INTTYPES_H])
+  AC_REQUIRE([jm_AC_HEADER_STDINT_H])
+  if test $jm_ac_cv_header_inttypes_h = no && test $jm_ac_cv_header_stdint_h = no; then
+    AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
+    test $ac_cv_type_unsigned_long_long = yes \
+      && ac_type='unsigned long long' \
+      || ac_type='unsigned long'
+    AC_DEFINE_UNQUOTED(uintmax_t, $ac_type,
+  [Define to unsigned long or unsigned long long
+   if <inttypes.h> and <stdint.h> don't define.])
+  fi
+])
+
+# inttypes_h.m4 serial 4 (gettext-0.11.4)
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Paul Eggert.
+
+# Define HAVE_INTTYPES_H_WITH_UINTMAX if <inttypes.h> exists,
+# doesn't clash with <sys/types.h>, and declares uintmax_t.
+
+AC_DEFUN([jm_AC_HEADER_INTTYPES_H],
+[
+  AC_CACHE_CHECK([for inttypes.h], jm_ac_cv_header_inttypes_h,
+  [AC_TRY_COMPILE(
+    [#include <sys/types.h>
+#include <inttypes.h>],
+    [uintmax_t i = (uintmax_t) -1;],
+    jm_ac_cv_header_inttypes_h=yes,
+    jm_ac_cv_header_inttypes_h=no)])
+  if test $jm_ac_cv_header_inttypes_h = yes; then
+    AC_DEFINE_UNQUOTED(HAVE_INTTYPES_H_WITH_UINTMAX, 1,
+[Define if <inttypes.h> exists, doesn't clash with <sys/types.h>,
+   and declares uintmax_t. ])
+  fi
+])
+
+# stdint_h.m4 serial 2 (gettext-0.11.4)
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Paul Eggert.
+
+# Define HAVE_STDINT_H_WITH_UINTMAX if <stdint.h> exists,
+# doesn't clash with <sys/types.h>, and declares uintmax_t.
+
+AC_DEFUN([jm_AC_HEADER_STDINT_H],
+[
+  AC_CACHE_CHECK([for stdint.h], jm_ac_cv_header_stdint_h,
+  [AC_TRY_COMPILE(
+    [#include <sys/types.h>
+#include <stdint.h>],
+    [uintmax_t i = (uintmax_t) -1;],
+    jm_ac_cv_header_stdint_h=yes,
+    jm_ac_cv_header_stdint_h=no)])
+  if test $jm_ac_cv_header_stdint_h = yes; then
+    AC_DEFINE_UNQUOTED(HAVE_STDINT_H_WITH_UINTMAX, 1,
+[Define if <stdint.h> exists, doesn't clash with <sys/types.h>,
+   and declares uintmax_t. ])
+  fi
+])
+
+# ulonglong.m4 serial 2 (fileutils-4.0.32, gettext-0.10.40)
+dnl Copyright (C) 1999-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Paul Eggert.
+
+AC_DEFUN([jm_AC_TYPE_UNSIGNED_LONG_LONG],
+[
+  AC_CACHE_CHECK([for unsigned long long], ac_cv_type_unsigned_long_long,
+  [AC_TRY_LINK([unsigned long long ull = 1; int i = 63;],
+    [unsigned long long ullmax = (unsigned long long) -1;
+     return ull << i | ull >> i | ullmax / ull | ullmax % ull;],
+    ac_cv_type_unsigned_long_long=yes,
+    ac_cv_type_unsigned_long_long=no)])
+  if test $ac_cv_type_unsigned_long_long = yes; then
+    AC_DEFINE(HAVE_UNSIGNED_LONG_LONG, 1,
+      [Define if you have the unsigned long long type.])
+  fi
+])
+
+# inttypes.m4 serial 1 (gettext-0.11.4)
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Paul Eggert.
+
+# Define HAVE_INTTYPES_H if <inttypes.h> exists and doesn't clash with
+# <sys/types.h>.
+
+AC_DEFUN([gt_HEADER_INTTYPES_H],
+[
+  AC_CACHE_CHECK([for inttypes.h], gt_cv_header_inttypes_h,
+  [
+    AC_TRY_COMPILE(
+      [#include <sys/types.h>
+#include <inttypes.h>],
+      [], gt_cv_header_inttypes_h=yes, gt_cv_header_inttypes_h=no)
+  ])
+  if test $gt_cv_header_inttypes_h = yes; then
+    AC_DEFINE_UNQUOTED(HAVE_INTTYPES_H, 1,
+      [Define if <inttypes.h> exists and doesn't clash with <sys/types.h>.])
+  fi
+])
+
+# inttypes-pri.m4 serial 1 (gettext-0.11.4)
+dnl Copyright (C) 1997-2002 Free Software Foundation, Inc.
+dnl This file is free software, distributed under the terms of the GNU
+dnl General Public License.  As a special exception to the GNU General
+dnl Public License, this file may be distributed as part of a program
+dnl that contains a configuration script generated by Autoconf, under
+dnl the same distribution terms as the rest of that program.
+
+dnl From Bruno Haible.
+
+# Define PRI_MACROS_BROKEN if <inttypes.h> exists and defines the PRI*
+# macros to non-string values.  This is the case on AIX 4.3.3.
+
+AC_DEFUN([gt_INTTYPES_PRI],
+[
+  AC_REQUIRE([gt_HEADER_INTTYPES_H])
+  if test $gt_cv_header_inttypes_h = yes; then
+    AC_CACHE_CHECK([whether the inttypes.h PRIxNN macros are broken],
+      gt_cv_inttypes_pri_broken,
+      [
+        AC_TRY_COMPILE([#include <inttypes.h>
+#ifdef PRId32
+char *p = PRId32;
+#endif
+], [], gt_cv_inttypes_pri_broken=no, gt_cv_inttypes_pri_broken=yes)
+      ])
+  fi
+  if test "$gt_cv_inttypes_pri_broken" = yes; then
+    AC_DEFINE_UNQUOTED(PRI_MACROS_BROKEN, 1,
+      [Define if <inttypes.h> exists and defines unusable PRI* macros.])
+  fi
+])
+
 # codeset.m4 serial AM1 (gettext-0.10.40)
 dnl Copyright (C) 2000-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -5952,7 +6397,7 @@ AC_DEFUN([AM_LANGINFO_CODESET],
   fi
 ])
 
-# lcmessage.m4 serial 2 (gettext-0.10.40)
+# lcmessage.m4 serial 3 (gettext-0.11.3)
 dnl Copyright (C) 1995-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -5975,15 +6420,15 @@ dnl   Ulrich Drepper <drepper@cygnus.com>, 1995.
 # Check whether LC_MESSAGES is available in <locale.h>.
 
 AC_DEFUN([AM_LC_MESSAGES],
-  [if test $ac_cv_header_locale_h = yes; then
-    AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
-      [AC_TRY_LINK([#include <locale.h>], [return LC_MESSAGES],
+[
+  AC_CACHE_CHECK([for LC_MESSAGES], am_cv_val_LC_MESSAGES,
+    [AC_TRY_LINK([#include <locale.h>], [return LC_MESSAGES],
        am_cv_val_LC_MESSAGES=yes, am_cv_val_LC_MESSAGES=no)])
-    if test $am_cv_val_LC_MESSAGES = yes; then
-      AC_DEFINE(HAVE_LC_MESSAGES, 1,
-        [Define if your <locale.h> file defines LC_MESSAGES.])
-    fi
-  fi])
+  if test $am_cv_val_LC_MESSAGES = yes; then
+    AC_DEFINE(HAVE_LC_MESSAGES, 1,
+      [Define if your <locale.h> file defines LC_MESSAGES.])
+  fi
+])
 
 
 dnl PKG_CHECK_MODULES(GSTUFF, gtk+-2.0 >= 1.3 glib = 1.3.4, action-if, action-not)

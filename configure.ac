@@ -109,25 +109,30 @@ PKG_CHECK_MODULES(GTKMM, gtkmm-2.0)
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 
-dnl ---------------
-dnl SigC++
-dnl ---------------
-echo -e "checking for SigC++... \c"
-dnl AC_CHECK_PROG(sigcxx_val,"sigc-config --cflags","yes","no")
-if [ `sigc-config --cflags >/dev/null 2>/dev/null` ]
-then
-  echo "yes"
-  AC_DEFINE(USE_SIGCXX, 1, Using sigc++ or not )
-  BARF1=`sigc-config --cflags`
-  BARF2=`sigc-config --libs`
-  extra_includes="$extra_includes $BARF1"
-  extra_libs="$extra_libs $BARF2"
-else
-  echo "no"
-  AC_DEFINE(USE_SIGCXX, 0, Using sigc++ or not)
-fi
-AC_SUBST(extra_includes)
-AC_SUBST(extra_libs)
+
+dnl dnl ---------------
+dnl dnl SigC++
+dnl dnl ---------------
+PKG_CHECK_MODULES(SIGC, sigc++-1.2)
+AC_SUBST(SIGC_CFLAGS)
+AC_SUBST(SIGC_LIBS)
+
+dnl echo -e "checking for SigC++... \c"
+dnl dnl AC_CHECK_PROG(sigcxx_val,"sigc-config --cflags","yes","no")
+dnl if [ `sigc-config --cflags >/dev/null 2>/dev/null` ]
+dnl then
+dnl   echo "yes"
+dnl   AC_DEFINE(USE_SIGCXX, 1, Using sigc++ or not )
+dnl   BARF1=`sigc-config --cflags`
+dnl   BARF2=`sigc-config --libs`
+dnl   extra_includes="$extra_includes $BARF1"
+dnl   extra_libs="$extra_libs $BARF2"
+dnl else
+dnl   echo "no"
+dnl   AC_DEFINE(USE_SIGCXX, 0, Using sigc++ or not)
+dnl fi
+dnl AC_SUBST(extra_includes)
+dnl AC_SUBST(extra_libs)
 
 
 AC_MSG_CHECKING(for a forced cpu type)
@@ -342,6 +347,7 @@ AC_OUTPUT([ Makefile         \
             src/utils/Makefile \
             src/generic/Makefile \
             src/graphics/Makefile \
+            src/input/Makefile \
 	    src/platform/Makefile \
 	    src/platform/gtkmm/Makefile \
             include/Makefile \

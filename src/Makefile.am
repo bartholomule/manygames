@@ -1,5 +1,5 @@
 EXTRA_DIST = 
-SUBDIRS = utils generic graphics platform
+SUBDIRS = utils generic graphics input platform
 INCLUDES = -I@top_srcdir@/include
 lib_LTLIBRARIES = libmanygames.la
 
@@ -8,13 +8,14 @@ bin_PROGRAMS = barf
 barf_SOURCES = barf.cpp 
 barf_LDADD = libmanygames.la
 
-graphics_objects = graphics/image_converter.lo
-generic_objects  = generic/extra_exceptions.lo
+#graphics_objects = graphics/image_converter.lo
+#generic_objects  = generic/extra_exceptions.lo
 
 graphics_libs = graphics/libmanygames_graphics.la
 generic_libs = generic/libmanygames_generic.la
+input_libs = input/libmanygames_input.la $(SIGC_LIBS)
 
 libmanygames_la_SOURCES = emptyfile.cpp
-libmanygames_la_LIBADD = $(graphics_libs) $(generic_libs)
+libmanygames_la_LIBADD = $(graphics_libs) $(generic_libs) $(input_libs)
 #$(graphics_objects) $(generic_objects)
 libmanygames_la_LDFLAGS = -module -shared -rpath @prefix@/lib 
