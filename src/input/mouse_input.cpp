@@ -19,6 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
  */
 
+/*
+  TODO:
+    constructor, copy constructor, assignment: copy press state...
+ */
+
 #include <manygames/mouse_input.hpp>
 #include <cstdio>
 
@@ -50,15 +55,13 @@ namespace manygames
     mouse_x(old.mouse_x), mouse_y(old.mouse_y),
     last_x(old.last_x), last_y(old.last_y),
     last_state(old.last_state),
-    press_state(old.press_state),
-    release_state(old.release_state),
     maximum_click_distance(old.maximum_click_distance),
     valid_data(old.valid_data),
-    clicked(old.clicked),
-    dragged(old.dragged),
-    moved(old.moved),
-    pressed(old.pressed),
-    released(old.released)    
+    mouse_clicked(old.mouse_clicked),
+    mouse_dragged(old.mouse_dragged),
+    mouse_moved(old.mouse_moved),
+    mouse_pressed(old.mouse_pressed),
+    mouse_released(old.mouse_released)    
   {
 
   } // mouse_input(mouse_input)
@@ -76,8 +79,6 @@ namespace manygames
       last_x = old.last_x;
       last_y = old.last_y;
       last_state = old.last_state;
-      press_state = old.press_state;
-      release_state = old.release_state;
       maximum_click_distance = old.maximum_click_distance;
       valid_data = old.valid_data;
 
@@ -93,6 +94,17 @@ namespace manygames
     return (*this);
   } // mouse_input::operator=(mouse_input)
 
+  int which_button(unsigned change)
+  {
+    for(int i = 0; i < 5; ++i, change >>= 1)
+    {
+      if( change & 1 )
+      {
+        return i;
+      }
+    }
+    return -1;
+  }
   
   bool mouse_input::handle_mouse_event(int x, int y, unsigned state)
   {
@@ -128,60 +140,69 @@ namespace manygames
     
     // Find all differences in buttons...
     unsigned state_difference = (last_state ^ state);
-
-    //    printf("state_difference=0x%06x (state=0x%06x, last=0x%06x)\n", state_difference, state, last_state);
-
     last_state = state;
     
     // If there is a button difference... Either a press or release.
-    int button_changed = state_difference & MouseButtonMask;
-    if( button_changed != 0 )
+    unsigned button_state_change = state_difference & mouse_button_mask;
+    if( button_state_change != 0 )
     {
-      if( state & button_changed )
+      if( state & button_state_change )
       {
-        //      printf("Button %d changed (press)!\n", button_changed);
         // It was a press!
-        press_state = state;
-        press_x = mouse_x;
-        press_y = mouse_y;
-        handled = pressed(mouse_x, mouse_y, press_state, state_difference) || handled;
-      }
+        int button_pressed = which_button(button_state_change);
+        if( button_pressed >= 0 )
+        {
+          press_data[button_pressed].x = mouse_x;
+          press_data[button_pressed].y = mouse_y;
+          press_data[button_pressed].press_state = state;
+        }
+        handled = mouse_pressed(mouse_x, mouse_y, state, state_difference) || handled;
+      } // if a press
       else
       {
-        //      printf("Button %d changed (release)!\n", button_changed);
-        
         // It was a release!
-        release_state = state;
-        handled = released(x,y,release_state,state_difference) || handled;
+        handled = mouse_released(x,y,state,state_difference) || handled;
 
         // Check to see if it could be a click...
-        int diff_x = x - press_x;
-        int diff_y = y - press_y;
+        int button_released = which_button(button_state_change);
 
-        if( ((diff_x <  maximum_click_distance) &&
-             (diff_x > -maximum_click_distance)) &&
-            ((diff_y <  maximum_click_distance) &&
-             (diff_y > -maximum_click_distance)) )
+        if( button_released >= 0 )
         {
-          // It's a click!
-          handled = clicked(x, y, press_state, release_state) || handled;
-        }
-        else
-        {
-          // It's a drag!
-          handled = dragged(press_x, press_y, mouse_x, mouse_y, state_difference) || handled;
-        }
-      }
+          int diff_x = x - press_data[button_released].x;
+          int diff_y = y - press_data[button_released].y;
+          
+          if( ((diff_x <  maximum_click_distance) &&
+               (diff_x > -maximum_click_distance)) &&
+              ((diff_y <  maximum_click_distance) &&
+               (diff_y > -maximum_click_distance)) )
+          {
+            // It's a click!
+            handled = mouse_clicked(x, y,
+                                    press_data[button_released].press_state,
+                                    state) || handled;
+          }
+          else
+          {
+            // It's a drag!
+            // Reset the state difference to be that between when it was
+            // pressed and when it was released.
+            state_difference = (press_data[button_released].press_state ^ state);
+            
+            handled = mouse_dragged(press_data[button_released].x,
+                                    press_data[button_released].y,
+                                    mouse_x, mouse_y, state_difference) || handled;
+          }
+        } // button >= 0 (if it's valid)
+      } // if a release
     } // button changed
     else
     {
       // Just a mouse movement...
-      handled = moved(mouse_x, mouse_y,
-                      mouse_x - last_x,
-                      mouse_y - last_y) || handled;
-    }
+      handled = mouse_moved(mouse_x, mouse_y,
+                            mouse_x - last_x,
+                            mouse_y - last_y) || handled;
+    } // no buttons changed
     
-    //    printf("\n");
     return handled;
   } // mouse_input::handle_mouse_event(int,int,int)
 

@@ -38,22 +38,22 @@ namespace manygames
   class mouse_input
   {
   public:
-    enum MouseStateMasks { MouseButton1      = 1 << 0,
-			   MouseButton2      = 1 << 1,
-			   MouseButton3      = 1 << 2,
-			   MouseButton4      = 1 << 3,
-			   MouseButton5      = 1 << 4,
-			   MouseShiftDown    = 1 << 5,
-			   MouseControlDown  = 1 << 6,
-			   MouseMod1Down     = 1 << 7,
-			   MouseMod2Down     = 1 << 8,
-			   MouseMod3Down     = 1 << 9,
-			   MouseMod4Down     = 1 << 10,
-			   MouseMod5Down     = 1 << 11,
-			   MouseLockDown     = 1 << 12,
-			   MouseButtonMask   = 0x001F,
-			   MouseModifierMask = 0x1FE0,
-			   MaxMouseButton   = 5
+    enum MouseStateMasks { mouse_button_1      = 1 << 0,
+                           mouse_button_2      = 1 << 1,
+                           mouse_button_3      = 1 << 2,
+                           mouse_button_4      = 1 << 3,
+                           mouse_button_5      = 1 << 4,
+                           mouse_shift_down    = 1 << 5,
+                           mouse_control_down  = 1 << 6,
+                           mouse_mod1_down     = 1 << 7,
+                           mouse_mod2_down     = 1 << 8,
+                           mouse_mod3_down     = 1 << 9,
+                           mouse_mod4_down     = 1 << 10,
+                           mouse_mod5_down     = 1 << 11,
+                           mouse_capslock_down = 1 << 12,
+                           mouse_button_mask   = 0x001f,
+                           mouse_modifier_mask = 0x1fe0,
+                           max_mouse_button   = 5
     };
   private:
 
@@ -65,13 +65,14 @@ namespace manygames
     */
     virtual bool handle_mouse_event(int x, int y, unsigned state);
 
-    int mouse_x, mouse_y; // 
-    int last_x,  last_y;  // 
-    unsigned last_state;       //
-    int press_x, press_y; // 
-    unsigned press_state, release_state; // 
-    int maximum_click_distance; // The max # of pixels dragable when clicking.
-    bool valid_data;            //
+    struct mouse_press_data { int x; int y; unsigned press_state; };
+
+    int mouse_x, mouse_y;           // Current X and Y
+    int last_x,  last_y;            // X and Y of the last event.
+    unsigned last_state;            // Holds the state at the last event
+    mouse_press_data press_data[5]; // Press data for each of the 5 allowed buttons
+    int maximum_click_distance;     // The max # of pixels dragable when clicking.
+    bool valid_data;                // says if data (positions, etc) is valid valid.
     
   public:
     /** Default constructor */
@@ -94,19 +95,19 @@ namespace manygames
     //    virtual int num_mouse_buttons() const = 0;
 
     /** Return the current mouse position (in x and y), valid IFF it returns
-	true */
+        true */
     virtual bool get_mouse_position(int& x, int& y) const;
     
     /** Return the last (previous) mouse position (in x and y), valid IFF it
-	returns true */    
+        returns true */    
     virtual bool get_last_position(int& x, int& y) const;
 
     /** Get the maximum distance between press and release to be counted as a
-	click. */
+        click. */
     int get_max_click_distance() const { return maximum_click_distance; }
     
     /** Set the maximum distance between press and release to be counted as a
-	click. */    
+        click. */    
     void set_max_click_distance(int d) { maximum_click_distance = d; }
 
     //bool mouse_clicked(int x, int y, unsigned press_state, unsigned release_state);
@@ -126,11 +127,11 @@ namespace manygames
     //   signals. :( 
 
     // See above comments for the arguments to these callbacks.
-    SigC::Signal4<bool,int,int,unsigned,unsigned> clicked;
-    SigC::Signal5<bool,int,int,int,int,unsigned> dragged;
-    SigC::Signal4<bool,int,int,int,int> moved;
-    SigC::Signal4<bool,int,int,unsigned,unsigned> pressed;
-    SigC::Signal4<bool,int,int,unsigned,unsigned> released;
+    SigC::Signal4<bool,int,int,unsigned,unsigned> mouse_clicked;
+    SigC::Signal5<bool,int,int,int,int,unsigned> mouse_dragged;
+    SigC::Signal4<bool,int,int,int,int> mouse_moved;
+    SigC::Signal4<bool,int,int,unsigned,unsigned> mouse_pressed;
+    SigC::Signal4<bool,int,int,unsigned,unsigned> mouse_released;
   }; // class mouse_input
 
 } // namespace manygames
