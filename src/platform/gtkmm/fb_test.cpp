@@ -673,7 +673,16 @@ int main(int argc, char** argv)
   //   barf = xpm_convert_image<unsigned char,bool>(wheelbarrow_xpm);
   barf = xpm_convert_image<unsigned char,bool>(al_xpm);   
   barf = scale_image(barf, 8);
-  
+
+  printf("Creating a rectangle...\n"); fflush(stdout);
+  rectangle<unsigned> r(barf.get_width() / 4,
+                        barf.get_width() - (barf.get_width() / 4),
+                        barf.get_height() / 4,
+                        barf.get_height() - (barf.get_height() / 4));
+
+  printf("Trying to sub an image using a rectangle...\n");  fflush(stdout);
+  barf = barf.sub_image(r);
+                        
   fb->run_window();
 
   delete fb;
