@@ -76,6 +76,11 @@ namespace manygames
     /** Swap the foreground and background buffers. */
     void flip() { my_swap(foreground, background); }
 
+    /** Get the width of the screen */
+    unsigned get_width()  const { return buffer1.get_width(); }
+    /** Get the height of the screen */
+    unsigned get_height() const { return buffer1.get_height(); }
+    
     /**
      * Called to tell any subclasses that they need to update the buffers, and
      * flip if required.
