@@ -145,8 +145,8 @@ namespace manygames
     virtual void add_modifier_ignore_mask(unsigned mask);
     virtual unsigned get_modifier_ignore_mask() const;
     
-    void disable_repeat() { allow_repeat = false; }
-    void enable_repeat()  { allow_repeat = true; }
+    virtual void disable_repeat() { allow_repeat = false; }
+    virtual void enable_repeat()  { allow_repeat = true; }
     bool repeat_enabled() const { return allow_repeat; }
 
     bool key_down(unsigned key) const;
