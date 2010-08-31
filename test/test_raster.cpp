@@ -281,7 +281,7 @@ int main(int argc, char** argv)
 
     typedef manygames::raster<char> crast;
 
-    char* hello_data = "|Hello...|n|.Hello..|n|..Hello.|n|...Hello|n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+    const char* hello_data = "|Hello...|n|.Hello..|n|..Hello.|n|...Hello|n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
     //    cout << hello_data << endl;
 
 

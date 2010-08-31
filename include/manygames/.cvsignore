@@ -1,2 +1,6 @@
 *~
 Makefile
+Makefile.in
+manygames_config.hpp
+manygames_config.hpp.in
+stamp-h1

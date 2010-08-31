@@ -111,7 +111,7 @@ do
     echo "*** Skipping test \"$test_name\", executable missing"
     missing_stuff=1
   fi
-  let "files_tested+=1"
+  files_tested=`expr ${files_tested} + 1`
 done
 
 

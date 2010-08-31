@@ -42,6 +42,7 @@
 #include <fstream>
 #include <time.h>
 #include <cstdio>
+#include <stdlib.h>
 using namespace std;
 
 // Put your name here...

@@ -105,7 +105,7 @@ dnl ---------------------------------------------------------------------------
 dnl ---------------
 dnl gtkmm-2.0
 dnl ---------------
-PKG_CHECK_MODULES(GTKMM, gtkmm-2.0)
+PKG_CHECK_MODULES(GTKMM, gtkmm-2.4)
 AC_SUBST(GTKMM_CFLAGS)
 AC_SUBST(GTKMM_LIBS)
 
@@ -113,7 +113,7 @@ AC_SUBST(GTKMM_LIBS)
 dnl dnl ---------------
 dnl dnl SigC++
 dnl dnl ---------------
-PKG_CHECK_MODULES(SIGC, sigc++-1.2)
+PKG_CHECK_MODULES(SIGC, sigc++-2.0)
 AC_SUBST(SIGC_CFLAGS)
 AC_SUBST(SIGC_LIBS)
 

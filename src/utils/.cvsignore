@@ -4,3 +4,4 @@
 Makefile
 gen-class
 gen-class-lgpl
+Makefile.in
